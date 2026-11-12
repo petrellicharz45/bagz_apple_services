@@ -25,6 +25,7 @@
     { href: "/groups", label: "Groups", icon: "layers" },
     { href: "/delivery-fees", label: "Delivery fees", icon: "truck" },
     { href: "/banners", label: "Home Banners", icon: "image" },
+    { href: "/popups", label: "Pop-ups", icon: "popup" },
     { href: "/social-links", label: "Social links", icon: "share" },
     { href: "/orders", label: "Orders", icon: "bag" },
     { href: "/product-reports", label: "Wrong product info", icon: "flag" },
@@ -55,7 +56,8 @@
     send: "paper-plane-o",
     users: "users",
     gear: "cog",
-    share: "share-alt"
+    share: "share-alt",
+    popup: "window-restore"
   };
 
   let alertUnread = 0;

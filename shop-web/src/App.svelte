@@ -19,8 +19,11 @@
     loadBrowseMenu,
     loadMerchGroups,
     productsForBrowseChip,
+    resolveMenuGroups,
     selectionFromSub
   } from "./lib/categoryMenu.js";
+  import CategorySidebar from "./components/CategorySidebar.svelte";
+  import PromoPopup from "./components/PromoPopup.svelte";
   import CartDrawer from "./components/CartDrawer.svelte";
   import ShopCartPage from "./components/ShopCartPage.svelte";
   import CheckoutPage from "./components/CheckoutPage.svelte";
@@ -711,7 +714,14 @@
   {#if (tab === "shop" || tab === "trends" || selected) && tab !== "checkout" && tab !== "cart" && tab !== "account" && tab !== "support" && tab !== "browse"}
     <div class="bleed-block">
       {#if !selected}
-        <HeroBanner onShop={goHome} />
+        <div class="home-top">
+          <div class="home-sidebar">
+            <CategorySidebar groups={resolveMenuGroups(categories, browseGroups)} onPick={handleCategorySub} />
+          </div>
+          <div class="home-hero">
+            <HeroBanner onShop={goHome} />
+          </div>
+        </div>
       {/if}
       <TrustGreenBar onAction={handleSupportAction} />
     </div>
@@ -932,6 +942,8 @@
         · <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}><i class="fa fa-{s.icon}" aria-hidden="true"></i> {s.label}</a>
       {/each}</p>
   </footer>
+
+  <PromoPopup suppressed={tab === "checkout" || tab === "cart"} />
 
   {#if !selected && tab !== "checkout"}
     <FloatActions onFeedback={() => handleSupportAction("chat")} />
@@ -1234,6 +1246,30 @@
   @media (min-width: 901px) {
     .mobile-nav {
       display: none;
+    }
+  }
+  /* Home top: category sidebar + banner slider on wide screens (Jumia-style); slider only below. */
+  .home-sidebar {
+    display: none;
+  }
+  @media (min-width: 1100px) {
+    .home-top {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 12px;
+      max-width: var(--page-max);
+      margin: 12px auto;
+      padding: 0 12px;
+      align-items: stretch;
+    }
+    .home-sidebar {
+      display: block;
+      min-height: 0;
+    }
+    .home-hero {
+      border-radius: 12px;
+      overflow: hidden;
+      min-width: 0;
     }
   }
 </style>

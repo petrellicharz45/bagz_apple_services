@@ -10,11 +10,34 @@
   export let onPick = () => {};
   export let hideTitle = false;
 
+  import { onMount, tick } from "svelte";
+
   let scroller;
+  let canLeft = false;
+  let canRight = false;
+
+  /** Show each arrow only when there is more to see in that direction. */
+  function updateArrows() {
+    if (!scroller) return;
+    const max = scroller.scrollWidth - scroller.clientWidth;
+    canLeft = scroller.scrollLeft > 4;
+    canRight = scroller.scrollLeft < max - 4;
+  }
 
   function scrollBy(dx) {
-    scroller?.scrollBy({ left: dx, behavior: "smooth" });
+    const step = Math.max(220, Math.round((scroller?.clientWidth || 600) * 0.7));
+    scroller?.scrollBy({ left: dx > 0 ? step : -step, behavior: "smooth" });
   }
+
+  onMount(() => {
+    updateArrows();
+    const ro = new ResizeObserver(updateArrows);
+    if (scroller) ro.observe(scroller);
+    return () => ro.disconnect();
+  });
+
+  // Re-check when the pill list changes (categories load from the database).
+  $: pills, tick().then(updateArrows);
 
   function isActive(pill) {
     return browsePillActive(pill, {
@@ -30,7 +53,12 @@
     <h2 class="explore-title">Explore your interests</h2>
   {/if}
   <div class="wrap">
-    <div class="pills" bind:this={scroller} role="tablist">
+    {#if canLeft}
+      <button type="button" class="scroll-btn" aria-label="Scroll categories left" on:click={() => scrollBy(-1)}>
+        <TemuIcon name="chevronLeft" size={16} color="#13344f" />
+      </button>
+    {/if}
+    <div class="pills" bind:this={scroller} role="tablist" on:scroll={updateArrows}>
       {#each pills as pill (pill.id)}
         <button
           type="button"
@@ -48,9 +76,11 @@
         </button>
       {/each}
     </div>
-    <button type="button" class="scroll-btn" aria-label="Scroll categories" on:click={() => scrollBy(220)}>
-      <TemuIcon name="chevronRight" size={18} color="#121212" strokeWidth={2} />
-    </button>
+    {#if canRight}
+      <button type="button" class="scroll-btn" aria-label="Scroll categories right" on:click={() => scrollBy(1)}>
+        <TemuIcon name="chevronRight" size={16} color="#13344f" />
+      </button>
+    {/if}
   </div>
 </section>
 
@@ -65,7 +95,7 @@
     margin: 0 0 12px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #1b1512;
+    color: #13344f;
     line-height: 1.2;
   }
   @media (max-width: 900px) {
@@ -106,20 +136,21 @@
     font-weight: 400;
     cursor: pointer;
     white-space: nowrap;
-    color: #1b1512;
+    color: #13344f;
     line-height: 1.25;
     transition:
       border-color 0.12s ease,
       box-shadow 0.12s ease;
   }
   .pills button:hover {
-    border-color: #999;
+    border-color: #2ba8e0;
   }
   .pills button.active {
-    border: 2px solid #121212;
+    border: 2px solid #13344f;
+    background: #13344f;
+    color: #fff;
     font-weight: 700;
     padding: 9px 15px;
-    box-shadow: 0 0 0 1px #121212;
   }
   .scroll-btn {
     flex-shrink: 0;
@@ -136,7 +167,8 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   }
   .scroll-btn:hover {
-    border-color: #aaa;
+    border-color: #2ba8e0;
+    background: #eef7fc;
   }
   @media (max-width: 900px) {
     .pills {
