@@ -93,8 +93,10 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Rules are OR-ed: this wildcard also matches payment_config, so exclude it
+    // explicitly or the MTN/Airtel credentials become publicly readable.
     match /settings/{document} {
-      allow read: if true;
+      allow read: if document != 'payment_config' || isAdmin();
       allow write: if isAdmin();
     }
 
