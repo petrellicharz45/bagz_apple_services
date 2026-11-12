@@ -366,7 +366,13 @@
       await updateDoc(doc(db, "product", productId), updates);
       invalidateProductCatalog();
       await loadProductCatalog(true);
-      goto("/products");
+      let back = "/products";
+      try {
+        back = sessionStorage.getItem("admin_products_list_url") || back;
+      } catch {
+        /* ignore */
+      }
+      goto(back.startsWith("/products") ? back : "/products");
     } catch (e: any) {
       errorMsg = e.message;
     } finally {
