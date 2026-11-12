@@ -117,7 +117,9 @@ export function featuredSubImage(label, products = []) {
  * ("iPhone 15 Series" → "iPhone 15", "Cases & Covers" → "Case Cover").
  */
 export function subQueryFromName(name) {
-  const words = String(name || "")
+  // "Cases & Covers" → search the first alternative only ("Case"); products rarely contain both words.
+  const main = String(name || "").split(/\s+(?:&|and)\s+/i)[0];
+  const words = main
     .split(/\s+/)
     .filter((w) => w && !/^(series|&|and)$/i.test(w))
     .map((w) => (w.length > 3 && /[a-z]s$/i.test(w) && !/ss$/i.test(w) ? w.slice(0, -1) : w));

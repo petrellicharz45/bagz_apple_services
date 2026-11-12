@@ -33,8 +33,11 @@
     stock: 0,
     stockPerSize: "",
     special: false,
-    freeShipping: false
+    freeShipping: false,
+    hidden: false
   };
+  /** Set on imported products that had no photo; cleared automatically once a photo is saved. */
+  let hiddenReason = "";
 
   let GROUP_OPTIONS: string[] = [...DEFAULT_GROUPS];
   let selectedGroups: string[] = [];
@@ -124,6 +127,8 @@
       form.stock = data.stock || 0;
       form.special = data.special || false;
       form.freeShipping = Boolean(data.freeShipping);
+      form.hidden = data.hidden === true;
+      hiddenReason = data.hiddenReason || "";
       const stored = Array.isArray(data.images) ? data.images.filter(Boolean) : [];
       cardImage = data.cardImage || "";
       existingImages =
@@ -323,6 +328,10 @@
         sizeStock,
         special: form.special,
         freeShipping: Boolean(form.freeShipping),
+        updatedAt: Date.now(),
+        // Hidden only because it had no photo → show it again as soon as it has one.
+        hidden: hiddenReason === "no-photo" && uploadedImageUrls.length > 0 ? false : Boolean(form.hidden),
+        hiddenReason: hiddenReason === "no-photo" && uploadedImageUrls.length > 0 ? null : hiddenReason || null,
         seoTitle: seo.seoTitle,
         seoDescription: seo.seoDescription,
         seoKeywords: seo.seoKeywords,
@@ -641,6 +650,16 @@
           {/if}
         </div>
       {/if}
+
+      <label class="checkbox-label full-width">
+        <input type="checkbox" bind:checked={form.hidden} />
+        <span>
+          Hidden from shop
+          {#if hiddenReason === "no-photo"}
+            <small class="hidden-note">— imported without a photo; it becomes visible automatically when you save it with a photo.</small>
+          {/if}
+        </span>
+      </label>
 
       <label class="checkbox-label full-width">
         <input type="checkbox" bind:checked={form.special} />
@@ -980,5 +999,9 @@
   small {
     color: #666;
     margin-top: 4px;
+  }
+  .hidden-note {
+    color: #92400e;
+    font-weight: 400;
   }
 </style>

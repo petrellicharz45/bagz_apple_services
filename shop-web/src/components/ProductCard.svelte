@@ -44,13 +44,13 @@
     {#if urgency}
       <span class="tag-urgent">{urgency}</span>
     {/if}
-    <span class="ship-pill">Free shipping</span>
+    <span class="ship-pill">Same-day Kampala</span>
   </button>
   <div class="body">
     <button type="button" class="title" on:click={() => onOpen(product)}>{product.name}</button>
     <div class="price-row">
       <span class="price">{formatUgx(shownPrice)}</span>
-      <span class="sold-inline">{soldLabel(product)}</span>
+      {#if soldLabel(product)}<span class="sold-inline">{soldLabel(product)}</span>{/if}
       <button
         type="button"
         class="cart-fab"

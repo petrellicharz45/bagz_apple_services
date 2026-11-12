@@ -109,6 +109,7 @@
         <th>Category</th>
         <th>Price</th>
         <th>Stock</th>
+        <th>Shop</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -119,6 +120,15 @@
           <td>{product.category}</td>
           <td>UGX {product.price?.toLocaleString()}</td>
           <td>{product.stock ?? 0}</td>
+          <td>
+            {#if product.hidden}
+              <span class="vis-badge hidden-badge" title={product.hiddenReason === "no-photo" ? "Add a photo to show it" : "Hidden from shop"}>
+                <i class="fa fa-eye-slash" aria-hidden="true"></i> {product.hiddenReason === "no-photo" ? "Needs photo" : "Hidden"}
+              </span>
+            {:else}
+              <span class="vis-badge"><i class="fa fa-eye" aria-hidden="true"></i> Visible</span>
+            {/if}
+          </td>
           <td class="actions">
             <a href={`/products/${product.id}`} class="btn btn-edit">Edit</a>
             <button on:click={() => handleDelete(product.id)} class="btn btn-delete">Delete</button>
@@ -127,7 +137,7 @@
       {/each}
       {#if filteredProducts.length === 0}
         <tr>
-          <td colspan="5" style="text-align: center; padding: 20px;">
+          <td colspan="6" style="text-align: center; padding: 20px;">
             {searchTerm ? `No products match “${searchTerm.trim()}”.` : 'No products found.'}
           </td>
         </tr>
@@ -197,5 +207,20 @@
   }
   .btn:hover {
     opacity: 0.9;
+  }
+  .vis-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #e0f1fa;
+    color: #135fa3;
+    white-space: nowrap;
+  }
+  .vis-badge.hidden-badge {
+    background: #fef3c7;
+    color: #92400e;
   }
 </style>

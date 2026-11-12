@@ -71,7 +71,11 @@ export async function loadProducts() {
   try {
     const snap = await getDocs(collection(db, "product"));
     const list = sortProductsNewestFirst(
-      snap.docs.map((d) => enrichProduct({ id: d.id, ...d.data() }))
+      snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        // Admin "Hidden from shop" (also set on imported products that still need a photo).
+        .filter((p) => p.hidden !== true)
+        .map((p) => enrichProduct(p))
     );
     return list.length ? list : fallbackProducts();
   } catch {
@@ -230,14 +234,15 @@ export {
   galleryImagesForProduct
 } from "./productPhotos.js";
 
-/** Stable pseudo sold count for Temu-style social proof (until real analytics exist). */
+/**
+ * Sold count — only from real data (product.soldCount, e.g. maintained by order processing).
+ * Returns "" when unknown: invented "sold" numbers would mislead customers.
+ */
 export function soldLabel(product) {
-  const seed = String(product.id || product.name || "")
-    .split("")
-    .reduce((a, c) => a + c.charCodeAt(0), 0);
-  const n = 120 + (seed % 9800);
+  const n = Math.floor(Number(product?.soldCount) || 0);
+  if (n <= 0) return "";
   if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K+ sold`;
-  return `${n}+ sold`;
+  return `${n} sold`;
 }
 
 export function ratingLabel(product) {

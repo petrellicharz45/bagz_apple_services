@@ -404,7 +404,7 @@
       </button>
     {/if}
     <p class="social">
-      {soldLabel(product)} · <span class="stock-line" class:out={productStock(product) <= 0}>{stockLabel(product)}</span>
+      {#if soldLabel(product)}{soldLabel(product)} · {/if}<span class="stock-line" class:out={productStock(product) <= 0}>{stockLabel(product)}</span>
     </p>
     <div class="price-block">
       <span class="now">{formatUgx(shownPrice)}</span>
