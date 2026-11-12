@@ -18,6 +18,9 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
 }
 
 const mount = document.getElementById("app");
+// Pages are prerendered with plain HTML for search engines (scripts/prerender-seo.mjs);
+// the app replaces that content once it starts.
+if (mount) mount.innerHTML = "";
 let app;
 try {
   app = new App({ target: mount });

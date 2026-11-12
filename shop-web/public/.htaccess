@@ -2,6 +2,10 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # Prerendered SEO pages: /p/<slug> and /c/<slug> are served from p/<slug>.html and c/<slug>.html
+  RewriteCond %{REQUEST_URI} ^/(p|c)/[^/]+/?$
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]

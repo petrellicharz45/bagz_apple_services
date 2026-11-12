@@ -24,7 +24,7 @@ export const BRAND = {
 
   logo: "/brand/bagz-logo.png",
   logoWhite: "/brand/bagz-logo-white.png",
-  ogImage: "/brand/store/bagz-store.jpg",
+  ogImage: "/brand/og-image.jpg", // 1200x630 share image
 
   contact: {
     email: "info@bagzappleservices.com",

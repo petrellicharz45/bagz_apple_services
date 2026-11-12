@@ -23,6 +23,7 @@
     selectionFromSub
   } from "./lib/categoryMenu.js";
   import CategorySidebar from "./components/CategorySidebar.svelte";
+  import { categoryFromPath, categoryPath } from "./lib/seoPaths.js";
   import PromoPopup from "./components/PromoPopup.svelte";
   import CartDrawer from "./components/CartDrawer.svelte";
   import ShopCartPage from "./components/ShopCartPage.svelte";
@@ -45,7 +46,8 @@
     applyShopPage,
     applySupportSeo,
     productCanonicalPath,
-    loadSeoSettings
+    loadSeoSettings,
+    applyCategorySeo
   } from "./lib/pageSeo.js";
   import {
     getSupportPage,
@@ -115,14 +117,25 @@
 
   function clearProductPathFromUrl() {
     const path = window.location.pathname;
-    if (path.startsWith("/p/") || path.startsWith("/help/")) {
+    if (path.startsWith("/p/") || path.startsWith("/help/") || path.startsWith("/c/")) {
       syncBrowserPath("/");
     }
+  }
+
+  /** /c/<slug> → open that category (shareable, indexable category pages). */
+  function openCategoryFromUrl(pathname) {
+    const cat = categoryFromPath(pathname, categories);
+    if (!cat) return false;
+    openCategoryBrowse({ category: cat, fromNav: "category" });
+    return true;
   }
 
   function openFromUrl() {
     const pathname = window.location.pathname;
     if (openSupportFromUrl(pathname)) return;
+    if (openCategoryFromUrl(pathname)) return;
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q && pathname === "/") search = q.slice(0, 120);
     const p = productFromPath(pathname);
     if (p) {
       selectedPhotoIndex = 0;
@@ -149,6 +162,7 @@
   function onPopState() {
     const pathname = window.location.pathname;
     if (openSupportFromUrl(pathname)) return;
+    if (openCategoryFromUrl(pathname)) return;
     const p = productFromPath(pathname);
     if (p) {
       selectedPhotoIndex = 0;
@@ -189,13 +203,25 @@
     support: "support"
   };
 
-  $: if (!selected && tab !== "support") {
+  /** Page-level SEO for the current view (category pages get their own title/canonical/JSON-LD). */
+  function applyViewSeo() {
+    const cat = browseState?.category;
+    if (tab === "browse" && !browseState?.group && cat && cat !== "All" && categories.includes(cat)) {
+      applyCategorySeo(cat, products.filter((p) => p.category === cat));
+      return;
+    }
     applyShopPage(search.trim() ? "search" : PAGE_SEO_KEY[tab] || "home");
+  }
+
+  $: if (!selected && tab !== "support") {
+    // Re-run when the view, search, category or catalogue changes.
+    void [tab, search, browseState, categories, products];
+    applyViewSeo();
   }
 
   onMount(async () => {
     loadSeoSettings().then(() => {
-      if (!selected) applyShopPage(PAGE_SEO_KEY[tab] || "home");
+      if (!selected && tab !== "support") applyViewSeo();
     });
     // Send any orders from this browser the admin has not received yet (background).
     syncOrdersToAdmin();
@@ -313,8 +339,14 @@
     activeCategory = category || "All";
     activeGroup = group || null;
     tab = "browse";
-    applyDefaultSeo();
-    clearProductPathFromUrl();
+    if (category && category !== "All" && !group && categories.includes(category)) {
+      // Real category: give it its own URL and SEO (title, description, structured data).
+      syncBrowserPath(categoryPath(category));
+      applyCategorySeo(category, products.filter((p) => p.category === category));
+    } else {
+      applyDefaultSeo();
+      clearProductPathFromUrl();
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 

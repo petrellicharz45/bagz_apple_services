@@ -9,7 +9,7 @@
       key: "home",
       label: "Home",
       path: `${SITE}/`,
-      title: "Bagz Apple Services | Authentic iPhones, Pixel, Samsung & Accessories in Kampala",
+      title: "Bagz Apple Services | Authentic iPhones & Samsung in Kampala",
       description: "Buy brand-new and certified iPhones, Google Pixel, Samsung Galaxy, MacBooks, Apple Watch and accessories at Bagz Apple Services, Kampala. Swap & top-up, warranty, same-day delivery.",
       keywords: "Bagz Apple Services, iPhone price Uganda, buy iPhone Kampala, Google Pixel Uganda, Samsung Uganda, Apple accessories Kampala, phone swap Uganda"
     },

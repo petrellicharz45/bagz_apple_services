@@ -3,6 +3,8 @@ import { db } from "./firebase.js";
 import { SUPPORT_EMAIL } from "./shopContact.js";
 
 import { BRAND as BRAND_INFO } from "./brand.js";
+import { siteGraph, productGraph, categoryGraph } from "./seoSchema.js";
+import { categoryPath, productPath, productSeoTitle } from "./seoPaths.js";
 
 const BRAND = BRAND_INFO.name;
 const SITE_NAME = BRAND_INFO.shortName;
@@ -36,7 +38,7 @@ export const SHOP_SEO_PAGES = {
   home: {
     label: "Home",
     path: "/",
-    title: "Bagz Apple Services | Authentic iPhones, Pixel, Samsung & Accessories in Kampala",
+    title: "Bagz Apple Services | Authentic iPhones & Samsung in Kampala",
     description: "Buy brand-new and certified iPhones, Google Pixel, Samsung Galaxy, MacBooks, Apple Watch and accessories at Bagz Apple Services, Kampala. Swap & top-up, warranty, same-day delivery.",
     keywords: "Bagz Apple Services, iPhone price Uganda, buy iPhone Kampala, Google Pixel Uganda, Samsung Uganda, Apple accessories Kampala, phone swap Uganda"
   },
@@ -187,51 +189,11 @@ function applySocialMeta({ title, description, url, image, type = "website" }) {
 }
 
 function applySiteJsonLd() {
-  const base = origin();
-  setJsonLd("site-jsonld", {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": `${base}/#organization`,
-        name: BRAND,
-        alternateName: SITE_NAME,
-        url: base || undefined,
-        logo: absUrl(DEFAULT_OG_IMAGE),
-        description: DEFAULT.description,
-        areaServed: { "@type": "Country", name: "Uganda" },
-        contactPoint: {
-          "@type": "ContactPoint",
-          contactType: "customer support",
-          email: SUPPORT_EMAIL,
-          telephone: "+256-752-918710",
-          areaServed: "UG",
-          availableLanguage: ["English"]
-        }
-      },
-      {
-        "@type": "WebSite",
-        "@id": `${base}/#website`,
-        url: base || undefined,
-        name: BRAND,
-        publisher: { "@id": `${base}/#organization` },
-        inLanguage: "en-UG",
-        potentialAction: {
-          "@type": "SearchAction",
-          target: {
-            "@type": "EntryPoint",
-            urlTemplate: `${base}/?q={search_term_string}`
-          },
-          "query-input": "required name=search_term_string"
-        }
-      }
-    ]
-  });
+  setJsonLd("site-jsonld", siteGraph(origin()));
 }
 
 export function productCanonicalPath(product) {
-  const slug = product?.slug || product?.id;
-  return slug ? `/p/${slug}` : "/";
+  return productPath(product);
 }
 
 export function productPublicUrl(product) {
@@ -285,8 +247,7 @@ export function applyProductSeo(product, formatUgx, priceParts, coverUrl) {
   }
   const prices = priceParts(product);
   const title =
-    product.seoTitle ||
-    `${product.name} | ${product.category || "Shop"} | ${BRAND}`;
+    product.seoTitle && product.seoTitle.length <= 65 ? product.seoTitle : productSeoTitle(product.name, BRAND);
   const description =
     product.seoDescription ||
     product.description ||
@@ -310,21 +271,35 @@ export function applyProductSeo(product, formatUgx, priceParts, coverUrl) {
   });
   applySiteJsonLd();
 
-  setJsonLd("product-jsonld", {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description,
-    image: image ? [absUrl(image)] : undefined,
-    sku: product.id,
-    // Device maker (Apple, Google, Samsung…) — not the shop name.
-    brand: { "@type": "Brand", name: product.brand || BRAND },
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "UGX",
-      price: Math.round(prices.current),
-      availability: "https://schema.org/InStock",
-      url
-    }
-  });
+  setJsonLd(
+    "product-jsonld",
+    productGraph(origin(), product, {
+      price: prices.current,
+      image: image ? absUrl(image) : "",
+      images: (product.images || []).filter(Boolean).slice(0, 6).map((u) => absUrl(u)),
+      description
+    })
+  );
 }
+
+/** Category landing page (/c/<slug>). */
+export function applyCategorySeo(category, products = []) {
+  if (!category || category === "All") {
+    applyDefaultSeo();
+    return;
+  }
+  const count = products.length;
+  const title = `${category} Price in Uganda | Buy ${category} in Kampala | ${BRAND}`;
+  const description =
+    `Shop ${count ? count + " " : ""}authentic ${category} at ${BRAND}, Kampala. ` +
+    `Best prices in UGX, warranty, same-day delivery in Kampala and mobile money payment.`;
+  const url = absUrl(categoryPath(category));
+  document.title = title.slice(0, 70);
+  setMeta("name", "description", description.slice(0, 160));
+  setMeta("name", "keywords", `${category} price in Uganda, buy ${category} Kampala, ${category} Uganda, ${BRAND}`);
+  setLink("canonical", url);
+  applySocialMeta({ title, description, url });
+  applySiteJsonLd();
+  setJsonLd("product-jsonld", categoryGraph(origin(), category, products));
+}
+

@@ -36,13 +36,13 @@ patch("sitemap.xml", (text) =>
 );
 
 patch("index.html", (html) => {
-  const ogImage = `${site}/pwa-icon-512.png`;
+  const ogImage = `${site}/brand/og-image.jpg`;
   const ogImageTags = [
     `<meta property="og:image" content="${ogImage}" />`,
     `<meta property="og:image:secure_url" content="${ogImage}" />`,
-    `<meta property="og:image:type" content="image/png" />`,
-    `<meta property="og:image:width" content="512" />`,
-    `<meta property="og:image:height" content="512" />`
+    `<meta property="og:image:type" content="image/jpeg" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`
   ].join("\n    ");
 
   let next = html
