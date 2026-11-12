@@ -809,7 +809,7 @@
       />
     </main>
   {:else}
-    <main class="site-main" class:category-main={tab === "category"}>
+    <main class="site-main" class:category-main={tab === "category"} class:with-side={tab === "shop" || tab === "trends"}>
       <h1 class="sr-only">Bagz Apple Services — authentic iPhones, Apple, Pixel &amp; Samsung devices in Kampala</h1>
       {#if tab === "shop" || tab === "trends"}
        <div class="shop-layout">
@@ -1253,9 +1253,15 @@
     display: none;
   }
   @media (min-width: 1100px) {
+    /* Widen the page by the sidebar's width so the menu sits in the left margin
+       and the products keep the full normal page width. */
+    .site-main.with-side {
+      max-width: calc(var(--page-max) + 226px);
+      padding-left: 12px;
+    }
     .shop-layout {
       display: grid;
-      grid-template-columns: 220px minmax(0, 1fr);
+      grid-template-columns: 210px minmax(0, 1fr);
       gap: 16px;
       align-items: start;
     }
