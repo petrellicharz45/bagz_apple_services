@@ -24,7 +24,7 @@ export function longestShipDays(order) {
   for (const item of items) {
     days = Math.max(days, deliveryBusinessDays(item.product || item));
   }
-  return days || 4;
+  return days; // 0 = same-day (Kampala, in-stock items)
 }
 
 /** Shop label, the time the admin set it, and the shipping deadline. */
@@ -41,10 +41,14 @@ export function describeFulfillment(order, remote) {
     raw === "canceled" || raw === "cancelled" ? canceledAt :
     confirmedAt;
   const start = confirmedAt || millisOf(order?.createdAt);
-  const deadline = start ? addBusinessDays(start, longestShipDays(order)) : null;
+  const shipDays = longestShipDays(order);
+  const deadline = start ? addBusinessDays(start, shipDays) : null;
   let window = "";
   if (label === "Confirmed" && !confirmedAt) {
-    window = `Ships within ${longestShipDays(order)} business days after confirmation`;
+    window =
+      shipDays === 0
+        ? "Same-day delivery in Kampala after confirmation · upcountry 1–3 days"
+        : `Ships within ${shipDays} business days after confirmation`;
   } else if (label === "Confirmed" || label === "Shipping") {
     window = deadline ? `Ship by ${formatOrderDate(deadline.getTime())}` : "";
   }

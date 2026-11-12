@@ -46,8 +46,8 @@ for (const p of built) {
   const { order, _copySource, ...data } = p;
   data.createdAt = prev?.createdAt || now - order * 1000; // keep the old site's order (first = newest)
   data.importedAt = now;
-  data.deliveryEstimateDays = 2;
-  data.deliveryEstimateLabel = "2 business days";
+  data.deliveryEstimateDays = 0; // same-day in Kampala (in stock)
+  data.deliveryEstimateLabel = "Same-day in Kampala";
   data.deliveryStartAt = null;
   data.deliveryEndAt = null;
   docs.push(data);

@@ -26,7 +26,7 @@
     offer: 0,
     saleStart: "",
     saleEnd: "",
-    deliveryEstimate: "5",
+    deliveryEstimate: "0",
     description: "",
     sizes: "",
     colors: "",
@@ -110,11 +110,9 @@
         const d = new Date(millis);
         return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
       };
-      if (data.deliveryEstimateDays) {
-        form.deliveryEstimate = String(data.deliveryEstimateDays);
-      } else {
-        form.deliveryEstimate = "5";
-      }
+      // 0 / missing = same-day in Kampala (in stock)
+      form.deliveryEstimate =
+        data.deliveryEstimateDays != null && data.deliveryEstimateDays !== "" ? String(data.deliveryEstimateDays) : "0";
       selectedGroups = Array.isArray(data.groups) ? data.groups : [];
       // Keep groups this product already has, even if they were removed from the list.
       GROUP_OPTIONS = [...groupList, ...selectedGroups.filter((g) => !groupList.includes(g))];

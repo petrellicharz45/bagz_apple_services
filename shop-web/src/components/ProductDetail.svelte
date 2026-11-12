@@ -528,7 +528,7 @@
         <span class="promo-icon promo-icon--fast" aria-hidden="true">
           <TemuIcon name="bolt" size={17} color="#2563eb" strokeWidth={2} />
         </span>
-        <span class="promo-text">Fastest delivery · {deliveryEst}</span>
+        <span class="promo-text">{deliveryEst}</span>
       </div>
     </div>
     <div class="select-wrap">

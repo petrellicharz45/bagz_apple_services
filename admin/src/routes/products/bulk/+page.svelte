@@ -42,7 +42,7 @@
       name: "",
       category: "",
       price: 0,
-      deliveryEstimate: "5",
+      deliveryEstimate: "0",
       description: "",
       sizes: "",
       colors: "",

@@ -7,6 +7,8 @@ export type DeliveryOption = {
 };
 
 export const DELIVERY_OPTIONS: DeliveryOption[] = [
+  // Bagz: in-stock items go out same day in Kampala; upcountry depends on distance (shop shows both).
+  { value: "0", label: "Same-day in Kampala (in stock)", days: 0 },
   { value: "2", label: "2 business days", days: 2 },
   { value: "3", label: "3 business days", days: 3 },
   { value: "5", label: "5 business days", days: 5 },

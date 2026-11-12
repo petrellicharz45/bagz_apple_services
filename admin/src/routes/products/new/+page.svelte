@@ -40,7 +40,7 @@
     offer: 0,
     saleStart: "",
     saleEnd: "",
-    deliveryEstimate: "5",
+    deliveryEstimate: "0",
     description: "",
     sizes: "",
     colors: "",

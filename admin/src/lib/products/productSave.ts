@@ -98,7 +98,7 @@ export async function createProduct(input: CreateProductInput): Promise<string> 
     offerPercentage: offer > 0 ? offer : null,
     saleStartAt: offer > 0 && input.saleStart ? new Date(input.saleStart).getTime() : null,
     saleEndAt: offer > 0 && input.saleEnd ? new Date(input.saleEnd).getTime() : null,
-    ...deliveryFieldsFromSelection(input.deliveryEstimate || "5"),
+    ...deliveryFieldsFromSelection(input.deliveryEstimate || "0"),
     groups,
     createdAt: Date.now(),
     description: input.description?.trim() ? input.description.trim() : null,
