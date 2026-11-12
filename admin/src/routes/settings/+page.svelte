@@ -22,24 +22,6 @@
   let supportEmail = "";
   let callNumber = "";
 
-  /** Social profiles shown in the shop footer. Empty = hidden on the shop. */
-  const SOCIAL_FIELDS = [
-    { key: "instagram", label: "Instagram", placeholder: "https://www.instagram.com/yourhandle" },
-    { key: "facebook", label: "Facebook", placeholder: "https://www.facebook.com/yourpage" },
-    { key: "x", label: "X (Twitter)", placeholder: "https://x.com/yourhandle" },
-    { key: "tiktok", label: "TikTok", placeholder: "https://www.tiktok.com/@yourhandle" },
-    { key: "snapchat", label: "Snapchat", placeholder: "https://www.snapchat.com/add/yourhandle" },
-    { key: "youtube", label: "YouTube", placeholder: "https://www.youtube.com/@yourchannel" }
-  ] as const;
-  type SocialKey = (typeof SOCIAL_FIELDS)[number]["key"];
-  let socialLinks: Record<SocialKey, string> = {
-    instagram: "",
-    facebook: "",
-    x: "",
-    tiktok: "",
-    snapchat: "",
-    youtube: ""
-  };
   let activeProvider: "mtn" | "airtel" = "mtn";
 
   let mtnApiUser = "";
@@ -105,8 +87,6 @@
         whatsappNumber = configDoc.data().whatsappNumber || "";
         supportEmail = configDoc.data().supportEmail || "";
         callNumber = configDoc.data().callNumber || "";
-        const savedSocial = configDoc.data().socialLinks || {};
-        for (const f of SOCIAL_FIELDS) socialLinks[f.key] = String(savedSocial[f.key] || "");
       }
 
       // 2. Fetch payment config
@@ -236,28 +216,17 @@
         throw new Error("WhatsApp number must be at least 9 digits");
       }
 
-      const cleanedSocial = {} as Record<SocialKey, string>;
-      for (const f of SOCIAL_FIELDS) {
-        const url = socialLinks[f.key].trim();
-        if (url && !/^https:\/\/\S+$/i.test(url)) {
-          throw new Error(`${f.label} link must be a full https:// address`);
-        }
-        cleanedSocial[f.key] = url;
-      }
-
       // 1. Save general config
       await setDoc(
         doc(db, "settings", "config"),
         {
           whatsappNumber: cleanedPhone,
           supportEmail: supportEmail.trim(),
-          callNumber: callNumber.trim(),
-          socialLinks: cleanedSocial
+          callNumber: callNumber.trim()
         },
         { merge: true }
       );
       whatsappNumber = cleanedPhone;
-      socialLinks = cleanedSocial;
 
       // 2. Save secure payment credentials
       const paymentConfigData = {
@@ -788,19 +757,10 @@
 
       <section class="section-card">
         <h2><i class="fa fa-share-alt" aria-hidden="true"></i> Social media</h2>
-        <p class="section-help">Paste the full link to each profile. Only filled-in links appear in the shop footer; leave a field empty to hide it.</p>
-        {#each SOCIAL_FIELDS as f}
-          <div class="form-group">
-            <label for="social-{f.key}">{f.label}</label>
-            <input
-              id="social-{f.key}"
-              type="url"
-              inputmode="url"
-              bind:value={socialLinks[f.key]}
-              placeholder={f.placeholder}
-            />
-          </div>
-        {/each}
+        <p class="section-help">
+          Social links have their own page where you can add, edit, hide, reorder and delete them.
+        </p>
+        <a class="social-page-link" href="/social-links">Manage social links <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
       </section>
 
       <div class="submit-bar">
@@ -1221,6 +1181,15 @@
   small {
     color: #6b7280;
     font-size: 12px;
+  }
+
+  .social-page-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #1673c4;
+    font-weight: 600;
+    text-decoration: none;
   }
 
   .section-help {

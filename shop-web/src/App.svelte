@@ -929,7 +929,7 @@
       </div>
     </div>
     <p class="copy">© {new Date().getFullYear()} {BRAND.legalName} · Prices in UGX {#each $liveContact.socials as s}
-        · <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+        · <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}><i class="fa fa-{s.icon}" aria-hidden="true"></i> {s.label}</a>
       {/each}</p>
   </footer>
 

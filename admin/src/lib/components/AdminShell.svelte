@@ -25,6 +25,7 @@
     { href: "/groups", label: "Groups", icon: "layers" },
     { href: "/delivery-fees", label: "Delivery fees", icon: "truck" },
     { href: "/banners", label: "Home Banners", icon: "image" },
+    { href: "/social-links", label: "Social links", icon: "share" },
     { href: "/orders", label: "Orders", icon: "bag" },
     { href: "/product-reports", label: "Wrong product info", icon: "flag" },
     { href: "/tickets", label: "Support Tickets", icon: "chat" },
@@ -53,7 +54,8 @@
     pulse: "heartbeat",
     send: "paper-plane-o",
     users: "users",
-    gear: "cog"
+    gear: "cog",
+    share: "share-alt"
   };
 
   let alertUnread = 0;

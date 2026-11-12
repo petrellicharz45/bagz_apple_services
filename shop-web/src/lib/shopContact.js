@@ -31,23 +31,38 @@ export const CONTACT = {
 };
 
 /** Admin Settings → Customer Support. Empty call stays hidden until a number is saved. */
-export const SOCIAL_LABELS = {
-  instagram: "Instagram",
-  facebook: "Facebook",
-  x: "X",
-  tiktok: "TikTok",
-  snapchat: "Snapchat",
-  youtube: "YouTube"
+/** Platform → label + Font Awesome 4.7 icon (keep in sync with admin/src/lib/social.ts). */
+export const SOCIAL_PLATFORMS = {
+  instagram: { label: "Instagram", icon: "instagram" },
+  facebook: { label: "Facebook", icon: "facebook-official" },
+  x: { label: "X", icon: "twitter" },
+  tiktok: { label: "TikTok", icon: "music" },
+  whatsapp: { label: "WhatsApp", icon: "whatsapp" },
+  snapchat: { label: "Snapchat", icon: "snapchat-ghost" },
+  youtube: { label: "YouTube", icon: "youtube-play" },
+  linkedin: { label: "LinkedIn", icon: "linkedin-square" },
+  telegram: { label: "Telegram", icon: "telegram" },
+  other: { label: "Link", icon: "link" }
 };
 
-/** Keep only https links for known networks, in a stable order. */
+const isHttps = (u) => /^https:\/\/\S+$/i.test(String(u || "").trim());
+
+function toLink(platform, url, label) {
+  const info = SOCIAL_PLATFORMS[platform] || SOCIAL_PLATFORMS.other;
+  return { key: platform, label: label || info.label, icon: info.icon, url: String(url).trim() };
+}
+
+/**
+ * Social links for the footer. Accepts the admin list (settings/social.items: [{platform,url,label,active}])
+ * or the older object form ({ instagram: "https://…" }). Only visible https links, in admin order.
+ */
 function cleanSocial(raw) {
-  const out = [];
-  for (const key of Object.keys(SOCIAL_LABELS)) {
-    const url = String(raw?.[key] || "").trim();
-    if (/^https:\/\/\S+$/i.test(url)) out.push({ key, label: SOCIAL_LABELS[key], url });
+  if (Array.isArray(raw)) {
+    return raw.filter((l) => l && l.active !== false && isHttps(l.url)).map((l) => toLink(l.platform, l.url, l.label));
   }
-  return out;
+  return Object.entries(raw || {})
+    .filter(([, url]) => isHttps(url))
+    .map(([platform, url]) => toLink(platform, url));
 }
 
 export const liveContact = writable({
@@ -62,18 +77,24 @@ export async function loadLiveContact() {
   if (!db) return;
   try {
     const snap = await getDoc(doc(db, "settings", "config"));
-    if (!snap.exists()) return;
-    const data = snap.data() || {};
+    const data = (snap.exists() && snap.data()) || {};
     const email = "supportEmail" in data ? String(data.supportEmail || "").trim() : SUPPORT_EMAIL;
     const whatsapp = "whatsappNumber" in data
       ? String(data.whatsappNumber || "").replace(/\D/g, "")
       : ORDER_WHATSAPP_E164;
     const call = "callNumber" in data ? String(data.callNumber || "").replace(/[^\d+]/g, "") : "";
+    let socialSource = data.socialLinks || BRAND.social;
+    try {
+      const socialSnap = await getDoc(doc(db, "settings", "social"));
+      if (socialSnap.exists() && Array.isArray(socialSnap.data().items)) socialSource = socialSnap.data().items;
+    } catch {
+      /* fall back to older settings */
+    }
     liveContact.set({
       email: email || SUPPORT_EMAIL,
       whatsapp,
       call,
-      socials: cleanSocial({ ...BRAND.social, ...(data.socialLinks || {}) })
+      socials: cleanSocial(socialSource)
     });
   } catch {
     /* Keep the numbers already in the shop. */

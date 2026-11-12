@@ -420,7 +420,7 @@
         <a href={"tel:" + $liveContact.call}>Call {$liveContact.call}</a>
       {/if}
       {#each $liveContact.socials as social}
-        <a href={social.url} target="_blank" rel="noopener noreferrer">{social.label}</a>
+        <a href={social.url} target="_blank" rel="noopener noreferrer"><i class="fa fa-{social.icon} fa-fw" aria-hidden="true"></i> {social.label}</a>
       {/each}
     </div>
     <button type="button" class="hub-card wallet-hub" on:click={() => onNavigateSection("wallet")}>
