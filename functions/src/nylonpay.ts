@@ -67,7 +67,7 @@ export async function executeNylonPayOrder(
   const customerName =
     `${order.address?.firstName || ''} ${order.address?.lastName || ''}`.trim() ||
     order.mobileMoneyName ||
-    "Fancy Deals Customer";
+    "Bagz Customer";
   const customerEmail = userEmail || "";
   const amount = Math.round(Number(order.totalPrice));
   const reference = crypto.randomUUID();
@@ -80,7 +80,7 @@ export async function executeNylonPayOrder(
   const payment = await nylonpay.collectPayment({
     amount: amount,
     currency: (order.currency || 'UGX') as any,
-    description: `Fancy Deals Order #${order.orderId || orderId}`,
+    description: `Bagz Apple Services Order #${order.orderId || orderId}`,
     customer: {
       name: customerName,
       phoneNumber: customerPhone,

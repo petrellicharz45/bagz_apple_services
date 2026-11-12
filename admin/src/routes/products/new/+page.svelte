@@ -670,7 +670,7 @@
   }
   .images-top {
     padding: 14px;
-    border: 1px dashed #fdba74;
+    border: 1px dashed #9fd6f0;
     border-radius: 10px;
     background: #fffbeb;
   }
@@ -686,10 +686,10 @@
     justify-content: center;
     padding: 10px 18px;
     background: #fff;
-    border: 1px solid #fdba74;
+    border: 1px solid #9fd6f0;
     border-radius: 8px;
     font-weight: 600;
-    color: #c2410c;
+    color: #13344f;
     cursor: pointer;
     margin-bottom: 8px;
   }
@@ -747,7 +747,7 @@
     font-weight: 700;
     padding: 2px 6px;
     border-radius: 4px;
-    background: rgba(234, 88, 12, 0.92);
+    background: rgba(19, 95, 163, 0.92);
     color: #fff;
   }
   .preview-main-btn {
@@ -852,9 +852,9 @@
     user-select: none;
   }
   .group-chip:has(input:checked) {
-    border-color: #f97316;
-    background: #fff7ed;
-    color: #9a3412;
+    border-color: #1673c4;
+    background: #eef7fc;
+    color: #0c2236;
   }
   .group-chip input {
     width: 16px;
@@ -862,7 +862,7 @@
     margin: 0;
     padding: 0;
     flex: 0 0 auto;
-    accent-color: #f97316;
+    accent-color: #1673c4;
     cursor: pointer;
   }
   .group-chip span {
@@ -870,7 +870,7 @@
   }
   button {
     padding: 12px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border: none;
     border-radius: 4px;
@@ -927,7 +927,7 @@
     font-size: 13px;
   }
   .stock-matrix th {
-    background: #f97316;
+    background: #1673c4;
     color: white;
     font-weight: 500;
   }

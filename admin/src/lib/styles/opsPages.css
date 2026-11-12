@@ -90,7 +90,7 @@
 }
 .ops-btn {
   border: none;
-  background: #f97316;
+  background: #1673c4;
   color: #fff;
   padding: 6px 12px;
   border-radius: 999px;
@@ -130,7 +130,7 @@
 }
 .ops-pill.low {
   background: #fef3c7;
-  color: #b45309;
+  color: #1d4f7a;
 }
 .ops-pill.out {
   background: #fee2e2;

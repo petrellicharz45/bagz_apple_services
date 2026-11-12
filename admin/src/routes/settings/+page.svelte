@@ -203,7 +203,7 @@
     try {
       shopLogoUrl = "";
       await persistDisplaySettings();
-      displaySuccess = "Logo reset — shop uses the default Fancy Deals logo.";
+      displaySuccess = "Logo reset — shop uses the default Bagz logo.";
     } catch (err: any) {
       displayError = err.message || "Failed to reset logo.";
     } finally {
@@ -847,8 +847,8 @@
   }
 
   .tabs button.active {
-    background: #fff7ed;
-    color: #ea580c;
+    background: #eef7fc;
+    color: #135fa3;
   }
 
   .account-form {
@@ -863,7 +863,7 @@
     border: 0;
     background: none;
     padding: 0;
-    color: #ea580c;
+    color: #135fa3;
     font-weight: 600;
     cursor: pointer;
     text-decoration: underline;
@@ -884,7 +884,7 @@
   .profile-avatar.placeholder {
     display: grid;
     place-items: center;
-    background: #f97316;
+    background: #1673c4;
     color: #fff;
     font-size: 28px;
     font-weight: 700;
@@ -893,10 +893,10 @@
     display: inline-flex;
     align-items: center;
     padding: 10px 16px;
-    border: 1px solid #fdba74;
+    border: 1px solid #9fd6f0;
     border-radius: 8px;
     font-weight: 600;
-    color: #c2410c;
+    color: #13344f;
     cursor: pointer;
     background: #fff;
   }
@@ -925,7 +925,7 @@
     width: min(100%, 280px);
     min-height: 72px;
     padding: 12px;
-    background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);
+    background: linear-gradient(180deg, #2ba8e0 0%, #135fa3 100%);
   }
 
   .logo-preview img {
@@ -1016,7 +1016,7 @@
   }
 
   .back-link {
-    color: #f97316;
+    color: #1673c4;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
@@ -1110,13 +1110,13 @@
   }
 
   .provider-option:hover {
-    border-color: #fdba74;
+    border-color: #9fd6f0;
     background: #fffaf0;
   }
 
   .provider-option.selected {
-    border-color: #f97316;
-    background: #fff7ed;
+    border-color: #1673c4;
+    background: #eef7fc;
   }
 
   .provider-radio {
@@ -1133,8 +1133,8 @@
   }
 
   .dot.active {
-    border-color: #f97316;
-    background: #f97316;
+    border-color: #1673c4;
+    background: #1673c4;
     box-shadow: inset 0 0 0 3px #ffffff;
   }
 
@@ -1154,7 +1154,7 @@
     display: inline-block;
     font-size: 11px;
     font-weight: 600;
-    color: #f97316;
+    color: #1673c4;
     text-transform: uppercase;
   }
 
@@ -1173,7 +1173,7 @@
   }
 
   .credentials-box.highlight {
-    border-color: #fed7aa;
+    border-color: #cbe8f7;
     background: #fffaf5;
   }
 
@@ -1214,8 +1214,8 @@
   input:focus,
   select:focus {
     outline: none;
-    border-color: #f97316;
-    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+    border-color: #1673c4;
+    box-shadow: 0 0 0 2px rgba(22, 115, 196, 0.2);
   }
 
   small {
@@ -1236,7 +1236,7 @@
 
   .save-btn {
     padding: 12px 24px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border: none;
     border-radius: 6px;
@@ -1247,7 +1247,7 @@
   }
 
   .save-btn:hover:not(:disabled) {
-    background: #ea580c;
+    background: #135fa3;
   }
 
   .save-btn:disabled {

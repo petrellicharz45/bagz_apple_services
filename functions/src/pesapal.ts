@@ -168,7 +168,7 @@ export async function executePesapalOrder(
   const projectId =
     process.env.GCLOUD_PROJECT ||
     admin.instanceId().app.options.projectId ||
-    "luxiva-dev";
+    "bagz-5aec7";
   const region = process.env.FUNCTION_REGION || "us-central1";
   const ipnId = await getOrRegisterIpnId(baseUrl, token, projectId, region);
 
@@ -177,14 +177,14 @@ export async function executePesapalOrder(
     id: orderId.toString(),
     currency: order.currency || "UGX",
     amount: amount,
-    description: `Fancy Deals Order #${order.orderId || orderId}`,
+    description: `Bagz Apple Services Order #${order.orderId || orderId}`,
     callback_url: `https://${projectId}.web.app/payment-success`,
     notification_id: ipnId,
     billing_address: {
-      email_address: userEmail || "customer@fancydeals.com",
+      email_address: userEmail || "info@bagzappleservices.com",
       phone_number: order.mobileMoneyNumber || order.address?.phone || "0700000000",
       country_code: "UG",
-      first_name: order.address?.firstName || order.mobileMoneyName || "Fancy",
+      first_name: order.address?.firstName || order.mobileMoneyName || "Bagz",
       last_name: order.address?.lastName || "Customer"
     }
   };
@@ -273,13 +273,13 @@ export const shopStartPesapalPayment = onCall({ cors: true, timeoutSeconds: 60 }
   const projectId =
     process.env.GCLOUD_PROJECT ||
     admin.app().options.projectId ||
-    "luxiva-dev";
+    "bagz-5aec7";
   const ipnId = await getOrRegisterIpnId(baseUrl, token, projectId, "us-central1");
 
   const fullName = String(order.customerName || order.mobileMoneyName || "Customer").trim();
   const nameParts = fullName.split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Customer";
-  const lastName = nameParts.slice(1).join(" ") || "Deals";
+  const lastName = nameParts.slice(1).join(" ") || "Customer";
   const phone = String(order.mobileMoneyNumber || order.customerPhone || "").replace(/\s/g, "");
 
   const response = await axios.post(
@@ -288,11 +288,11 @@ export const shopStartPesapalPayment = onCall({ cors: true, timeoutSeconds: 60 }
       id: orderId,
       currency: "UGX",
       amount,
-      description: `Fancy Deals ${orderId}`,
-      callback_url: "https://fancydealsug.com/",
+      description: `Bagz Apple Services ${orderId}`,
+      callback_url: "https://bagzappleservices.com/",
       notification_id: ipnId,
       billing_address: {
-        email_address: "orders@fancydealsug.com",
+        email_address: "info@bagzappleservices.com",
         phone_number: phone || "0700000000",
         country_code: "UG",
         first_name: firstName,

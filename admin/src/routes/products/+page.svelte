@@ -181,7 +181,7 @@
     color: white;
   }
   .btn-primary {
-    background-color: #f97316;
+    background-color: #1673c4;
   }
   .btn-secondary {
     background-color: #475569;

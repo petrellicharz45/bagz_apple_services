@@ -284,7 +284,7 @@
   .form-row { display: flex; gap: 10px; margin-top: 10px; }
   .form-row input[type="text"] { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
   .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; color: white; }
-  .btn-primary { background: #f97316; }
+  .btn-primary { background: #1673c4; }
   .btn-danger { background: #dc3545; padding: 5px 10px; margin-top: 5px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; margin-top: 20px; }
   .subcat-item { text-align: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee; }

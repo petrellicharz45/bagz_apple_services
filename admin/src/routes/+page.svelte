@@ -146,7 +146,7 @@
     <div class="welcome-copy">
       <span class="welcome-tag">Welcome back,</span>
       <h2>Welcome Back, Admin!</h2>
-      <p>Here’s what’s happening with your Fancy Deals store today.</p>
+      <p>Here’s what’s happening at Bagz Apple Services today.</p>
     </div>
     <div class="welcome-art" aria-hidden="true">
       <div class="laptop">
@@ -177,7 +177,7 @@
         <span class="range-pill">📅 Last 7 days</span>
       </header>
       <svg viewBox="0 0 300 180" class="chart">
-        <polyline fill="none" stroke="#f97316" stroke-width="3" points={linePoints} />
+        <polyline fill="none" stroke="#1673c4" stroke-width="3" points={linePoints} />
         {#each salesDays as day, i}
           <text x={20 + (i * 260) / Math.max(salesDays.length - 1, 1)} y="172" text-anchor="middle" font-size="9" fill="#94a3b8">{day.label}</text>
         {/each}
@@ -326,15 +326,15 @@
     gap: 20px;
     padding: 22px 24px;
     border-radius: 18px;
-    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 45%, #fff 100%);
-    border: 1px solid #fed7aa;
-    box-shadow: 0 10px 28px rgba(234, 88, 12, 0.08);
+    background: linear-gradient(135deg, #eef7fc 0%, #e0f1fa 45%, #fff 100%);
+    border: 1px solid #cbe8f7;
+    box-shadow: 0 10px 28px rgba(19, 95, 163, 0.08);
   }
   .welcome-tag {
     display: inline-block;
     font-size: 12px;
     font-weight: 700;
-    color: #ea580c;
+    color: #135fa3;
     margin-bottom: 4px;
   }
   .welcome h2 {
@@ -358,14 +358,14 @@
     height: 90px;
     margin: 0 auto;
     border-radius: 10px 10px 4px 4px;
-    background: linear-gradient(180deg, #fdba74, #f97316);
+    background: linear-gradient(180deg, #9fd6f0, #1673c4);
     padding: 10px 12px 16px;
-    box-shadow: 0 12px 24px rgba(249, 115, 22, 0.35);
+    box-shadow: 0 12px 24px rgba(22, 115, 196, 0.35);
   }
   .screen {
     height: 100%;
     border-radius: 6px;
-    background: #fff7ed;
+    background: #eef7fc;
     display: grid;
     place-items: center;
     font-size: 28px;
@@ -433,10 +433,10 @@
     vertical-align: -3px;
   }
   .sales-ico {
-    background: linear-gradient(180deg, #fb923c, #ea580c);
+    background: linear-gradient(180deg, #2ba8e0, #135fa3);
   }
   .orders-ico {
-    background: linear-gradient(180deg, #fdba74, #f97316);
+    background: linear-gradient(180deg, #9fd6f0, #1673c4);
   }
   .range-pill {
     font-size: 12px;
@@ -492,7 +492,7 @@
   }
   header a, header span {
     font-size: 12px;
-    color: #ea580c;
+    color: #135fa3;
     text-decoration: none;
     font-weight: 600;
   }
@@ -526,7 +526,7 @@
   }
   .pill.ok { background: #dcfce7; color: #166534; }
   .pill.info { background: #dbeafe; color: #1d4ed8; }
-  .pill.warn { background: #ffedd5; color: #c2410c; }
+  .pill.warn { background: #e0f1fa; color: #13344f; }
   .pill.bad { background: #fee2e2; color: #b91c1c; }
   .row {
     display: flex;

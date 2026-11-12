@@ -29,7 +29,7 @@ export function templateProductCopy(
   const name = productName?.trim() || "This product";
   const cat = category?.trim() || "item";
   return {
-    description: `${name} — a ${cat.toLowerCase()} pick for Fancy Deals Uganda. Comfortable, practical, and great value for everyday use. Order today with local delivery options.`,
+    description: `${name} from Bagz Apple Services, Kampala. 100% authentic, with warranty and same-day delivery in Kampala. Swap & top-up accepted.`,
     colors: ["#1F2937", "#FFFFFF"]
   };
 }
@@ -45,24 +45,24 @@ export async function analyzeWithOpenRouter(
   model = DEFAULT_VISION_MODEL
 ): Promise<AnalyzeProductResult> {
   const categoryList =
-    categories.length > 0 ? categories.join('", "') : "Clothing, Shoes, Accessories, Bags, Jewelry";
+    categories.length > 0 ? categories.join('", "') : "iPhones, Google Pixel, Samsung, MacBooks & iPads, Apple Watch, Audio, Accessories";
 
-  const prompt = `You are an e-commerce copywriter for Uganda (Fancy Deals shop).
+  const prompt = `You are an e-commerce copywriter for Bagz Apple Services, an authentic Apple & tech store in Kampala, Uganda.
 Look at the product image and return ONLY one JSON object with these keys:
 - "name": short product title (max 10 words)${productName ? ` (hint: ${productName})` : ""}
 - "category": exactly ONE from: ${categoryList}${category ? ` (hint: ${category})` : ""}
-- "description": 2-3 sentences (material, style, who it's for)
+- "description": 2-3 sentences (model, key specs such as storage/chip/camera, condition if visible, who it's for). Never invent prices or warranty terms
 - "colors": array of 2-4 dominant HEX colors like "#FF5733"
 
-Example: {"name":"Kids Baseball Cap","category":"Accessories","description":"...","colors":["#1E3A5F","#FFFFFF"]}`;
+Example: {"name":"iPhone 17 Pro Max 256GB Cosmic Orange","category":"iPhones","description":"...","colors":["#1E3A5F","#FFFFFF"]}`;
 
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": "https://fancydeals.ug",
-      "X-Title": "Fancy Deals Admin"
+      "HTTP-Referer": "https://bagzappleservices.com",
+      "X-Title": "Bagz Admin"
     },
     body: JSON.stringify({
       model: model || DEFAULT_VISION_MODEL,

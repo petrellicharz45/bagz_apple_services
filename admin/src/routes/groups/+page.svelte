@@ -303,7 +303,7 @@
     margin-bottom: 20px;
   }
   .back-link {
-    color: #f97316;
+    color: #1673c4;
     text-decoration: none;
   }
   .alert {
@@ -343,7 +343,7 @@
   }
   .add-btn {
     padding: 10px 18px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border: none;
     border-radius: 4px;
@@ -427,7 +427,7 @@
     white-space: nowrap;
   }
   .legacy tr.unsure {
-    background: #fff7ed;
+    background: #eef7fc;
   }
   .legacy select {
     padding: 4px 6px;

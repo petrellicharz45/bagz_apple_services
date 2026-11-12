@@ -159,7 +159,7 @@
 
   function getStatusColor(status: string) {
     switch (status) {
-      case "Open": return "#f97316";
+      case "Open": return "#1673c4";
       case "Under Review": return "#0d6efd";
       case "Resolved": return "#198754";
       case "Rejected": return "#dc3545";
@@ -325,7 +325,7 @@
   h3 {
     margin-top: 0;
     margin-bottom: 15px;
-    color: #ea580c;
+    color: #135fa3;
   }
   p { margin: 5px 0; }
   .mono { font-family: monospace; font-size: 12px; word-break: break-all; }
@@ -417,7 +417,7 @@
   }
   .chat-admin {
     align-self: flex-end;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border-bottom-right-radius: 4px;
   }
@@ -461,7 +461,7 @@
   }
   .btn-send {
     padding: 10px 20px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border: none;
     border-radius: 6px;

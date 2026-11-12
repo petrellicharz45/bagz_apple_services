@@ -3,70 +3,71 @@
   import { doc, getDoc, setDoc } from "firebase/firestore";
   import { db } from "$lib/firebase";
 
+  const SITE = "https://bagzappleservices.com";
   const pages = [
     {
       key: "home",
       label: "Home",
-      path: "https://fancydealsug.com/",
-      title: "Fancy Deals Uganda | Online Shopping, Fashion & Best Prices in Kampala",
-      description: "Shop fashion, shoes, electronics, home and beauty at Fancy Deals Uganda. Kampala delivery, MTN and Airtel Money checkout, and daily deals in UGX.",
-      keywords: "Fancy Deals Uganda, online shopping Uganda, buy online Kampala, ecommerce Uganda, fashion deals Uganda, MTN Mobile Money shop, Airtel Money shopping"
+      path: `${SITE}/`,
+      title: "Bagz Apple Services | Authentic iPhones, Pixel, Samsung & Accessories in Kampala",
+      description: "Buy brand-new and certified iPhones, Google Pixel, Samsung Galaxy, MacBooks, Apple Watch and accessories at Bagz Apple Services, Kampala. Swap & top-up, warranty, same-day delivery.",
+      keywords: "Bagz Apple Services, iPhone price Uganda, buy iPhone Kampala, Google Pixel Uganda, Samsung Uganda, Apple accessories Kampala, phone swap Uganda"
     },
     {
       key: "newIn",
       label: "New in",
-      path: "https://fancydealsug.com/",
-      title: "New Arrivals Uganda | Latest Fashion & Products | Fancy Deals",
-      description: "See what just landed at Fancy Deals Uganda. New clothes, shoes, bags, electronics and home items, priced in UGX with delivery in Kampala.",
-      keywords: "new arrivals Uganda, latest fashion Kampala, new products online Uganda, Fancy Deals new in"
+      path: `${SITE}/`,
+      title: "New Arrivals | Latest iPhones & Gadgets in Uganda | Bagz",
+      description: "The newest phones and gadgets at Bagz Apple Services — latest iPhone, Pixel and Samsung models, priced in UGX with same-day delivery in Kampala.",
+      keywords: "new iPhone Uganda, latest phones Kampala, new arrivals Bagz, iPhone 18 Pro price Uganda"
     },
     {
       key: "categories",
       label: "Categories",
-      path: "https://fancydealsug.com/",
-      title: "Shop by Category in Uganda | Clothes, Shoes, Electronics | Fancy Deals",
-      description: "Browse Fancy Deals categories: women's clothing, men's shoes, bags, wigs, beauty, home and living, and electronics. Order online in Uganda.",
-      keywords: "shop categories Uganda, women's clothing Kampala, men's shoes Uganda, home and living Uganda, beauty products Kampala"
+      path: `${SITE}/`,
+      title: "Shop by Category | iPhone, Pixel, Samsung, MacBook, Watch | Bagz",
+      description: "Browse Bagz categories: iPhones, Google Pixel, Samsung Galaxy & Z series, MacBooks, iPads, Apple Watch, AirPods, audio and accessories. Order online in Uganda.",
+      keywords: "iPhones Uganda, Google Pixel Kampala, Samsung Z Fold Uganda, MacBook Uganda, Apple Watch Kampala, phone accessories Uganda"
     },
     {
       key: "search",
       label: "Search",
-      path: "https://fancydealsug.com/",
-      title: "Search Products in Uganda | Fancy Deals",
-      description: "Search Fancy Deals for clothes, shoes, bags, electronics and home goods. Find a product and pay with MTN or Airtel Money.",
-      keywords: "search products Uganda, find shoes Kampala, buy bags online Uganda, Fancy Deals search"
+      path: `${SITE}/`,
+      title: "Search Phones & Gadgets | Bagz Apple Services",
+      description: "Search Bagz for iPhones, Pixel, Samsung, MacBooks, watches and accessories. Find your device and pay with MTN or Airtel Money.",
+      keywords: "search iPhone Uganda, find phone Kampala, Bagz search"
     },
     {
       key: "cart",
       label: "Cart",
-      path: "https://fancydealsug.com/",
-      title: "Your Cart | Fancy Deals Uganda",
-      description: "Review the items in your Fancy Deals cart, check the UGX total and delivery, then continue to mobile money checkout.",
-      keywords: "shopping cart Uganda, Fancy Deals cart, online order Kampala"
+      path: `${SITE}/`,
+      title: "Your Cart | Bagz Apple Services",
+      description: "Review the items in your Bagz cart, check the UGX total and delivery, then continue to checkout.",
+      keywords: "Bagz cart, buy phone online Kampala"
     },
     {
       key: "checkout",
       label: "Checkout",
-      path: "https://fancydealsug.com/",
-      title: "Checkout with Mobile Money | MTN & Airtel | Fancy Deals Uganda",
-      description: "Pay for your Fancy Deals order with MTN Mobile Money or Airtel Money. Delivery in Kampala and outside Kampala, prices in UGX.",
-      keywords: "mobile money checkout Uganda, pay with MTN Mobile Money, Airtel Money online shop, Fancy Deals checkout"
+      path: `${SITE}/`,
+      title: "Secure Checkout | MTN & Airtel Money | Bagz Apple Services",
+      description: "Pay for your Bagz order with MTN Mobile Money, Airtel Money or card. Same-day delivery in Kampala, prices in UGX.",
+      keywords: "mobile money phone checkout Uganda, Bagz checkout"
     },
     {
       key: "orders",
       label: "My orders",
-      path: "https://fancydealsug.com/",
-      title: "Track Your Order | Fancy Deals Uganda",
-      description: "See your Fancy Deals orders, payment status and delivery updates. Shop online in Uganda and follow the order from your account.",
-      keywords: "track order Uganda, Fancy Deals orders, delivery status Kampala"
+      path: `${SITE}/`,
+      title: "Track Your Order | Bagz Apple Services",
+      description: "See your Bagz orders, payment status and delivery updates.",
+      keywords: "track order Bagz, delivery status Kampala"
     },
     {
       key: "support",
       label: "Support",
-      path: "https://fancydealsug.com/help/support",
-      title: "Help & Customer Support | Fancy Deals Uganda",
-      description: "Get help with a Fancy Deals order, delivery, payment or product. Contact Fancy Deals Uganda customer support.",
-      keywords: "Fancy Deals support, customer care Uganda, online shop help Kampala, delivery help Uganda"
+      path: `${SITE}/help/support`,
+      title: "Help, Warranty & Support | Bagz Apple Services",
+      description: "Get help with a Bagz order, warranty claim, swap or repair. Call or WhatsApp Bagz Apple Services, Kampala.",
+      keywords: "Bagz support, iPhone warranty Kampala, phone repair Kampala, Bagz WhatsApp"
     }
   ];
 
@@ -85,9 +86,9 @@
     const snap = await getDoc(doc(firestore, "settings", "seo"));
     const data = snap.exists() ? snap.data() : {};
     site = {
-      title: data.site?.title || "Fancy Deals Uganda | Online Shopping, Fashion & Best Prices in Kampala",
-      description: data.site?.description || "Shop fashion, shoes, electronics, home and beauty at Fancy Deals Uganda. Kampala delivery, MTN and Airtel Money checkout, and daily deals in UGX.",
-      keywords: data.site?.keywords || "Fancy Deals Uganda, online shopping Uganda, buy online Kampala, ecommerce Uganda, MTN Mobile Money shop, Airtel Money shopping"
+      title: data.site?.title || pages[0].title,
+      description: data.site?.description || pages[0].description,
+      keywords: data.site?.keywords || pages[0].keywords
     };
     for (const page of pages) {
       const row = data.pages?.[page.key] || {};
@@ -153,7 +154,7 @@
   h1 { margin: 0 0 8px; font-size: 28px; }
   .tabs { display: flex; gap: 8px; margin: 16px 0; }
   .tabs button, .save { border: 1px solid #e7e5e4; background: #fff; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
-  .tabs button.on, .save { background: #ea580c; color: #fff; border-color: #ea580c; }
+  .tabs button.on, .save { background: #135fa3; color: #fff; border-color: #135fa3; }
   section, label { display: block; background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
   .row { width: 100%; display: flex; justify-content: space-between; background: none; border: 0; cursor: pointer; text-align: left; }
   small { display: block; color: #78716c; }

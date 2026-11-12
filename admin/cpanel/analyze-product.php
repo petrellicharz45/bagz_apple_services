@@ -1,6 +1,6 @@
 <?php
 /**
- * Fancy Deals admin — AI product auto-fill (no Firebase Blaze / Cloud Functions).
+ * Bagz admin — AI product auto-fill (no Firebase Blaze / Cloud Functions).
  * Place next to index.html on admin hosting. Requires analyze-config.php.
  */
 header('Content-Type: application/json; charset=utf-8');
@@ -63,20 +63,20 @@ if ($key === '') {
 
 $categoryList = count($categories) > 0
   ? implode('", "', $categories)
-  : 'Clothing, Shoes, Accessories, Bags, Jewelry';
+  : 'iPhones, Google Pixel, Samsung, MacBooks & iPads, Apple Watch, Audio, Accessories';
 
 $nameHint = $productName !== '' ? " (hint: {$productName})" : '';
 $catHint = $category !== '' ? " (hint: {$category})" : '';
 
 $prompt = <<<PROMPT
-You are an e-commerce copywriter for Uganda (Fancy Deals shop).
+You are an e-commerce copywriter for Bagz Apple Services, an authentic Apple & tech store in Kampala, Uganda.
 Look at the product image and return ONLY one JSON object with these keys:
 - "name": short product title (max 10 words){$nameHint}
 - "category": exactly ONE from: {$categoryList}{$catHint}
-- "description": 2-3 sentences (material, style, who it's for)
+- "description": 2-3 sentences (model, key specs such as storage/chip/camera, condition if visible, who it's for). Never invent prices or warranty terms
 - "colors": array of 2-4 dominant HEX colors like "#FF5733"
 
-Example: {"name":"Kids Baseball Cap","category":"Accessories","description":"...","colors":["#1E3A5F","#FFFFFF"]}
+Example: {"name":"iPhone 17 Pro Max 256GB Cosmic Orange","category":"iPhones","description":"...","colors":["#1E3A5F","#FFFFFF"]}
 PROMPT;
 
 $payload = json_encode([
@@ -101,7 +101,7 @@ curl_setopt_array($ch, [
     'Authorization: Bearer ' . $key,
     'Content-Type: application/json',
     'HTTP-Referer: https://admin.quontrova.com',
-    'X-Title: Fancy Deals Admin',
+    'X-Title: Bagz Admin',
   ],
   CURLOPT_POSTFIELDS => $payload,
   CURLOPT_TIMEOUT => 55,

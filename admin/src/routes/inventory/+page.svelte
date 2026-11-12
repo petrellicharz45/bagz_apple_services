@@ -123,9 +123,9 @@
     font-size: 13px;
   }
   .tabs button.active {
-    background: #f97316;
+    background: #1673c4;
     color: #fff;
-    border-color: #f97316;
+    border-color: #1673c4;
   }
   .prod-cell {
     display: flex;

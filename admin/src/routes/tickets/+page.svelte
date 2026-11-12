@@ -53,7 +53,7 @@
 
   function getStatusColor(status: string) {
     switch (status) {
-      case "Open": return "#f97316";
+      case "Open": return "#1673c4";
       case "Under Review": return "#0d6efd";
       case "Resolved": return "#198754";
       case "Rejected": return "#dc3545";
@@ -159,9 +159,9 @@
     transition: all 0.2s;
   }
   .filter-btn.active {
-    background: #f97316;
+    background: #1673c4;
     color: white;
-    border-color: #f97316;
+    border-color: #1673c4;
   }
   .filter-btn:hover:not(.active) {
     background: #f8f9fa;

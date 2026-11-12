@@ -130,7 +130,7 @@
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
-    background: #ea580c;
+    background: #135fa3;
     color: #fff;
     font-weight: 600;
     cursor: pointer;

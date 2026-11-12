@@ -347,7 +347,7 @@
     margin-bottom: 20px;
   }
   .back-link {
-    color: #f97316;
+    color: #1673c4;
     text-decoration: none;
   }
   .alert {
@@ -407,7 +407,7 @@
   .upload-btn {
     display: inline-block;
     padding: 8px 16px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -452,7 +452,7 @@
     font-size: 14px;
   }
   .add-category-card input[type="text"]:focus {
-    border-color: #f97316;
+    border-color: #1673c4;
     outline: none;
   }
   .no-photo {
@@ -468,8 +468,8 @@
   }
   .pick-btn {
     padding: 8px 14px;
-    border: 1px dashed #f97316;
-    color: #f97316;
+    border: 1px dashed #1673c4;
+    color: #1673c4;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
@@ -489,7 +489,7 @@
   }
   .add-btn {
     padding: 9px 18px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border: none;
     border-radius: 4px;
@@ -542,7 +542,7 @@
     font-size: 14px;
   }
   .rename-row input:focus {
-    border-color: #f97316;
+    border-color: #1673c4;
     outline: none;
   }
   .rename-confirm-btn {

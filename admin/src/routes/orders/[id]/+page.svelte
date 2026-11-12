@@ -267,7 +267,7 @@
   h3 {
     margin-top: 0;
     margin-bottom: 15px;
-    color: #ea580c;
+    color: #135fa3;
   }
   p {
     margin: 5px 0;

@@ -378,12 +378,12 @@
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
-    background: linear-gradient(135deg, #c2410c 0%, #ea580c 55%, #f97316 100%);
+    background: linear-gradient(135deg, #13344f 0%, #135fa3 55%, #1673c4 100%);
     color: #fff;
     padding: 22px 24px;
     border-radius: 14px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 28px rgba(234, 88, 12, 0.25);
+    box-shadow: 0 10px 28px rgba(19, 95, 163, 0.25);
   }
   .hero h1 {
     margin: 0 0 6px;
@@ -397,7 +397,7 @@
   .btn-invite {
     border: none;
     background: #fff;
-    color: #c2410c;
+    color: #13344f;
     font-weight: 700;
     padding: 12px 20px;
     border-radius: 10px;
@@ -420,13 +420,13 @@
     border: 1px solid #fecaca;
   }
   .alert.ok {
-    background: #fff7ed;
-    color: #9a3412;
-    border: 1px solid #fed7aa;
+    background: #eef7fc;
+    color: #0c2236;
+    border: 1px solid #cbe8f7;
   }
   .link-box {
-    background: #fff7ed;
-    border: 1px solid #fdba74;
+    background: #eef7fc;
+    border: 1px solid #9fd6f0;
     border-radius: 10px;
     padding: 14px;
     margin-bottom: 16px;
@@ -440,7 +440,7 @@
   }
   .btn-copy {
     border: none;
-    background: #ea580c;
+    background: #135fa3;
     color: #fff;
     padding: 8px 14px;
     border-radius: 8px;
@@ -493,7 +493,7 @@
     font: inherit;
   }
   .modules {
-    border: 1px solid #fed7aa;
+    border: 1px solid #cbe8f7;
     border-radius: 10px;
     padding: 12px;
     margin-bottom: 16px;
@@ -540,7 +540,7 @@
   }
   .btn-primary {
     border: none;
-    background: linear-gradient(90deg, #ea580c, #f97316);
+    background: linear-gradient(90deg, #135fa3, #1673c4);
     color: #fff;
     font-weight: 700;
     padding: 10px 18px;
@@ -579,7 +579,7 @@
     color: #475569;
   }
   tr.is-admin {
-    background: #fff7ed;
+    background: #eef7fc;
   }
   .empty {
     text-align: center;
@@ -595,7 +595,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #ea580c;
+    background: #135fa3;
     color: #fff;
     display: grid;
     place-items: center;
@@ -610,8 +610,8 @@
     font-weight: 700;
   }
   .pill.role {
-    background: #ffedd5;
-    color: #9a3412;
+    background: #e0f1fa;
+    color: #0c2236;
   }
   .pill.user {
     background: #f1f5f9;
@@ -619,7 +619,7 @@
   }
   .pill.pending {
     background: #fef3c7;
-    color: #b45309;
+    color: #1d4f7a;
   }
   .actions {
     white-space: nowrap;
@@ -651,7 +651,7 @@
     font-weight: 600;
     cursor: pointer;
     color: #fff;
-    background: #ea580c;
+    background: #135fa3;
   }
   .btn-mini.danger {
     background: #dc2626;

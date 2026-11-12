@@ -1,14 +1,14 @@
 :root {
   color-scheme: light;
-  --fd-navy: #1b1512;
-  --fd-orange: #f97316;
+  --fd-navy: #13344f;
+  --fd-orange: #1673c4;
   --fd-green: #169d4a;
   --fd-bg: #f3f4f6;
   --fd-card: #ffffff;
-  --fd-text: #1b1512;
+  --fd-text: #1f2937;
   --fd-muted: #666666;
   --fd-line: #e8e8e8;
-  --fd-shadow: 0 10px 30px rgba(27, 21, 18, 0.08);
+  --fd-shadow: 0 10px 30px rgba(19, 52, 80, 0.08);
 }
 
 html,

@@ -74,7 +74,7 @@
 <style>
   .seo-box {
     grid-column: 1 / -1;
-    border: 1px solid #fdba74;
+    border: 1px solid #9fd6f0;
     border-radius: 8px;
     padding: 14px 16px;
     background: #fffbeb;
@@ -86,9 +86,9 @@
   }
   .regen {
     margin-bottom: 12px;
-    border: 1px solid #ea580c;
+    border: 1px solid #135fa3;
     background: #fff;
-    color: #c2410c;
+    color: #13344f;
     font-weight: 600;
     padding: 8px 14px;
     border-radius: 6px;

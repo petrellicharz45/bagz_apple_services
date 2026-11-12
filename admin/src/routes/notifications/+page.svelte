@@ -130,7 +130,7 @@
     cursor: pointer;
   }
   li.unread .inbox-row {
-    border-color: #fed7aa;
+    border-color: #cbe8f7;
     background: #fffbeb;
   }
   .type {
@@ -147,8 +147,8 @@
   }
   .type-order,
   .type-payment {
-    background: #ffedd5;
-    color: #c2410c;
+    background: #e0f1fa;
+    color: #13344f;
   }
   .type-user {
     background: #dbeafe;
@@ -166,7 +166,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #f97316;
+    background: #1673c4;
     margin-top: 6px;
   }
   .empty {

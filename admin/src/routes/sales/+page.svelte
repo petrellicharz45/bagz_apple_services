@@ -92,7 +92,7 @@
   }
 
   $: slices = pieSlices(pie);
-  const pieColors = ["#f97316", "#22c55e", "#3b82f6", "#a855f7", "#eab308", "#64748b"];
+  const pieColors = ["#1673c4", "#22c55e", "#3b82f6", "#a855f7", "#eab308", "#64748b"];
 </script>
 
 <h1>Sales</h1>
@@ -126,7 +126,7 @@
     <section class="ops-panel">
       <h3>Sales trend (14 days, paid)</h3>
       <svg viewBox="0 0 320 160" class="ops-chart">
-        <polyline fill="none" stroke="#f97316" stroke-width="3" points={linePoints} />
+        <polyline fill="none" stroke="#1673c4" stroke-width="3" points={linePoints} />
         {#each series as day, i}
           <text x={24 + (i * 272) / Math.max(series.length - 1, 1)} y="155" text-anchor="middle" font-size="8" fill="#94a3b8">{day.label}</text>
         {/each}

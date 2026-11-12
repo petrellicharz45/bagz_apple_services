@@ -137,8 +137,8 @@
     <div class="brand">
       <img
         class="logo-wordmark"
-        src="/fancy-deals-logo-white.png"
-        alt="Fancy Deals"
+        src="/brand/bagz-logo-white.png"
+        alt="Bagz Apple Services"
         width="168"
         height="40"
       />
@@ -161,7 +161,7 @@
       <div class="promo-icon-wrap" aria-hidden="true">
         <img class="promo-mark" src="/favicon.png" alt="" width="40" height="40" />
       </div>
-      <p class="promo-title">Fancy Deals: More Deals, Happier Customers</p>
+      <p class="promo-title">Bagz Apple Services — Authentic Genuine Gadget Store</p>
       <button type="button" class="promo-cta" on:click={openShopInBrowser}>View shop →</button>
     </div>
   </aside>
@@ -323,13 +323,13 @@
     color: #fff !important;
   }
   nav a.nav-active {
-    background: linear-gradient(90deg, #ea580c 0%, #f97316 100%);
+    background: linear-gradient(90deg, #135fa3 0%, #1673c4 100%);
     color: #fff !important;
     font-weight: 600;
-    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 4px 14px rgba(19, 95, 163, 0.35);
   }
   nav a.nav-active:hover {
-    background: linear-gradient(90deg, #ea580c 0%, #f97316 100%);
+    background: linear-gradient(90deg, #135fa3 0%, #1673c4 100%);
     color: #fff !important;
   }
   nav a.nav-active .icon,
@@ -411,10 +411,10 @@
   .promo {
     border-radius: 16px;
     padding: 16px 14px;
-    background: linear-gradient(145deg, #ea580c 0%, #f97316 55%, #fb923c 100%);
+    background: linear-gradient(145deg, #135fa3 0%, #1673c4 55%, #2ba8e0 100%);
     color: #fff;
     text-align: center;
-    box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 8px 24px rgba(19, 95, 163, 0.35);
   }
   .promo-icon-wrap {
     width: 52px;
@@ -443,7 +443,7 @@
     padding: 10px 12px;
     border-radius: 10px;
     background: #fff;
-    color: #c2410c;
+    color: #13344f;
     font-weight: 700;
     font-size: 13px;
   }
@@ -557,9 +557,9 @@
       border-color 0.15s ease;
   }
   .website-link:hover {
-    background: #fff7ed;
-    border-color: #fdba74;
-    color: #c2410c;
+    background: #eef7fc;
+    border-color: #9fd6f0;
+    color: #13344f;
   }
   .website-icon {
     width: 15px;

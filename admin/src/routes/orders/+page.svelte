@@ -249,8 +249,8 @@
     font-size: 13px;
   }
   .filters button.active {
-    background: #c2410c;
-    border-color: #c2410c;
+    background: #13344f;
+    border-color: #13344f;
     color: #fff;
   }
   .filters label {
@@ -316,13 +316,13 @@
   }
   .pill.successful { background: #dcfce7; color: #166534; }
   .pill.failed { background: #fee2e2; color: #991b1b; }
-  .pill.attempted { background: #ffedd5; color: #9a3412; }
+  .pill.attempted { background: #e0f1fa; color: #0c2236; }
   .view {
     display: inline-block;
     padding: 6px 12px;
     border-radius: 999px;
-    background: #fff7ed;
-    color: #c2410c;
+    background: #eef7fc;
+    color: #13344f;
     font-weight: 700;
     text-decoration: none;
   }

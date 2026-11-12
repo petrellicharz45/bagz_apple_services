@@ -1,4 +1,4 @@
-# FancyDeals admin (SvelteKit static SPA) — included in admin/build when you run npm run build
+# Bagz admin (SvelteKit static SPA) — included in admin/build when you run npm run build
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /

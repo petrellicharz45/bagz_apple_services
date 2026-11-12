@@ -45,24 +45,24 @@ async function analyzeWithOpenRouter(
     throw new Error("OPENROUTER_API_KEY is not configured on Cloud Functions.");
   }
   const categoryList =
-    categories.length > 0 ? categories.join('", "') : "Clothing, Shoes, Accessories, Bags, Jewelry";
+    categories.length > 0 ? categories.join('", "') : "iPhones, Google Pixel, Samsung, MacBooks & iPads, Apple Watch, Audio, Accessories";
 
-  const prompt = `You are an e-commerce copywriter for Uganda (Fancy Deals shop).
+  const prompt = `You are an e-commerce copywriter for Bagz Apple Services, an authentic Apple & tech store in Kampala, Uganda.
 Look at the product image and return ONLY one JSON object with these keys:
 - "name": short product title (max 10 words)${productName ? ` (hint: ${productName})` : ""}
 - "category": exactly ONE from: ${categoryList}${category ? ` (hint: ${category})` : ""}
-- "description": 2-3 sentences (material, style, who it's for)
+- "description": 2-3 sentences (model, key specs such as storage/chip/camera, condition if visible, who it's for). Never invent prices or warranty terms
 - "colors": array of 2-4 dominant HEX colors like "#FF5733"
 
-Example: {"name":"Kids Baseball Cap","category":"Accessories","description":"...","colors":["#1E3A5F","#FFFFFF"]}`;
+Example: {"name":"iPhone 17 Pro Max 256GB Cosmic Orange","category":"iPhones","description":"...","colors":["#1E3A5F","#FFFFFF"]}`;
 
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${OPENROUTER_API_KEY}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": "https://fancydealsug.com",
-      "X-Title": "Fancy Deals Admin"
+      "HTTP-Referer": "https://bagzappleservices.com",
+      "X-Title": "Bagz Admin"
     },
     body: JSON.stringify({
       model: OPENROUTER_VISION_MODEL,
@@ -180,7 +180,7 @@ export const adminAnalyzeProduct = onCall({ cors: true, timeoutSeconds: 60, memo
 
     const categoryListStr = categoryList.length > 0
       ? categoryList.join('", "')
-      : "Clothing, Shoes, Accessories, Bags, Jewelry";
+      : "iPhones, Google Pixel, Samsung, MacBooks & iPads, Apple Watch, Audio, Accessories";
 
     // Call 1: Name + Category (short, focused prompt)
     const namePromise = callNvidia([
@@ -227,7 +227,7 @@ export const aiScanProduct = onCall({ cors: true, timeoutSeconds: 60, memory: "5
     throw new HttpsError("invalid-argument", "Missing imageBase64");
   }
 
-  const promptText = `Analyze this fashion product image. Return ONLY a JSON object, nothing else.
+  const promptText = `Analyze this electronics / phone accessory product image. Return ONLY a JSON object, nothing else.
 
 Rules:
 - "itemType": The item type (e.g., "Dress", "Shoes", "Bag", "Top")
@@ -258,7 +258,7 @@ export const adminCategorizeSubcategoryImage = onCall({ cors: true, timeoutSecon
   const { imageBase64 } = request.data;
   if (!imageBase64) throw new HttpsError("invalid-argument", "Missing imageBase64");
 
-  const promptText = `Analyze this fashion product image. Return ONLY a JSON object, nothing else.
+  const promptText = `Analyze this electronics / phone accessory product image. Return ONLY a JSON object, nothing else.
 
 Assign it to one of these Main Categories: "Clothing", "Shoes", "Accessories", "Bags", "Jewelry".
 Provide a short plural Subcategory name (e.g., "Dresses", "Sneakers", "Watches").

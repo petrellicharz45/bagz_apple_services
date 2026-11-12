@@ -59,7 +59,7 @@
 </script>
 
 <svelte:head>
-  <title>Sign in — Fancy Deals Admin</title>
+  <title>Sign in — Bagz Admin</title>
 </svelte:head>
 
 <div class="page">
@@ -69,44 +69,44 @@
         <div class="brand-row">
           <img
             class="brand-logo"
-            src="/fancy-deals-logo-white.png"
-            alt="Fancy Deals"
+            src="/brand/bagz-logo-white.png"
+            alt="Bagz Apple Services"
             width="220"
             height="52"
           />
-          <p class="brand-tagline">Great products. Fancy prices.</p>
+          <p class="brand-tagline">Authentic Genuine Gadget Store</p>
         </div>
 
-        <h1>Fancy <em>Deals</em></h1>
+        <h1>Bagz <em>Admin</em></h1>
         <p class="lead">
-          Your trusted online shopping platform for quality products, amazing prices
-          and a seamless shopping experience.
+          Manage iPhones, Pixel, Samsung, Mac and accessories — stock, orders,
+          swaps and customers for Kampala's trusted Apple &amp; tech hub.
         </p>
 
         <ul>
           <li>
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm3 8H9V6a3 3 0 016 0v3z"/></svg>
-            Secure Shopping
+            Secure access
           </li>
           <li>
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 7h11v7h2.5L20 11h3v7h-2a2 2 0 11-4 0H9a2 2 0 11-4 0H3V7zm2 11a1 1 0 100-2 1 1 0 000 2zm12 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
-            Fast Delivery
+            Same-day delivery
           </li>
           <li>
             <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a7 7 0 00-7 7v2H4v6h4v-6H7v-2a5 5 0 0110 0v2h-1v6h4v-6h-1v-2a7 7 0 00-7-7z"/></svg>
-            24/7 Support
+            Swap &amp; top-up
           </li>
         </ul>
 
-        <p class="script">Shop Smart<br />Live Better</p>
+        <p class="script">Authentic.<br />Genuine.</p>
       </div>
 
       <svg class="wave" viewBox="0 0 800 320" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="waveGrad" x1="0" y1="0" x2="0.85" y2="1">
-            <stop offset="0%" stop-color="#9a3412" />
-            <stop offset="35%" stop-color="#ea580c" />
-            <stop offset="100%" stop-color="#fdba74" />
+            <stop offset="0%" stop-color="#0c2236" />
+            <stop offset="35%" stop-color="#135fa3" />
+            <stop offset="100%" stop-color="#9fd6f0" />
           </linearGradient>
         </defs>
         <path d="M0 188C120 48 230 250 410 150C560 70 690 40 800 92V320H0Z" fill="url(#waveGrad)" />
@@ -214,7 +214,7 @@
     margin: 0;
     font-size: 13px;
     font-weight: 600;
-    color: #fdba74;
+    color: #9fd6f0;
   }
   h1 {
     margin: 0 0 14px;
@@ -224,7 +224,7 @@
   }
   h1 em {
     font-style: normal;
-    color: #fb923c;
+    color: #2ba8e0;
   }
   .lead {
     margin: 0;
@@ -257,7 +257,7 @@
     width: 14px;
     height: 14px;
     color: #fff;
-    background: #ea580c;
+    background: #135fa3;
     border-radius: 50%;
     padding: 5px;
     box-sizing: content-box;
@@ -267,7 +267,7 @@
     font-family: "Great Vibes", Georgia, cursive;
     font-size: 36px;
     line-height: 1.05;
-    color: #fbbf24;
+    color: #7cc8ec;
     text-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
   }
   .form-wrap {
@@ -285,7 +285,7 @@
   }
   .eyebrow {
     margin: 0;
-    color: #f97316;
+    color: #1673c4;
     font-weight: 800;
     font-size: 11px;
     letter-spacing: 0.14em;
@@ -356,8 +356,8 @@
     font-weight: 800;
     color: #fff;
     cursor: pointer;
-    background: linear-gradient(90deg, #fb923c, #ea580c);
-    box-shadow: 0 10px 18px rgba(234, 88, 12, 0.28);
+    background: linear-gradient(90deg, #2ba8e0, #135fa3);
+    box-shadow: 0 10px 18px rgba(19, 95, 163, 0.28);
   }
   .submit:disabled {
     opacity: 0.65;

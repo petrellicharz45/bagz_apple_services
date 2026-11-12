@@ -11,7 +11,7 @@
   /** Same order as hex swatches — shown on shop & admin. */
   export let labels: string[] = [];
 
-  let picker = "#F97316";
+  let picker = "#1673c4";
   let nameInput = "";
   let nameError = "";
 

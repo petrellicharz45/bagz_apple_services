@@ -68,7 +68,7 @@
 
 <div class="page">
   <div class="card">
-    <div class="brand">Fancy Deals Admin</div>
+    <div class="brand">Bagz Admin</div>
     {#if loading}
       <p>Loading invitation…</p>
     {:else if errorMsg && !email}
@@ -113,7 +113,7 @@
     display: grid;
     place-items: center;
     padding: 24px;
-    background: linear-gradient(180deg, #fff7ed, #ffedd5);
+    background: linear-gradient(180deg, #eef7fc, #e0f1fa);
   }
   .card {
     width: min(420px, 100%);
@@ -125,7 +125,7 @@
   }
   .brand {
     font-weight: 800;
-    color: #ea580c;
+    color: #135fa3;
     margin-bottom: 16px;
   }
   .avatar {
@@ -133,7 +133,7 @@
     height: 56px;
     margin: 0 auto 12px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ea580c, #f97316);
+    background: linear-gradient(135deg, #135fa3, #1673c4);
     color: #fff;
     display: grid;
     place-items: center;
@@ -151,8 +151,8 @@
   }
   .role {
     display: inline-block;
-    background: #ffedd5;
-    color: #9a3412;
+    background: #e0f1fa;
+    color: #0c2236;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px;
@@ -188,7 +188,7 @@
     border: none;
     border-radius: 10px;
     padding: 12px;
-    background: linear-gradient(90deg, #ea580c, #f97316);
+    background: linear-gradient(90deg, #135fa3, #1673c4);
     color: #fff;
     font-weight: 700;
     cursor: pointer;
@@ -205,6 +205,6 @@
     font-size: 13px;
   }
   a {
-    color: #ea580c;
+    color: #135fa3;
   }
 </style>

@@ -336,7 +336,7 @@
     cursor: pointer;
   }
   .btn.primary {
-    background: linear-gradient(135deg, #ea580c, #f97316);
+    background: linear-gradient(135deg, #135fa3, #1673c4);
     color: #fff;
   }
   .btn.secondary {
@@ -349,7 +349,7 @@
     cursor: not-allowed;
   }
   .link {
-    color: #ea580c;
+    color: #135fa3;
     font-weight: 600;
     text-decoration: none;
   }
@@ -368,7 +368,7 @@
   }
   .progress {
     font-weight: 600;
-    color: #c2410c;
+    color: #13344f;
   }
   .card {
     background: #fff;
@@ -433,7 +433,7 @@
   }
   .images-block {
     padding: 12px;
-    border: 1px dashed #fdba74;
+    border: 1px dashed #9fd6f0;
     border-radius: 8px;
     background: #fffbeb;
   }

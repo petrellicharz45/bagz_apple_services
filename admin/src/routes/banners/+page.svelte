@@ -223,7 +223,7 @@
     align-items: center;
     margin-bottom: 20px;
   }
-  .back-link { color: #f97316; text-decoration: none; }
+  .back-link { color: #1673c4; text-decoration: none; }
   .alert { padding: 12px; border-radius: 4px; margin-bottom: 20px; }
   .error { background: #ffebee; color: #c62828; }
   .success { background: #e8f5e9; color: #2e7d32; }
@@ -272,7 +272,7 @@
 
   button {
     padding: 10px 20px;
-    background: #f97316;
+    background: #1673c4;
     color: white;
     border: none;
     border-radius: 4px;

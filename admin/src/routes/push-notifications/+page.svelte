@@ -108,6 +108,6 @@
     cursor: not-allowed;
   }
   .btn-primary {
-    background-color: #f97316;
+    background-color: #1673c4;
   }
 </style>

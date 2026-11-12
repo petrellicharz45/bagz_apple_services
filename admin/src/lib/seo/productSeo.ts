@@ -14,8 +14,8 @@ export type ProductSeoFields = {
   slug: string;
 };
 
-const BRAND = "Fancy Deals Uganda";
-const SITE_HINT = "fancydeals.ug";
+const BRAND = "Bagz Apple Services";
+const SITE_HINT = "bagzappleservices.com";
 
 function truncate(text: string, max: number): string {
   const t = text.replace(/\s+/g, " ").trim();
