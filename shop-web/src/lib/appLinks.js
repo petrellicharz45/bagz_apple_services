@@ -1,6 +1,6 @@
 /** Android app — Play Store listing (set VITE_PLAY_STORE_URL when live). */
 const DEFAULT_PLAY_STORE =
-  "https://play.google.com/store/apps/details?id=com.fancydeals.ug";
+  "https://play.google.com/store/apps/details?id=com.bagzappleservices.com";
 
 export function playStoreUrl() {
   const custom = import.meta.env.VITE_PLAY_STORE_URL;
@@ -35,7 +35,7 @@ export function nativeAppDownloadUrl() {
   return playStoreUrl();
 }
 
-const BANNER_DISMISS_KEY = "fancydeals_app_banner_dismissed";
+const BANNER_DISMISS_KEY = "bagz_app_banner_dismissed";
 
 export function isAppBannerDismissed() {
   try {

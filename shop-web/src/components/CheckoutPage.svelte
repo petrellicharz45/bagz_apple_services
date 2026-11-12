@@ -421,7 +421,7 @@
             <span class="mini-spin" aria-hidden="true" />
             Locating…
           {:else}
-            <TemuIcon name="globe" size={18} color="#ea580c" />
+            <TemuIcon name="globe" size={18} color="#1673c4" />
             Use my live location
           {/if}
         </button>
@@ -489,7 +489,7 @@
       <div class="wallet-box">
         <label class="wallet-row">
           <input type="checkbox" bind:checked={useWallet} disabled={walletBalance <= 0} />
-          <TemuIcon name="wallet" size={22} color="#ea580c" />
+          <TemuIcon name="wallet" size={22} color="#1673c4" />
           <span>
             <strong>My Wallet</strong>
             <span class="wallet-bal">{formatUgx(walletBalance)} available</span>
@@ -609,7 +609,7 @@
       <span>{amountDue > 0 ? "Due now" : "Total"}</span>
       <strong>{formatUgx(amountDue > 0 ? amountDue : total)}</strong>
     </div>
-    <p class="lock">🔒 Secure checkout — Fancy Deals Uganda</p>
+    <p class="lock">🔒 Secure checkout — Bagz Apple Services</p>
   </aside>
 </div>
 
@@ -934,13 +934,13 @@
     color: inherit;
   }
   .saved-addr:hover {
-    border-color: #fdba74;
-    background: #fff7ed;
+    border-color: #9fd6f0;
+    background: #eef7fc;
   }
   .saved-addr.selected {
     border-color: var(--temu-orange);
-    background: #fff7ed;
-    box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.15);
+    background: #eef7fc;
+    box-shadow: 0 0 0 1px rgba(43, 168, 224, 0.15);
   }
   .saved-addr-label {
     font-size: 13px;
@@ -1002,9 +1002,9 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border: 1px solid #fed7aa;
-    background: #fff7ed;
-    color: #c2410c;
+    border: 1px solid #cbe8f7;
+    background: #eef7fc;
+    color: #13344f;
     font-weight: 600;
     font-size: var(--text-sm);
     padding: 10px 14px;
@@ -1018,14 +1018,14 @@
   .mini-spin {
     width: 16px;
     height: 16px;
-    border: 2px solid #fed7aa;
-    border-top-color: #ea580c;
+    border: 2px solid #cbe8f7;
+    border-top-color: #1673c4;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
   .map-link {
     font-size: var(--text-xs);
-    color: #c2410c;
+    color: #13344f;
     font-weight: 600;
   }
   .deliver-card {
@@ -1111,7 +1111,7 @@
     color: #666;
   }
   .msg {
-    color: #b45309;
+    color: #1d4f7a;
   }
   .side h2 {
     margin: 0 0 12px;
@@ -1136,8 +1136,8 @@
     margin: 0;
   }
   .wallet-box {
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
+    background: #eef7fc;
+    border: 1px solid #cbe8f7;
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 16px;
@@ -1190,7 +1190,7 @@
   .link-btn {
     border: none;
     background: none;
-    color: #c2410c;
+    color: #13344f;
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
@@ -1213,8 +1213,8 @@
   }
   .pay-chips button.sel {
     border-color: var(--temu-orange);
-    background: #fff7ed;
-    color: #c2410c;
+    background: #eef7fc;
+    color: #13344f;
   }
   .card-fields label {
     display: block;
@@ -1301,14 +1301,14 @@
   }
   .proceed-shop {
     border: none;
-    background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);
+    background: linear-gradient(180deg, #5bbde9 0%, #1673c4 100%);
     color: #fff;
     font-size: var(--text-sm);
     font-weight: 700;
     padding: 10px 20px;
     border-radius: 999px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+    box-shadow: 0 4px 14px rgba(22, 115, 196, 0.3);
   }
   .proceed-shop.wide {
     display: block;
@@ -1340,8 +1340,8 @@
     width: 48px;
     height: 48px;
     margin: 0 auto 16px;
-    border: 4px solid #fed7aa;
-    border-top-color: #ea580c;
+    border: 4px solid #cbe8f7;
+    border-top-color: #1673c4;
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
   }

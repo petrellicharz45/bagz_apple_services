@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const key = JSON.parse(fs.readFileSync(path.join(root, "fancydeals-ug-firebase-adminsdk-fbsvc-9fefd5e36f.json"), "utf8"));
+const key = JSON.parse(fs.readFileSync(path.join(root, "firebase-adminsdk.json"), "utf8"));
 const php = `<?php
 return [
   'project_id' => ${JSON.stringify(key.project_id)},

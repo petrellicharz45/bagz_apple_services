@@ -898,7 +898,7 @@
     font-weight: 600;
   }
   .stock-line.out {
-    color: #c2410c;
+    color: #13344f;
   }
   .rating-row {
     margin: 0 0 12px;
@@ -1002,7 +1002,7 @@
     line-height: 1.6;
   }
   .promo-list a {
-    color: var(--header-orange, #e85d04);
+    color: var(--header-orange, #1673c4);
     font-weight: 600;
     text-decoration: none;
   }
@@ -1184,7 +1184,7 @@
     margin: 0;
     padding: 8px 12px;
     background: #fff4e5;
-    color: #9a3412;
+    color: #0c2236;
     border: 1px solid #f59e0b;
     font-size: 13px;
     font-weight: 700;
@@ -1252,7 +1252,7 @@
     padding: 0;
     border: none;
     background: none;
-    color: #c2410c;
+    color: #13344f;
     font-weight: 700;
     cursor: pointer;
   }
@@ -1270,7 +1270,7 @@
   }
   .report-form button {
     align-self: flex-start;
-    background: #c2410c;
+    background: #13344f;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -1349,12 +1349,12 @@
     padding: 12px 24px;
     border: none;
     border-radius: 999px;
-    background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);
+    background: linear-gradient(180deg, #5bbde9 0%, #1673c4 100%);
     color: #fff;
     font-size: var(--text-sm);
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 4px 14px rgba(22, 115, 196, 0.35);
   }
   .no-reviews {
     font-size: var(--text-sm);
@@ -1414,7 +1414,7 @@
   .submit-review {
     align-self: flex-start;
     border: none;
-    background: #ea580c;
+    background: #1673c4;
     color: #fff;
     font-weight: 700;
     padding: 10px 20px;

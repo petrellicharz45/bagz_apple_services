@@ -2,7 +2,7 @@ import { writable, get } from "svelte/store";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase.js";
 
-export const DEFAULT_LOGO = "/brand/fancy-deals-logo-white.png";
+export const DEFAULT_LOGO = "/brand/bagz-logo-white.png";
 export const DEFAULT_FAVICON = "/favicon.png";
 
 export const displaySettings = writable({
@@ -38,8 +38,8 @@ function applyWebManifestIcon(favicon) {
   const link = document.querySelector('link[rel="manifest"]');
   if (!link) return;
   const manifest = {
-    name: "Fancy Deals Uganda",
-    short_name: "Fancy Deals",
+    name: "Bagz Apple Services",
+    short_name: "Bagz",
     description:
       "Online shopping in Uganda — fashion, electronics, home & more. Mobile money checkout & wallet.",
     start_url: "/",
@@ -47,7 +47,7 @@ function applyWebManifestIcon(favicon) {
     display: "standalone",
     orientation: "portrait-primary",
     background_color: "#0a0a0a",
-    theme_color: "#ea580c",
+    theme_color: "#1673c4",
     categories: ["shopping", "lifestyle"],
     icons: [
       { src: favicon, sizes: "192x192", type: "image/png", purpose: "any" },

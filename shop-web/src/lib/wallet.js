@@ -3,8 +3,8 @@ import { db } from "./firebase.js";
 import { collection, query, where, limit, getDocs } from "firebase/firestore";
 import { readProfile } from "./accountStore.js";
 
-const WALLET_KEY = "fancydeals_wallet_v1";
-const TX_KEY = "fancydeals_wallet_tx_v1";
+const WALLET_KEY = "bagz_wallet_v1";
+const TX_KEY = "bagz_wallet_tx_v1";
 const MAX_TX = 80;
 
 function readLocalBalance() {
@@ -120,7 +120,7 @@ export async function syncWalletFromCloud() {
     const remote = Math.round(Number(snap.docs[0].data().walletBalance) || 0);
     const local = getWalletBalance();
     if (remote > local) {
-      creditWallet(remote - local, { type: "sync", note: "Credited from Fancy Deals account" });
+      creditWallet(remote - local, { type: "sync", note: "Credited from Bagz account" });
     } else if (remote !== local) {
       writeLocalBalance(remote);
     }

@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store";
 import { priceParts } from "../catalog.js";
 
-const KEY = "fancydeals_cart_v1";
+const KEY = "bagz_cart_v1";
 export const MIN_CHECKOUT_UGX = 10000;
 
 function read() {

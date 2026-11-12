@@ -18,12 +18,12 @@
   margin-bottom: 0.35rem;
 }
 :global(.info-body a) {
-  color: #c2410c;
+  color: #13344f;
   text-decoration: underline;
 }
 :global(.info-body .contact-card) {
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
+  background: #eef7fc;
+  border: 1px solid #cbe8f7;
   border-radius: 10px;
   padding: 14px 16px;
   margin-bottom: 1rem;

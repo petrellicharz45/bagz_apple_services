@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy, tick } from "svelte";
+  import { BRAND } from "./lib/brand.js";
   import TemuHeader from "./components/TemuHeader.svelte";
   import TemuIcon from "./components/TemuIcon.svelte";
   import TrustGreenBar from "./components/TrustGreenBar.svelte";
@@ -805,7 +806,7 @@
     </main>
   {:else}
     <main class="site-main" class:category-main={tab === "category"}>
-      <h1 class="sr-only">Fancy Deals Uganda — online shopping, best deals &amp; secure checkout</h1>
+      <h1 class="sr-only">Bagz Apple Services — authentic iPhones, Apple, Pixel &amp; Samsung devices in Kampala</h1>
       {#if tab === "shop" || tab === "trends"}
         {#if search.trim()}
           <p class="search-hint">Results for “{search.trim()}” · {shopProducts.length} items</p>
@@ -899,11 +900,18 @@
     <div class="footer-cols">
       <div>
         <strong>Get to know us</strong>
-        <button type="button" class="foot-link" on:click={() => handleSupportAction("about")}>About Fancy Deals</button>
+        <button type="button" class="foot-link" on:click={() => handleSupportAction("about")}>About Bagz</button>
+        {#each BRAND.branches as b}
+          <p class="foot-note"><strong>{b.name}:</strong> {b.address}</p>
+        {/each}
       </div>
       <div>
         <strong>Customer service</strong>
-        <button type="button" class="foot-link" on:click={() => handleSupportAction("shipping")}>Shipping info</button>
+        <button type="button" class="foot-link" on:click={() => handleSupportAction("shipping")}>Delivery info</button>
+        <button type="button" class="foot-link" on:click={() => handleSupportAction("protection")}>Warranty &amp; authenticity</button>
+        <button type="button" class="foot-link" on:click={() => handleSupportAction("seller")}>Swap &amp; top-up</button>
+        <a class="foot-link" href="tel:{BRAND.contact.phoneTel}">Call {BRAND.contact.phoneDisplay}</a>
+        <a class="foot-link" href="https://wa.me/{BRAND.contact.whatsappE164}" target="_blank" rel="noopener noreferrer">WhatsApp us</a>
       </div>
       <div>
         <strong>Help</strong>
@@ -917,7 +925,7 @@
         <AppDownloadActions layout="footer" />
       </div>
     </div>
-    <p class="copy">© Fancy Deals Uganda · Prices in UGX</p>
+    <p class="copy">© {new Date().getFullYear()} {BRAND.legalName} · Prices in UGX · <a href="{BRAND.social.instagram}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="{BRAND.social.x}" target="_blank" rel="noopener noreferrer">X</a></p>
   </footer>
 
   {#if !selected && tab !== "checkout"}
@@ -1146,12 +1154,12 @@
     padding: 12px 24px;
     border: none;
     border-radius: 999px;
-    background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);
+    background: linear-gradient(180deg, #5bbde9 0%, #1673c4 100%);
     color: #fff;
     font-size: var(--text-sm);
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 4px 14px rgba(22, 115, 196, 0.35);
   }
   .see-more:hover {
     filter: brightness(1.05);
@@ -1192,8 +1200,14 @@
     text-align: left;
   }
   a.foot-link {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: none;
+  }
+  a.foot-link:hover,
+  button.foot-link:hover {
+    color: #2ba8e0;
+  }
+  .copy a {
+    color: #999;
   }
   .foot-note {
     margin-top: 4px !important;

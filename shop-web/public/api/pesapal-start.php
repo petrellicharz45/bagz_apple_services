@@ -182,7 +182,7 @@ if (isset($list[0]) && is_array($list[0])) {
 $ipnId = (string) ($existing["ipn_id"] ?? $existing["ipnId"] ?? "");
 if ($ipnId === "") {
   $registered = pesapal_call($base . "/api/URLSetup/RegisterIPN", $token, [
-    "url" => "https://fancydealsug.com/pesapal-ipn",
+    "url" => "https://bagzappleservices.com/pesapal-ipn",
     "ipn_notification_type" => "GET"
   ]);
   $ipnId = (string) ($registered["ipn_id"] ?? "");
@@ -199,11 +199,11 @@ $submitted = pesapal_call($base . "/api/Transactions/SubmitOrderRequest", $token
   "id" => $orderId,
   "currency" => "UGX",
   "amount" => $amount,
-  "description" => "Fancy Deals " . $orderId,
-  "callback_url" => "https://fancydealsug.com/",
+  "description" => "Bagz " . $orderId,
+  "callback_url" => "https://bagzappleservices.com/",
   "notification_id" => $ipnId,
   "billing_address" => [
-    "email_address" => "orders@fancydealsug.com",
+    "email_address" => "info@bagzappleservices.com",
     "phone_number" => $phone !== "" ? $phone : "0700000000",
     "country_code" => "UG",
     "first_name" => $first,

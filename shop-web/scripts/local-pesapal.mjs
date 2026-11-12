@@ -41,7 +41,7 @@ async function pesapal(pathname, token, body) {
 }
 
 let ipnId = "";
-const keyPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../fancydeals-ug-firebase-adminsdk-fbsvc-9fefd5e36f.json");
+const keyPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../firebase-adminsdk.json");
 
 function fsValue(value) {
   if (value === null || value === undefined) return { nullValue: null };
@@ -111,7 +111,7 @@ async function recordOrder(order, paymentStatus, orderStatus) {
   };
   const names = Object.keys(fields);
   const mask = names.map((name) => `updateMask.fieldPaths=${encodeURIComponent(name)}`).join("&");
-  const saved = await fetch(`https://firestore.googleapis.com/v1/projects/fancydeals-ug/databases/(default)/documents/order/${encodeURIComponent(id)}?${mask}`, {
+  const saved = await fetch(`https://firestore.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID || "bagz-apple-services"}/databases/(default)/documents/order/${encodeURIComponent(id)}?${mask}`, {
     method: "PATCH",
     headers: { Authorization: `Bearer ${tokenData.access_token}`, "Content-Type": "application/json" },
     body: JSON.stringify({ fields: Object.fromEntries(names.map((name) => [name, name === "timestamp" ? { timestampValue: fields.timestamp } : fsValue(fields[name])])) }),
@@ -146,7 +146,7 @@ export async function localPesapalRedirect({ orderId, amount, name, phone, addre
   }
   if (!ipnId) {
     const registered = await pesapal("/api/URLSetup/RegisterIPN", token, {
-      url: "https://fancydealsug.com/pesapal-ipn",
+      url: "https://bagzappleservices.com/pesapal-ipn",
       ipn_notification_type: "GET"
     });
     ipnId = registered.ipn_id || "";
@@ -158,11 +158,11 @@ export async function localPesapalRedirect({ orderId, amount, name, phone, addre
     id,
     currency: "UGX",
     amount: due,
-    description: `Fancy Deals ${id}`,
-    callback_url: "https://fancydealsug.com/",
+    description: `Bagz ${id}`,
+    callback_url: "https://bagzappleservices.com/",
     notification_id: ipnId,
     billing_address: {
-      email_address: "orders@fancydealsug.com",
+      email_address: "info@bagzappleservices.com",
       phone_number: String(phone || "").replace(/\s/g, "") || "0700000000",
       country_code: "UG",
       first_name: parts[0] || "Customer",

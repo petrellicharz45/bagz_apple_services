@@ -22,18 +22,18 @@
 </script>
 
 {#if visible}
-  <div class="banner variant-{variant}" role="region" aria-label="Install Fancy Deals">
+  <div class="banner variant-{variant}" role="region" aria-label="Install Bagz">
     <img class="icon" src={bannerIconSrc} alt="" width="36" height="36" />
     <div class="copy">
       <p class="title">
-        <strong>Fancy Deals</strong>
-        <span class="tagline">Shop like a millionaire</span>
+        <strong>Bagz</strong>
+        <span class="tagline">Authentic Genuine Gadget Store</span>
       </p>
       <p class="sub">
         {#if $pwaCanQuickInstall && !$isPwaInstalled}
           Add to your home screen in one tap — or get the native app.
         {:else}
-          Incredible deals in Uganda — app &amp; mobile shop
+          iPhones, Pixel, Samsung &amp; accessories — shop on your phone
         {/if}
       </p>
     </div>

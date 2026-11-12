@@ -343,7 +343,7 @@
     width: 100%;
     border: none;
     border-radius: 999px;
-    background: var(--temu-orange, #f97316);
+    background: var(--temu-orange, #2ba8e0);
     color: #fff;
     font-size: 20px;
     font-weight: 700;
@@ -372,7 +372,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 8px 12px;
-      background: var(--temu-orange, #f97316);
+      background: var(--temu-orange, #2ba8e0);
       color: #fff;
       font-size: 12px;
       font-weight: 800;
@@ -417,14 +417,14 @@
       font-size: 12px;
     }
     .sum-price strong {
-      color: var(--temu-orange, #f97316);
+      color: var(--temu-orange, #2ba8e0);
       font-size: 16px;
     }
     .sum-price del {
       color: #999;
     }
     .off {
-      color: var(--temu-orange, #f97316);
+      color: var(--temu-orange, #2ba8e0);
       border: 1px solid currentColor;
       padding: 0 4px;
       border-radius: 3px;

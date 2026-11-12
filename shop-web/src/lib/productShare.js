@@ -10,7 +10,7 @@ function siteOrigin() {
   if (typeof window !== "undefined" && window.location?.origin) {
     return window.location.origin;
   }
-  return "https://fancydealsug.com";
+  return "https://bagzappleservices.com";
 }
 
 export function productPageUrl(product) {
@@ -22,7 +22,7 @@ export function productPageUrl(product) {
 export function productShareLinks(product) {
   const pageUrl = productPageUrl(product);
   const title = (product?.name || "Product").trim();
-  const message = `${title} — Fancy Deals Uganda`;
+  const message = `${title} — Bagz Apple Services`;
   const encUrl = encodeURIComponent(pageUrl);
   const encText = encodeURIComponent(message);
   return {
@@ -38,7 +38,7 @@ export function reportProductMailto(product) {
   const name = (product?.name || "Product").trim();
   const subject = encodeURIComponent(`Report incorrect product: ${name}`);
   const body = encodeURIComponent(
-    `Hi Fancy Deals,\n\nI would like to report incorrect information on this product:\n\n${name}\n${pageUrl}\n\nDetails:\n`
+    `Hi Bagz,\n\nI would like to report incorrect information on this product:\n\n${name}\n${pageUrl}\n\nDetails:\n`
   );
   return `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
 }

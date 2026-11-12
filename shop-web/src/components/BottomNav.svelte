@@ -21,7 +21,7 @@
       on:click={() => onChange(item.id)}
     >
       <span class="icon-wrap">
-        <TemuIcon name={item.icon} size={22} color={active === item.id ? "#f97316" : "#999"} />
+        <TemuIcon name={item.icon} size={22} color={active === item.id ? "#2ba8e0" : "#999"} />
         {#if item.id === "cart" && cartCount > 0}
           <span class="nav-badge">{cartCount > 99 ? "99+" : cartCount}</span>
         {/if}

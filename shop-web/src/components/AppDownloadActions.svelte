@@ -34,7 +34,7 @@
     </button>
   {/if}
   {#if helpOpen}
-    <div class="help" role="dialog" aria-label="Install Fancy Deals">
+    <div class="help" role="dialog" aria-label="Install Bagz">
       <p>
         {#if iphone}
           In Safari, tap Share, then <strong>Add to Home Screen</strong>.
@@ -99,9 +99,9 @@
     margin: 0 0 8px;
   }
   .quick {
-    background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);
+    background: linear-gradient(180deg, #5bbde9 0%, #1673c4 100%);
     color: #fff;
-    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 2px 8px rgba(22, 115, 196, 0.35);
   }
   .quick:disabled {
     opacity: 0.7;

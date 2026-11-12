@@ -13,8 +13,8 @@ import {
 import { db } from "./firebase.js";
 import { readProfile } from "./accountStore.js";
 
-const MY_REVIEWS_KEY = "fancydeals_my_reviews_v1";
-const REVIEWER_ID_KEY = "fancydeals_reviewer_id_v1";
+const MY_REVIEWS_KEY = "bagz_my_reviews_v1";
+const REVIEWER_ID_KEY = "bagz_reviewer_id_v1";
 
 /** Stable id for this browser (no Firebase login required). */
 export function getShopReviewerId() {
@@ -36,7 +36,7 @@ function displayName() {
   if (name) return name;
   const email = (p.email || "").trim();
   if (email) return email.split("@")[0];
-  return "Fancy Deals shopper";
+  return "Bagz shopper";
 }
 
 function ratingRef(productId, reviewerId) {

@@ -152,7 +152,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ea580c;
+    color: #1673c4;
   }
   .side-label {
     flex: 1;
@@ -218,7 +218,7 @@
     position: absolute;
     top: 2px;
     right: 2px;
-    background: linear-gradient(135deg, #fb923c, #ea580c);
+    background: linear-gradient(135deg, #5bbde9, #1673c4);
     color: #fff;
     font-size: 8px;
     font-weight: 800;

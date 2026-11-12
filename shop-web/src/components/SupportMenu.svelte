@@ -6,8 +6,8 @@
   const items = [
     { id: "support", label: "Support center & FAQ", icon: "headset" },
     { id: "safety", label: "Safety centre", icon: "shield" },
-    { id: "chat", label: "Chat with Fancy Deals", icon: "message" },
-    { id: "protection", label: "Fancy Deals purchase protection", icon: "bag" },
+    { id: "chat", label: "Chat with Bagz on WhatsApp", icon: "message" },
+    { id: "protection", label: "Warranty & authenticity", icon: "bag" },
     { id: "privacy", label: "Privacy policy", icon: "lock" },
     { id: "terms", label: "Terms of use", icon: "message" }
   ];

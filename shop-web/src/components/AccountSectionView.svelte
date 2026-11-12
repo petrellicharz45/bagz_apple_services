@@ -397,7 +397,7 @@
       <span>{COUPONS.length} available</span>
     </button>
     <button type="button" class="hub-card" on:click={() => onOpenHelp("about")}>
-      <strong>About Fancy Deals</strong>
+      <strong>About Bagz</strong>
       <span>Who we are</span>
     </button>
     <button type="button" class="hub-card" on:click={() => onOpenHelp("shipping")}>
@@ -421,13 +421,13 @@
       {/if}
     </div>
     <button type="button" class="hub-card wallet-hub" on:click={() => onNavigateSection("wallet")}>
-      <span class="hub-ico"><TemuIcon name="wallet" size={20} color="#ea580c" /></span>
+      <span class="hub-ico"><TemuIcon name="wallet" size={20} color="#1673c4" /></span>
       <strong>My Wallet</strong>
       <span>{formatUgx($walletBalanceStore)} available</span>
     </button>
     <div class="hub-card">
       <strong>Install app</strong>
-      <span>Add Fancy Deals to your home screen</span>
+      <span>Add Bagz to your home screen</span>
       <AppDownloadActions layout="footer" />
     </div>
   </div>
@@ -867,7 +867,7 @@
     height: 72px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #fed7aa;
+    border: 2px solid #cbe8f7;
     background: #f3f4f6;
   }
   .hub-avatar.fallback {
@@ -918,7 +918,7 @@
     cursor: default;
   }
   .contact-card a {
-    color: #ea580c;
+    color: #1673c4;
     font-size: 13px;
     font-weight: 700;
     text-decoration: none;
@@ -1037,7 +1037,7 @@
     font-size: var(--text-sm);
     font-weight: 700;
     cursor: pointer;
-    background: linear-gradient(90deg, #fb923c, #ea580c);
+    background: linear-gradient(90deg, #5bbde9, #1673c4);
     color: #fff;
   }
   .pay-backdrop {
@@ -1304,7 +1304,7 @@
     align-items: center;
     gap: 14px;
     border: none;
-    background: linear-gradient(135deg, #ea580c, #c2410c);
+    background: linear-gradient(135deg, #1673c4, #13344f);
     color: #fff;
     border-radius: 12px;
     padding: 14px 16px;
@@ -1379,8 +1379,8 @@
   }
   .pay-chips button.sel {
     border-color: var(--temu-orange);
-    background: #fff7ed;
-    color: #c2410c;
+    background: #eef7fc;
+    color: #13344f;
   }
   .tx-list {
     list-style: none;
@@ -1422,8 +1422,8 @@
   }
   .code {
     border: 2px dashed var(--temu-orange);
-    background: #fff7ed;
-    color: #9a3412;
+    background: #eef7fc;
+    color: #0c2236;
     font-weight: 800;
     padding: 8px 12px;
     border-radius: 6px;

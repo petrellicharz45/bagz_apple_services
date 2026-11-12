@@ -205,7 +205,7 @@
     text-align: center;
   }
   .help-hint a {
-    color: #c2410c;
+    color: #13344f;
     text-decoration: none;
     font-weight: 600;
   }

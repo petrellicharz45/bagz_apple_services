@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
-const PROFILE_KEY = "fancydeals_profile_v1";
-const ADDR_KEY = "fancydeals_addresses_v1";
+const PROFILE_KEY = "bagz_profile_v1";
+const ADDR_KEY = "bagz_addresses_v1";
 
 const defaultProfile = {
   name: "",
@@ -159,6 +159,6 @@ export const COUPONS = [
   {
     code: "FREESHIP",
     title: "Free shipping",
-    detail: "Already applied on eligible items at Fancy Deals."
+    detail: "Already applied on eligible items at Bagz."
   }
 ];

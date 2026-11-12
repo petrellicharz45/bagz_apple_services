@@ -1,24 +1,27 @@
-/** Fancy Deals contact numbers — used across shop UI and help pages. */
+/** Bagz contact numbers — used across shop UI and help pages. Values come from brand.js. */
 
 import { writable } from "svelte/store";
+import { BRAND } from "./brand.js";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase.js";
 
-export const BUSINESS_EMAIL = "fancydeals480@gmail.com";
+export const BUSINESS_EMAIL = BRAND.contact.email;
 export const SUPPORT_EMAIL = BUSINESS_EMAIL;
 
 /** Mobile support & phone orders. */
-export const SUPPORT_PHONE_DISPLAY = "+256 752 918 710";
-export const SUPPORT_PHONE_TEL = "+256752918710";
+export const SUPPORT_PHONE_DISPLAY = BRAND.contact.phoneDisplay;
+export const SUPPORT_PHONE_TEL = BRAND.contact.phoneTel;
 
 /** Call-to-order line (product promotions). */
 export const ORDER_PHONE_DISPLAY = SUPPORT_PHONE_DISPLAY;
 export const ORDER_PHONE_TEL = SUPPORT_PHONE_TEL;
 
 /** WhatsApp for orders (from your business lines). */
-export const ORDER_WHATSAPP_E164 = "256200804010";
+export const ORDER_WHATSAPP_E164 = BRAND.contact.whatsappE164;
 
-export const BUSINESS_HOURS = "Mon–Sat, 9:00–18:00 EAT";
+export const BUSINESS_HOURS = BRAND.contact.hours;
+
+export const BRANCHES = BRAND.branches;
 
 /** @deprecated Use fields above; kept for help HTML templates. */
 export const CONTACT = {

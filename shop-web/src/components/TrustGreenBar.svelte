@@ -5,10 +5,10 @@
   export let onAction = () => {};
 
   const items = [
-    { topic: "about", icon: "shield", label: "Why choose Fancy Deals?" },
-    { topic: "privacy", icon: "lock", label: "Secure privacy" },
-    { topic: "safety", icon: "check", label: "Safe payments" },
-    { topic: "protection", icon: "truck", label: "Delivery guarantee" }
+    { topic: "about", icon: "shield", label: "Why choose Bagz?" },
+    { topic: "protection", icon: "check", label: "100% authentic + warranty" },
+    { topic: "seller", icon: "package", label: "Swap & top-up" },
+    { topic: "shipping", icon: "truck", label: "Same-day Kampala delivery" }
   ];
 </script>
 

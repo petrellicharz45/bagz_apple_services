@@ -39,7 +39,7 @@
   let catCloseTimer;
   let inApp = false;
 
-  const defaultHint = "Search Fancy Deals";
+  const defaultHint = "Search iPhone, Pixel, AirPods…";
 
   function openCategories() {
     clearTimeout(catCloseTimer);
@@ -69,7 +69,7 @@
   }
 
   onMount(() => {
-    inApp = navigator.userAgent.includes("FancyDealsApp");
+    inApp = navigator.userAgent.includes("BagzApp");
     window.addEventListener("keydown", onWindowKeydown);
   });
 
@@ -120,16 +120,16 @@
   <div class="utility">
     <button type="button" class="u-item link" on:click={() => onTab("shop")}>
       <TemuIcon name="truck" size={14} color="#6ee7b7" />
-      <span class="u-strong">Free shipping</span>
-      <span class="u-muted">· Incredible</span>
+      <span class="u-strong">Same-day delivery</span>
+      <span class="u-muted">· Kampala</span>
     </button>
     <button type="button" class="u-item link" on:click={() => onSupportAction("protection")}>
       <TemuIcon name="package" size={14} color="#fcd34d" />
-      <span class="u-strong">Delivery guarantee</span>
+      <span class="u-strong">100% authentic · warranty</span>
     </button>
     <span class="grow" />
     <button type="button" class="seller" on:click={() => onSupportAction("seller")}>
-      Join now ›
+      Swap &amp; top-up ›
     </button>
   </div>
 
@@ -145,7 +145,7 @@
         <img
           class="brand-logo"
           src={shopLogoSrc}
-          alt="Fancy Deals"
+          alt="Bagz Apple Services"
           width="192"
           height="46"
         />
@@ -248,7 +248,7 @@
         <img
           class="brand-logo sm"
           src={shopLogoSrc}
-          alt="Fancy Deals"
+          alt="Bagz Apple Services"
           width="140"
           height="34"
         />
@@ -406,7 +406,7 @@
   }
   .seller {
     border: none;
-    background: linear-gradient(90deg, #c2410c, #ea580c);
+    background: linear-gradient(90deg, #13344f, #1673c4);
     color: #fff;
     font-size: 11px;
     font-weight: 700;
@@ -719,7 +719,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #fb923c, #ea580c);
+    background: linear-gradient(135deg, #5bbde9, #1673c4);
     color: #fff;
     font-size: 10px;
     font-weight: 800;
@@ -751,7 +751,7 @@
     position: absolute;
     top: 4px;
     right: 4px;
-    background: #ea580c;
+    background: #1673c4;
     color: #fff;
     font-size: 10px;
     font-weight: 700;

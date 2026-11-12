@@ -185,7 +185,7 @@
     overflow: hidden;
   }
   .strip button.active {
-    border-color: var(--temu-orange, #f97316);
+    border-color: var(--temu-orange, #2ba8e0);
   }
   .strip img {
     width: 100%;
@@ -256,7 +256,7 @@
     flex: 1;
     border: none;
     border-radius: 999px;
-    background: var(--temu-orange, #f97316);
+    background: var(--temu-orange, #2ba8e0);
     color: #fff;
     font-size: 18px;
     font-weight: 700;

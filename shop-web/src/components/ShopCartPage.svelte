@@ -215,7 +215,7 @@
     cursor: not-allowed;
   }
   .cta.secondary {
-    background: #fdba74;
+    background: #9fd6f0;
     margin-bottom: 8px;
   }
   .hint,

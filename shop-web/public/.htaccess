@@ -1,4 +1,4 @@
-# FancyDeals shop (Vite SPA) — upload with the rest of shop-web/dist to Hostinger public_html
+# Bagz shop (Vite SPA) — upload with the rest of shop-web/dist to Hostinger public_html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /

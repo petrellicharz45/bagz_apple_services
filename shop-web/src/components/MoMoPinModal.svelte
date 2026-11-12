@@ -53,8 +53,8 @@
     width: 48px;
     height: 48px;
     margin: 0 auto 16px;
-    border: 4px solid #fed7aa;
-    border-top-color: #ea580c;
+    border: 4px solid #cbe8f7;
+    border-top-color: #1673c4;
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
   }

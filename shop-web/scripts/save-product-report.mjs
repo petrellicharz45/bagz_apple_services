@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const keyPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../fancydeals-ug-firebase-adminsdk-fbsvc-9fefd5e36f.json");
+const keyPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../firebase-adminsdk.json");
 
 export async function saveProductReport({ productId, productName, message }) {
   const text = String(message || "").trim();
@@ -39,7 +39,7 @@ export async function saveProductReport({ productId, productName, message }) {
     createdAt: { timestampValue: new Date().toISOString() }
   };
   const saved = await fetch(
-    `https://firestore.googleapis.com/v1/projects/fancydeals-ug/databases/(default)/documents/productReport?documentId=${id}`,
+    `https://firestore.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID || "bagz-apple-services"}/databases/(default)/documents/productReport?documentId=${id}`,
     {
       method: "POST",
       headers: {

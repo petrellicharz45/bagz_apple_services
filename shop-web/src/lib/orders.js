@@ -1,7 +1,7 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "./firebase.js";
 
-const KEY = "fancydeals_orders_v1";
+const KEY = "bagz_orders_v1";
 const MAX = 40;
 
 /**

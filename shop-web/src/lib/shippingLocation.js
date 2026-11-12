@@ -1,7 +1,7 @@
 /** Saved delivery zone/area for shipping fee snippets on product pages. */
 
-const ZONE_KEY = "fancydeals_delivery_zone";
-const AREA_KEY = "fancydeals_delivery_area";
+const ZONE_KEY = "bagz_delivery_zone";
+const AREA_KEY = "bagz_delivery_area";
 
 export const KAMPALA_AREAS = [
   "Central Business District",

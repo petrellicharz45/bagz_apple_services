@@ -211,7 +211,7 @@
     font-weight: 600;
   }
   .stock-line.out {
-    color: #c2410c;
+    color: #13344f;
   }
   .ship-text {
     margin: 4px 0 0;

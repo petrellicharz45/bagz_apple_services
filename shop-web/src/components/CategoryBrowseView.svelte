@@ -123,8 +123,8 @@
     background: #f3f4f6;
   }
   .chip-row button.active .chip-thumb {
-    border-color: #ea580c;
-    box-shadow: 0 0 0 1px #ea580c;
+    border-color: #1673c4;
+    box-shadow: 0 0 0 1px #1673c4;
   }
   .chip-thumb img {
     width: 100%;

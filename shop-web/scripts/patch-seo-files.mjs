@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 
-const site = (process.env.VITE_PUBLIC_SITE_URL || "https://fancydealsug.com").replace(/\/$/, "");
+const site = (process.env.VITE_PUBLIC_SITE_URL || "https://bagzappleservices.com").replace(/\/$/, "");
 
 function patch(file, transform) {
   const path = join(dist, file);
@@ -69,7 +69,7 @@ patch("index.html", (html) => {
   if (!/name="twitter:image"/i.test(next)) {
     next = next.replace(
       /<meta name="twitter:card" content="summary_large_image"\s*\/>/i,
-      `<meta name="twitter:card" content="summary_large_image" />\n    <meta name="twitter:image" content="${ogImage}" />\n    <meta name="twitter:image:alt" content="Fancy Deals Uganda" />`
+      `<meta name="twitter:card" content="summary_large_image" />\n    <meta name="twitter:image" content="${ogImage}" />\n    <meta name="twitter:image:alt" content="Bagz Apple Services" />`
     );
   } else {
     next = next.replace(

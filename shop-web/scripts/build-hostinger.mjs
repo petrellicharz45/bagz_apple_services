@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
 const assetsDir = path.join(dist, "assets");
-const outZip = path.join(root, "..", "deploy", "hostinger", "packages", "fancydeals-shop-upload.zip");
+const outZip = path.join(root, "..", "deploy", "hostinger", "packages", "bagz-shop-upload.zip");
 
 const APP_JS = "app.js";
 const APP_CSS = "app.css";
@@ -51,7 +51,7 @@ fs.writeFileSync(path.join(dist, "index.html"), html);
 const swPath = path.join(dist, "sw.js");
 if (fs.existsSync(swPath)) {
   let sw = fs.readFileSync(swPath, "utf8");
-  sw = sw.replace(/fancydeals-shop-v\d+/, `fancydeals-shop-v${Date.now()}`);
+  sw = sw.replace(/bagz-shop-v\d+/, `bagz-shop-v${Date.now()}`);
   fs.writeFileSync(swPath, sw);
 }
 

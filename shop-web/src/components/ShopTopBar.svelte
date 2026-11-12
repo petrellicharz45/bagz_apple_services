@@ -7,11 +7,11 @@
 <header class="top-bar">
   <div class="logo" aria-hidden="true">
     <svg viewBox="0 0 16 16" width="36" height="36">
-      <path d="M4,5 L4,13 C4,13.5 4.5,14 5,14 L11,14 C11.5,14 12,13.5 12,13 L12,5 Z" fill="#F97316" />
+      <path d="M4,5 L4,13 C4,13.5 4.5,14 5,14 L11,14 C11.5,14 12,13.5 12,13 L12,5 Z" fill="#2ba8e0" />
       <path
         d="M6.5,5 C6.5,3.5 7.5,2.5 8,2.5 C8.5,2.5 9.5,3.5 9.5,5"
         fill="none"
-        stroke="#F97316"
+        stroke="#2ba8e0"
         stroke-width="1.2"
       />
       <path d="M6.5,6.5 L6.5,12" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" />
@@ -36,7 +36,7 @@
   </div>
 
   <button type="button" class="icon-btn" aria-label="Help">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#EA580C" stroke-width="2">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1673c4" stroke-width="2">
       <circle cx="12" cy="12" r="10" />
       <path d="M12 16v-4M12 8h.01" />
     </svg>
@@ -44,7 +44,7 @@
 
   <div class="cart-wrap">
     <button type="button" class="icon-btn" aria-label="Cart">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#EA580C" stroke-width="2">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1673c4" stroke-width="2">
         <path d="M6 6h15l-1.5 9h-12z" />
         <circle cx="9" cy="20" r="1" />
         <circle cx="18" cy="20" r="1" />

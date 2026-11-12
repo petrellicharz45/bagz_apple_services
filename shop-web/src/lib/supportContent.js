@@ -52,7 +52,7 @@ const faqBlock = `
 export const SUPPORT_PAGES = {
   support: {
     title: "Support center & FAQ",
-    description: "Help with orders, delivery, payments, and returns on Fancy Deals Uganda.",
+    description: "Help with orders, delivery, payments, and returns on Bagz Apple Services.",
     body: `
 <p class="lead">We are here to help you shop safely and get your order on time. Reach us any time—responses are fastest during business hours.</p>
 <div class="contact-card">
@@ -65,10 +65,10 @@ ${faqBlock}
 `
   },
   about: {
-    title: "About Fancy Deals",
-    description: "Who we are and how Fancy Deals Uganda serves online shoppers.",
+    title: "About Bagz",
+    description: "Who we are and how Bagz Apple Services serves online shoppers.",
     body: `
-<p class="lead"><strong>Fancy Deals Uganda</strong> is an online marketplace focused on value, variety, and reliable delivery across Uganda.</p>
+<p class="lead"><strong>Bagz Apple Services</strong> is an online marketplace focused on value, variety, and reliable delivery across Uganda.</p>
 <h2>What we offer</h2>
 <ul>
   <li>Fashion, electronics, home goods, and everyday essentials at competitive UGX prices</li>
@@ -83,7 +83,7 @@ ${faqBlock}
   },
   shipping: {
     title: "Shipping & delivery",
-    description: "Delivery times, fees, and tracking for Fancy Deals Uganda orders.",
+    description: "Delivery times, fees, and tracking for Bagz Apple Services orders.",
     body: `
 <p class="lead">Delivery options and estimated arrival times are shown on each product. Times may vary for upcountry addresses.</p>
 <h2>How shipping works</h2>
@@ -102,12 +102,12 @@ ${faqBlock}
   },
   safety: {
     title: "Safety centre",
-    description: "Account security, safe payments, and reporting scams on Fancy Deals.",
+    description: "Account security, safe payments, and reporting scams on Bagz.",
     body: `
-<p class="lead">Your safety matters. Follow these tips when shopping online with Fancy Deals.</p>
+<p class="lead">Your safety matters. Follow these tips when shopping online with Bagz.</p>
 <h2>Secure your account</h2>
 <ul>
-  <li>Use a strong, unique password for your Fancy Deals account.</li>
+  <li>Use a strong, unique password for your Bagz account.</li>
   <li>Never share your mobile money PIN with anyone—including people claiming to be support.</li>
   <li>Sign out on shared devices.</li>
 </ul>
@@ -115,15 +115,15 @@ ${faqBlock}
 <ul>
   <li>We will <strong>never</strong> ask you to send money to a personal number outside the official checkout.</li>
   <li>Official support only uses <strong>${CONTACT.email}</strong> and numbers listed on this site.</li>
-  <li>Be wary of “too good to be true” links on social media—use <strong>fancydeals.ug</strong> or this official shop URL only.</li>
+  <li>Be wary of “too good to be true” links on social media—use <strong>bagzappleservices.com</strong> or this official shop URL only.</li>
 </ul>
 <h2>Report a concern</h2>
 <p>Email <a href="mailto:${CONTACT.email}">${CONTACT.email}</a> with “Safety report” in the subject. Include screenshots if possible. We investigate every report.</p>
 `
   },
   chat: {
-    title: "Chat with Fancy Deals",
-    description: "Contact Fancy Deals Uganda for order help.",
+    title: "Chat with Bagz",
+    description: "Contact Bagz Apple Services for order help.",
     body: `
 <p class="lead">Live chat is rolling out soon. You can still reach us quickly using the options below.</p>
 <h2>Fastest ways to reach us</h2>
@@ -137,7 +137,7 @@ ${faqBlock}
 `
   },
   protection: {
-    title: "Fancy Deals purchase protection",
+    title: "Bagz purchase protection",
     description: "Delivery guarantee and buyer protection on eligible orders.",
     body: `
 <p class="lead">Purchase protection helps when something goes wrong with an eligible order.</p>
@@ -160,9 +160,9 @@ ${faqBlock}
   },
   privacy: {
     title: "Privacy policy",
-    description: "How Fancy Deals Uganda collects and uses your personal data.",
+    description: "How Bagz Apple Services collects and uses your personal data.",
     body: `
-<p class="lead">Last updated: October 2026. This policy explains how Fancy Deals Uganda (“we”, “us”) handles your information when you use our website and app.</p>
+<p class="lead">Last updated: October 2026. This policy explains how Bagz Apple Services (“we”, “us”) handles your information when you use our website and app.</p>
 <h2>Information we collect</h2>
 <ul>
   <li><strong>Account:</strong> name, email, phone number, delivery addresses</li>
@@ -186,12 +186,12 @@ ${faqBlock}
   },
   terms: {
     title: "Terms of use",
-    description: "Terms and conditions for using Fancy Deals Uganda.",
+    description: "Terms and conditions for using Bagz Apple Services.",
     body: `
-<p class="lead">By using Fancy Deals Uganda you agree to these terms. Please read them before placing an order.</p>
+<p class="lead">By using Bagz Apple Services you agree to these terms. Please read them before placing an order.</p>
 <h2>Shopping</h2>
 <ul>
-  <li>Product images and descriptions are provided by sellers and Fancy Deals; minor variations may occur.</li>
+  <li>Product images and descriptions are provided by sellers and Bagz; minor variations may occur.</li>
   <li>Prices are in <strong>UGX</strong> unless stated otherwise. Promotions may change without notice.</li>
   <li>We may cancel orders suspected of fraud or pricing errors, with a full refund.</li>
 </ul>
@@ -202,17 +202,17 @@ ${faqBlock}
 <h2>Accounts</h2>
 <p>You are responsible for activity on your account. Notify us immediately if you suspect unauthorised access.</p>
 <h2>Limitation of liability</h2>
-<p>To the extent permitted by Ugandan law, Fancy Deals is not liable for indirect losses. Our liability for any order is limited to the amount you paid for that order.</p>
+<p>To the extent permitted by Ugandan law, Bagz is not liable for indirect losses. Our liability for any order is limited to the amount you paid for that order.</p>
 <h2>Changes</h2>
 <p>We may update these terms; continued use after changes means you accept the updated terms.</p>
 <p>Questions: <a href="mailto:${CONTACT.email}">${CONTACT.email}</a></p>
 `
   },
   seller: {
-    title: "Sell on Fancy Deals",
-    description: "Become a seller on Fancy Deals Uganda.",
+    title: "Sell on Bagz",
+    description: "Become a seller on Bagz Apple Services.",
     body: `
-<p class="lead">Want to list products on Fancy Deals? We welcome quality sellers across Uganda.</p>
+<p class="lead">Want to list products on Bagz? We welcome quality sellers across Uganda.</p>
 <h2>Who can sell</h2>
 <ul>
   <li>Registered businesses or individuals with verifiable contact details</li>

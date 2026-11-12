@@ -1,4 +1,4 @@
-const KEY = "fancydeals_browse_v1";
+const KEY = "bagz_browse_v1";
 const MAX = 12;
 
 export function pushBrowse(product) {

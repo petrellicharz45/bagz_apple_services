@@ -1,4 +1,4 @@
-const CACHE_NAME = "fancydeals-shop-v20261102d";
+const CACHE_NAME = "bagz-shop-v20261102d";
 const PRECACHE = [
   "/",
   "/index.html",
