@@ -1,10 +1,16 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { BRAND } from "../lib/brand.js";
+  import { loadHomeBanners } from "../lib/homeBanners.js";
 
   export let onShop = () => {};
 
-  /** Static fallback slides. Admin → Banners can replace these later. */
+  /** Uploaded image banners (Admin → Home Banners). Empty → built-in slides below. */
+  let imageBanners = [];
+  let touchX = null;
+  let paused = false;
+
+  /** Built-in fallback slides, shown only when no admin banner is active. */
   const slides = [
     {
       eyebrow: "Brand new · Sealed",
@@ -35,16 +41,93 @@
   let index = 0;
   let timer;
 
-  onMount(() => {
+  $: count = imageBanners.length || slides.length;
+  $: slide = slides[index % slides.length];
+
+  function go(next) {
+    index = (next + count) % count;
+  }
+
+  onMount(async () => {
     timer = setInterval(() => {
-      index = (index + 1) % slides.length;
-    }, 7000);
+      if (!paused) go(index + 1);
+    }, 6000);
+    imageBanners = await loadHomeBanners();
+    index = 0;
   });
   onDestroy(() => clearInterval(timer));
 
-  $: slide = slides[index];
+  function openBanner(banner) {
+    const link = banner?.link || "";
+    if (!link) return onShop();
+    if (link.startsWith("/")) {
+      window.location.href = link;
+    } else {
+      window.open(link, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  function onTouchStart(e) {
+    touchX = e.touches[0].clientX;
+  }
+  function onTouchEnd(e) {
+    if (touchX == null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }
 </script>
 
+{#if imageBanners.length}
+  <section
+    class="img-hero"
+    aria-label="Promotions"
+    aria-roledescription="carousel"
+    on:mouseenter={() => (paused = true)}
+    on:mouseleave={() => (paused = false)}
+    on:touchstart|passive={onTouchStart}
+    on:touchend={onTouchEnd}
+  >
+    <div class="track" style="transform: translateX(-{index * 100}%)">
+      {#each imageBanners as banner, i (banner.id)}
+        <button
+          type="button"
+          class="slide"
+          aria-label={banner.caption || `Promotion ${i + 1}`}
+          aria-hidden={i !== index}
+          tabindex={i === index ? 0 : -1}
+          on:click={() => openBanner(banner)}
+        >
+          <picture>
+            {#if banner.mobileImageUrl}
+              <source media="(max-width: 700px)" srcset={banner.mobileImageUrl} />
+            {/if}
+            <img
+              src={banner.imageUrl}
+              alt={banner.caption || ""}
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchpriority={i === 0 ? "high" : "auto"}
+            />
+          </picture>
+        </button>
+      {/each}
+    </div>
+
+    {#if imageBanners.length > 1}
+      <button type="button" class="nav prev" aria-label="Previous banner" on:click={() => go(index - 1)}>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="nav next" aria-label="Next banner" on:click={() => go(index + 1)}>
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </button>
+      <div class="dots">
+        {#each imageBanners as _, i}
+          <button type="button" class:active={i === index} aria-label="Banner {i + 1}" on:click={() => go(i)} />
+        {/each}
+      </div>
+    {/if}
+  </section>
+{:else}
 <section class="hero" aria-label="Promotions">
   <div class="glow" aria-hidden="true" />
 
@@ -73,8 +156,68 @@
     {/each}
   </div>
 </section>
+{/if}
 
 <style>
+  /* ---------- uploaded image banners ---------- */
+  .img-hero {
+    position: relative;
+    overflow: hidden;
+    background: #0c2236;
+  }
+  .track {
+    display: flex;
+    transition: transform 0.55s ease;
+  }
+  .slide {
+    flex: 0 0 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: block;
+  }
+  .slide picture,
+  .slide img {
+    display: block;
+    width: 100%;
+  }
+  /* Designed banners carry their own text — never crop them; show at natural ratio. */
+  .slide img {
+    height: auto;
+  }
+  .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.85);
+    color: #13344f;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+  }
+  .nav:hover {
+    background: #fff;
+  }
+  .nav.prev {
+    left: 14px;
+  }
+  .nav.next {
+    right: 14px;
+  }
+  @media (max-width: 700px) {
+    .nav {
+      display: none;
+    }
+  }
+
+  /* ---------- built-in fallback slides ---------- */
   .hero {
     position: relative;
     background: linear-gradient(120deg, #0c2236 0%, #13344f 55%, #1a4a70 100%);
