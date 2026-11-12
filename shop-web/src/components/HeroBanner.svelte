@@ -1,12 +1,15 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { BRAND } from "../lib/brand.js";
-  import { watchHomeBanners } from "../lib/homeBanners.js";
+  import { watchHomeBanners, cachedHomeBanners, cacheHomeBanners } from "../lib/homeBanners.js";
 
   export let onShop = () => {};
 
   /** Uploaded image banners (Admin → Home Banners). Empty → built-in slides below. */
-  let imageBanners = [];
+  // Last banners this browser saw → shown instantly on reload (no flash of the built-in slides).
+  let imageBanners = cachedHomeBanners();
+  /** True once the live banner list has arrived (or failed); until then show a neutral placeholder. */
+  let bannersReady = imageBanners.length > 0;
   let touchX = null;
   let paused = false;
 
@@ -58,6 +61,8 @@
     stopWatching = watchHomeBanners((list) => {
       const currentId = imageBanners[index]?.id;
       imageBanners = list;
+      bannersReady = true;
+      cacheHomeBanners(list);
       const keep = list.findIndex((b) => b.id === currentId);
       index = keep >= 0 ? keep : 0;
     });
@@ -88,7 +93,9 @@
   }
 </script>
 
-{#if imageBanners.length}
+{#if !bannersReady}
+  <section class="hero-placeholder" aria-label="Loading promotions" aria-busy="true"></section>
+{:else if imageBanners.length}
   <section
     class="img-hero"
     aria-label="Promotions"
@@ -170,6 +177,29 @@
 {/if}
 
 <style>
+  /* Same footprint as a banner while the live list loads (avoids layout jump and dummy-slide flash). */
+  .hero-placeholder {
+    width: 100%;
+    aspect-ratio: 3.4 / 1;
+    max-height: 560px;
+    background: linear-gradient(110deg, #0c2236 30%, #163e5f 50%, #0c2236 70%);
+    background-size: 200% 100%;
+    animation: hero-shimmer 1.4s ease-in-out infinite;
+  }
+  @keyframes hero-shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: -100% 0;
+    }
+  }
+  @media (max-width: 700px) {
+    .hero-placeholder {
+      aspect-ratio: 3.4 / 1;
+    }
+  }
+
   /* ---------- uploaded image banners ---------- */
   .img-hero {
     position: relative;

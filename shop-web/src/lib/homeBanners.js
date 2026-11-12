@@ -18,6 +18,26 @@ function cleanBanners(data) {
     }));
 }
 
+const CACHE_KEY = "bagz_home_banners_v1";
+
+/** Banners from the previous visit (instant first paint); [] if none or storage is blocked. */
+export function cachedHomeBanners() {
+  try {
+    const list = JSON.parse(localStorage.getItem(CACHE_KEY) || "[]");
+    return Array.isArray(list) ? list.filter((b) => b && /^https:\/\//i.test(String(b.imageUrl || ""))) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function cacheHomeBanners(list) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(list || []));
+  } catch {
+    /* private mode / storage full: just no instant paint next time */
+  }
+}
+
 export async function loadHomeBanners() {
   if (!db) return [];
   try {
@@ -41,9 +61,7 @@ export function watchHomeBanners(onChange) {
     return onSnapshot(
       doc(db, "settings", "banners"),
       (snap) => onChange(cleanBanners(snap.exists() ? snap.data() : null)),
-      () => {
-        /* keep whatever is showing if the live connection drops */
-      }
+      () => onChange(cachedHomeBanners()) // offline / blocked: keep the last known banners
     );
   } catch {
     loadHomeBanners().then(onChange);
