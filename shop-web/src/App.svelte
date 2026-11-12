@@ -714,14 +714,7 @@
   {#if (tab === "shop" || tab === "trends" || selected) && tab !== "checkout" && tab !== "cart" && tab !== "account" && tab !== "support" && tab !== "browse"}
     <div class="bleed-block">
       {#if !selected}
-        <div class="home-top">
-          <div class="home-hero">
-            <HeroBanner onShop={goHome} />
-          </div>
-          <div class="home-sidebar">
-            <CategorySidebar side="right" groups={resolveMenuGroups(categories, browseGroups)} onPick={handleCategorySub} />
-          </div>
-        </div>
+        <HeroBanner onShop={goHome} />
       {/if}
       <TrustGreenBar onAction={handleSupportAction} />
     </div>
@@ -819,6 +812,11 @@
     <main class="site-main" class:category-main={tab === "category"}>
       <h1 class="sr-only">Bagz Apple Services — authentic iPhones, Apple, Pixel &amp; Samsung devices in Kampala</h1>
       {#if tab === "shop" || tab === "trends"}
+       <div class="shop-layout">
+        <aside class="shop-side" aria-label="Categories">
+          <CategorySidebar side="left" groups={resolveMenuGroups(categories, browseGroups)} onPick={handleCategorySub} />
+        </aside>
+        <div class="shop-content">
         {#if search.trim()}
           <p class="search-hint">Results for “{search.trim()}” · {shopProducts.length} items</p>
         {/if}
@@ -893,6 +891,8 @@
             {/if}
           {/if}
         </div>
+        </div>
+       </div>
 
       {:else if tab === "category"}
         <CategoryMenuPanel
@@ -1248,27 +1248,25 @@
       display: none;
     }
   }
-  /* Home top: banner slider + category sidebar on its right (wide screens); slider only below. */
-  .home-sidebar {
+  /* Shop page: sticky category menu on the left of the feed (wide screens); hidden on phones. */
+  .shop-side {
     display: none;
   }
   @media (min-width: 1100px) {
-    .home-top {
+    .shop-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 230px;
-      gap: 12px;
-      max-width: var(--page-max);
-      margin: 12px auto;
-      padding: 0 12px;
-      align-items: stretch;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
     }
-    .home-sidebar {
+    .shop-side {
       display: block;
-      min-height: 0;
+      position: sticky;
+      top: 175px; /* below the sticky desktop header (~163px) */
+      margin-top: 12px;
+      z-index: 30;
     }
-    .home-hero {
-      border-radius: 12px;
-      overflow: hidden;
+    .shop-content {
       min-width: 0;
     }
   }
