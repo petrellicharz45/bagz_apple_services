@@ -12,47 +12,36 @@ import { sortProductsNewestFirst } from "./shopBrowse.js";
 import { globalDeliveryFee } from "./deliveryFees.js";
 
 const DEFAULT_CATEGORIES = [
-  "Clothing",
-  "Shoes",
-  "Accessories",
-  "Bags",
-  "Jewelry",
-  "Beauty"
+  "iPhones",
+  "Google Pixel",
+  "Samsung",
+  "MacBooks & iPads",
+  "Apple Watch",
+  "Audio",
+  "Accessories"
 ];
 
+/**
+ * Sample catalog for local development only (shown when Firestore has no products).
+ * Pixel prices are from the Bagz December flyer; iPhone prices are placeholders.
+ */
 function demoProducts() {
   const items = [
-    ["Clothing", "Women's cotton dress", 45000, 22],
-    ["Clothing", "Men's casual shirt", 38000, 18],
-    ["Shoes", "Running sneakers", 89000, 25],
-    ["Shoes", "Leather sandals", 52000, 15],
-    ["Accessories", "Smart watch band", 15000, 30],
-    ["Accessories", "Sunglasses UV400", 22000, 20],
-    ["Bags", "Crossbody handbag", 65000, 28],
-    ["Bags", "Travel backpack 25L", 78000, 24],
-    ["Jewelry", "Gold-tone necklace", 28000, 12],
-    ["Jewelry", "Hoop earrings set", 18000, 16],
-    ["Beauty", "Skincare gift set", 42000, 35],
-    ["Beauty", "Hair styling kit", 35000, 19],
-    ["Clothing", "Kids hoodie", 32000, 14],
-    ["Accessories", "Phone case bundle", 12000, 40],
-    ["Bags", "Laptop sleeve", 24000, 10],
-    ["Shoes", "Canvas slip-ons", 41000, 21],
-    ["Clothing", "Linen summer dress", 48000, 17],
-    ["Beauty", "Vitamin C serum", 29000, 22],
-    ["Accessories", "Leather belt classic", 19000, 11],
-    ["Bags", "Mini shoulder bag", 44000, 26],
-    ["Jewelry", "Silver bracelet", 32000, 14],
-    ["Shoes", "Sport slides", 27000, 19],
-    ["Clothing", "Polo shirt pack", 36000, 16],
-    ["Accessories", "Wireless earbuds case", 14000, 24],
-    ["Beauty", "Lip gloss set", 16000, 28],
-    ["Bags", "Gym duffel", 55000, 20],
-    ["Jewelry", "Pearl stud earrings", 24000, 13],
-    ["Clothing", "Jogger pants", 39000, 18],
-    ["Accessories", "Cap adjustable", 17000, 15],
-    ["Shoes", "Formal loafers", 72000, 23],
-    ["Beauty", "Face mask 10-pack", 21000, 31]
+    ["iPhones", "iPhone 18 Pro Max 512GB", 0, 0],
+    ["iPhones", "iPhone 18 Pro 256GB", 0, 0],
+    ["iPhones", "iPhone Duo", 0, 0],
+    ["iPhones", "iPhone 17 Pro Max 256GB", 0, 0],
+    ["iPhones", "iPhone 17 Pro 256GB", 0, 0],
+    ["iPhones", "iPhone 17 256GB", 0, 0],
+    ["iPhones", "iPhone Air 256GB", 0, 0],
+    ["Google Pixel", "Pixel 10 Pro XL 512GB", 4800000, 0],
+    ["Google Pixel", "Pixel 10 Pro XL 256GB", 3900000, 0],
+    ["Google Pixel", "Pixel 9 Pro Fold 512GB", 4000000, 0],
+    ["Google Pixel", "Pixel 10 Pro 256GB", 3800000, 0],
+    ["Google Pixel", "Pixel 9 Pro XL 512GB", 3200000, 0],
+    ["Google Pixel", "Pixel 9 Pro XL 256GB", 3000000, 0],
+    ["Google Pixel", "Pixel 9 Pro 256GB", 2700000, 0],
+    ["Accessories", "USB-C charging cable", 0, 0]
   ];
   return items.map(([category, name, price, offer], i) => {
     const id = `demo-${i + 1}`;
@@ -60,6 +49,9 @@ function demoProducts() {
     return enrichProduct(base);
   });
 }
+
+/** Demo items only in `npm run dev` — production shows the real (possibly empty) catalog. */
+const fallbackProducts = () => (import.meta.env.DEV ? demoProducts() : []);
 
 export async function loadCategories() {
   try {
@@ -88,9 +80,9 @@ export async function loadProducts() {
     const list = sortProductsNewestFirst(
       snap.docs.map((d) => enrichProduct({ id: d.id, ...d.data() }))
     );
-    return list.length ? list : demoProducts();
+    return list.length ? list : fallbackProducts();
   } catch {
-    return demoProducts();
+    return fallbackProducts();
   }
 }
 

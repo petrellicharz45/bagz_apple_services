@@ -1,6 +1,6 @@
 /** Android app — Play Store listing (set VITE_PLAY_STORE_URL when live). */
 const DEFAULT_PLAY_STORE =
-  "https://play.google.com/store/apps/details?id=com.bagzappleservices.com";
+  "https://play.google.com/store/apps/details?id=com.bagzappleservices.app";
 
 export function playStoreUrl() {
   const custom = import.meta.env.VITE_PLAY_STORE_URL;

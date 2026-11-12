@@ -111,7 +111,7 @@ async function recordOrder(order, paymentStatus, orderStatus) {
   };
   const names = Object.keys(fields);
   const mask = names.map((name) => `updateMask.fieldPaths=${encodeURIComponent(name)}`).join("&");
-  const saved = await fetch(`https://firestore.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID || "bagz-apple-services"}/databases/(default)/documents/order/${encodeURIComponent(id)}?${mask}`, {
+  const saved = await fetch(`https://firestore.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID || "bagz-5aec7"}/databases/(default)/documents/order/${encodeURIComponent(id)}?${mask}`, {
     method: "PATCH",
     headers: { Authorization: `Bearer ${tokenData.access_token}`, "Content-Type": "application/json" },
     body: JSON.stringify({ fields: Object.fromEntries(names.map((name) => [name, name === "timestamp" ? { timestampValue: fields.timestamp } : fsValue(fields[name])])) }),

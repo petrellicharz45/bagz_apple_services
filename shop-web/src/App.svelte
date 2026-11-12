@@ -1,6 +1,7 @@
 <script>
   import { onMount, onDestroy, tick } from "svelte";
   import { BRAND } from "./lib/brand.js";
+  import { liveContact } from "./lib/shopContact.js";
   import TemuHeader from "./components/TemuHeader.svelte";
   import TemuIcon from "./components/TemuIcon.svelte";
   import TrustGreenBar from "./components/TrustGreenBar.svelte";
@@ -910,8 +911,10 @@
         <button type="button" class="foot-link" on:click={() => handleSupportAction("shipping")}>Delivery info</button>
         <button type="button" class="foot-link" on:click={() => handleSupportAction("protection")}>Warranty &amp; authenticity</button>
         <button type="button" class="foot-link" on:click={() => handleSupportAction("seller")}>Swap &amp; top-up</button>
-        <a class="foot-link" href="tel:{BRAND.contact.phoneTel}">Call {BRAND.contact.phoneDisplay}</a>
-        <a class="foot-link" href="https://wa.me/{BRAND.contact.whatsappE164}" target="_blank" rel="noopener noreferrer">WhatsApp us</a>
+        <a class="foot-link" href="tel:{$liveContact.call || BRAND.contact.phoneTel}">Call {$liveContact.call || BRAND.contact.phoneDisplay}</a>
+        {#if $liveContact.whatsapp}
+          <a class="foot-link" href="https://wa.me/{$liveContact.whatsapp}" target="_blank" rel="noopener noreferrer">WhatsApp us</a>
+        {/if}
       </div>
       <div>
         <strong>Help</strong>
@@ -925,7 +928,9 @@
         <AppDownloadActions layout="footer" />
       </div>
     </div>
-    <p class="copy">© {new Date().getFullYear()} {BRAND.legalName} · Prices in UGX · <a href="{BRAND.social.instagram}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="{BRAND.social.x}" target="_blank" rel="noopener noreferrer">X</a></p>
+    <p class="copy">© {new Date().getFullYear()} {BRAND.legalName} · Prices in UGX {#each $liveContact.socials as s}
+        · <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+      {/each}</p>
   </footer>
 
   {#if !selected && tab !== "checkout"}

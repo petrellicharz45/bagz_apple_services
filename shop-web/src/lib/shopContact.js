@@ -31,10 +31,31 @@ export const CONTACT = {
 };
 
 /** Admin Settings → Customer Support. Empty call stays hidden until a number is saved. */
+export const SOCIAL_LABELS = {
+  instagram: "Instagram",
+  facebook: "Facebook",
+  x: "X",
+  tiktok: "TikTok",
+  snapchat: "Snapchat",
+  youtube: "YouTube"
+};
+
+/** Keep only https links for known networks, in a stable order. */
+function cleanSocial(raw) {
+  const out = [];
+  for (const key of Object.keys(SOCIAL_LABELS)) {
+    const url = String(raw?.[key] || "").trim();
+    if (/^https:\/\/\S+$/i.test(url)) out.push({ key, label: SOCIAL_LABELS[key], url });
+  }
+  return out;
+}
+
 export const liveContact = writable({
   email: SUPPORT_EMAIL,
   whatsapp: ORDER_WHATSAPP_E164,
-  call: ""
+  call: "",
+  /** @type {{ key: string, label: string, url: string }[]} */
+  socials: cleanSocial(BRAND.social)
 });
 
 export async function loadLiveContact() {
@@ -51,7 +72,8 @@ export async function loadLiveContact() {
     liveContact.set({
       email: email || SUPPORT_EMAIL,
       whatsapp,
-      call
+      call,
+      socials: cleanSocial({ ...BRAND.social, ...(data.socialLinks || {}) })
     });
   } catch {
     /* Keep the numbers already in the shop. */

@@ -2,7 +2,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "$lib/firebase";
 
 /** Shop merchandising groups (product checkboxes + shop filters). Admin-managed in settings/groups. */
-export const DEFAULT_GROUPS = ["Men", "Women", "Kids", "Home Utilities", "Accessories", "Beauty", "Recommended"];
+export const DEFAULT_GROUPS = ["Brand New", "Certified Pre-owned", "Deals", "Accessories", "Recommended"];
 
 /** "Recommended" is a group now, not a category — keep it out of the Category dropdown. */
 export const NOT_A_CATEGORY = "Recommended";

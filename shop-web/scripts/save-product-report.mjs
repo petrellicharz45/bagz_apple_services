@@ -39,7 +39,7 @@ export async function saveProductReport({ productId, productName, message }) {
     createdAt: { timestampValue: new Date().toISOString() }
   };
   const saved = await fetch(
-    `https://firestore.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID || "bagz-apple-services"}/databases/(default)/documents/productReport?documentId=${id}`,
+    `https://firestore.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID || "bagz-5aec7"}/databases/(default)/documents/productReport?documentId=${id}`,
     {
       method: "POST",
       headers: {

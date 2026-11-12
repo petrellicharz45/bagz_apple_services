@@ -1,8 +1,9 @@
 import { writable, get } from "svelte/store";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase.js";
+import { BRAND } from "./brand.js";
 
-export const DEFAULT_LOGO = "/brand/bagz-logo-white.png";
+export const DEFAULT_LOGO = BRAND.logoWhite;
 export const DEFAULT_FAVICON = "/favicon.png";
 
 export const displaySettings = writable({
@@ -38,17 +39,16 @@ function applyWebManifestIcon(favicon) {
   const link = document.querySelector('link[rel="manifest"]');
   if (!link) return;
   const manifest = {
-    name: "Bagz Apple Services",
-    short_name: "Bagz",
-    description:
-      "Online shopping in Uganda — fashion, electronics, home & more. Mobile money checkout & wallet.",
+    name: BRAND.name,
+    short_name: BRAND.shortName,
+    description: BRAND.description,
     start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait-primary",
-    background_color: "#0a0a0a",
-    theme_color: "#1673c4",
-    categories: ["shopping", "lifestyle"],
+    background_color: "#ffffff",
+    theme_color: BRAND.colors.navy,
+    categories: ["shopping", "business"],
     icons: [
       { src: favicon, sizes: "192x192", type: "image/png", purpose: "any" },
       { src: favicon, sizes: "512x512", type: "image/png", purpose: "any" },

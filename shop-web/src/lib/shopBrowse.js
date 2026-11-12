@@ -1,5 +1,6 @@
 /** Audience / merchandising groups — fallback when Firestore settings/groups (Admin → Groups) is unavailable. */
-export const SHOP_MERCH_GROUPS = ["Men", "Women", "Kids", "Home Utilities", "Accessories", "Beauty", "Recommended"];
+/** Default merchandising groups (admin can replace them in Admin → Groups). */
+export const SHOP_MERCH_GROUPS = ["Brand New", "Certified Pre-owned", "Deals", "Accessories", "Recommended"];
 
 /** Group (and legacy category) that the admin uses to pin products to the top of the Recommended feed. */
 export const RECOMMENDED = "Recommended";

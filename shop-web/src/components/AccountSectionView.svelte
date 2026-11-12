@@ -419,6 +419,9 @@
       {#if $liveContact.call}
         <a href={"tel:" + $liveContact.call}>Call {$liveContact.call}</a>
       {/if}
+      {#each $liveContact.socials as social}
+        <a href={social.url} target="_blank" rel="noopener noreferrer">{social.label}</a>
+      {/each}
     </div>
     <button type="button" class="hub-card wallet-hub" on:click={() => onNavigateSection("wallet")}>
       <span class="hub-ico"><TemuIcon name="wallet" size={20} color="#1673c4" /></span>

@@ -21,36 +21,42 @@ const STATIC_MENU_GROUPS = [
     ]
   },
   {
-    id: "women",
-    label: "Women's fashion",
+    id: "iphone",
+    label: "iPhone",
     subs: [
-      { label: "Dresses", filterCategory: "Clothing", hot: true },
-      { label: "Handbags", filterCategory: "Bags", hot: true },
-      { label: "Jewelry", filterCategory: "Jewelry" },
-      { label: "Beauty", filterCategory: "Beauty", hot: true }
+      { label: "iPhone 18 series", filterCategory: "iPhones", query: "iphone 18", hot: true },
+      { label: "iPhone Duo", filterCategory: "iPhones", query: "duo", hot: true },
+      { label: "iPhone 17 series", filterCategory: "iPhones", query: "iphone 17" },
+      { label: "iPhone Air", filterCategory: "iPhones", query: "air" },
+      { label: "Older models", filterCategory: "iPhones" }
     ]
   },
   {
-    id: "men",
-    label: "Men's fashion",
+    id: "android",
+    label: "Pixel & Samsung",
     subs: [
-      { label: "Shirts & polos", filterCategory: "Clothing", query: "shirt" },
-      { label: "Sneakers", filterCategory: "Shoes", hot: true },
-      { label: "Bags", filterCategory: "Bags", query: "backpack" }
+      { label: "Google Pixel", filterCategory: "Google Pixel", hot: true },
+      { label: "Samsung Z Fold / Flip", filterCategory: "Samsung", query: "z " },
+      { label: "Samsung Galaxy S", filterCategory: "Samsung", query: "galaxy s" }
     ]
   },
   {
-    id: "shoes",
-    label: "Shoes & bags",
+    id: "mac",
+    label: "Mac, iPad & Watch",
     subs: [
-      { label: "Casual shoes", filterCategory: "Shoes" },
-      { label: "Crossbody bags", filterCategory: "Bags", query: "crossbody" }
+      { label: "MacBooks", filterCategory: "MacBooks & iPads", query: "macbook" },
+      { label: "iPads", filterCategory: "MacBooks & iPads", query: "ipad" },
+      { label: "Apple Watch", filterCategory: "Apple Watch" }
     ]
   },
   {
-    id: "beauty",
-    label: "Beauty & health",
-    subs: [{ label: "Skincare", filterCategory: "Beauty", query: "serum" }]
+    id: "accessories",
+    label: "Audio & accessories",
+    subs: [
+      { label: "AirPods & audio", filterCategory: "Audio", hot: true },
+      { label: "Cases & protectors", filterCategory: "Accessories", query: "case" },
+      { label: "Chargers & cables", filterCategory: "Accessories", query: "charger" }
+    ]
   }
 ];
 
@@ -65,13 +71,13 @@ function slugId(text) {
 
 /** Stock category used for each Featured tile (always has a valid image URL). */
 const FEATURED_STOCK_CATEGORY = {
-  "Best sellers": "Shoes",
-  "5-Star picks": "Jewelry",
-  "Mega sale": "Beauty",
-  "New In": "Clothing",
-  "New arrivals": "Clothing",
-  "Gift ideas": "Beauty",
-  "Daily deals": "Bags"
+  "Best sellers": "iPhones",
+  "5-Star picks": "iPhones",
+  "Mega sale": "Google Pixel",
+  "New In": "iPhones",
+  "New arrivals": "iPhones",
+  "Gift ideas": "Accessories",
+  "Daily deals": "Accessories"
 };
 
 function featuredSubs() {

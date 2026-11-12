@@ -101,6 +101,9 @@
     gap: 24px;
     min-height: clamp(200px, 26vw, 300px);
   }
+  .hero-inner > * {
+    min-width: 0;
+  }
   .eyebrow {
     margin: 0;
     display: inline-block;

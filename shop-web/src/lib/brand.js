@@ -48,11 +48,18 @@ export const BRAND = {
     }
   ],
 
+  /**
+   * Social profile URLs — placeholders only. The real links are managed in
+   * Admin → Settings → Social media (Firestore settings/config.socialLinks).
+   * Empty values are hidden in the shop.
+   */
   social: {
-    instagram: "https://www.instagram.com/bagzappleservices",
-    facebook: "https://www.facebook.com/bagzappleservices",
-    x: "https://x.com/bagzapplestore",
-    snapchat: "https://www.snapchat.com/add/bagzmarvin"
+    instagram: "",
+    facebook: "",
+    x: "",
+    tiktok: "",
+    snapchat: "",
+    youtube: ""
   },
 
   /** Selling points shown in the trust bar, hero and help pages. */

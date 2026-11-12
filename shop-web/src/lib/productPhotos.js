@@ -1,35 +1,42 @@
-/** Curated stock photos (Unsplash) — used when product has no/broken image URL. */
+/**
+ * Fallback photos used when a product has no/broken image URL.
+ * Bagz: local brand images first (shop-web/public/brand), Unsplash only where we have no own photo.
+ */
 const U = (id, w = 600) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${w}&q=80`;
+const P = (file) => `/brand/products/${file}`;
+const S = (file) => `/brand/store/${file}`;
 
 const STOCK = {
-  sunglasses: U("photo-1572635196237-14b3e281a0b3"),
-  lipstick: U("photo-1586495777744-44168d6d9293"),
-  beauty: U("photo-1596462502278-27bfdc403348"),
-  foundation: U("photo-1522335789203-aabd1fc54bc9"),
-  earrings: U("photo-1535632066927-ab7c9ab60908"),
-  jewelry: U("photo-1515562141203-7a88fb7ce338"),
-  bag: U("photo-1584916201218-f4242ceb4809"),
-  backpack: U("photo-1553062407-98eeb64c6a62"),
-  hat: U("photo-1521369909029-2afed882baee"),
-  clothing: U("photo-1483985988355-763728e1935b"),
-  dress: U("photo-1595777453373-55b39a4d4b6f"),
-  shoes: U("photo-1549298916-b41d501d3772"),
-  sneakers: U("photo-1606107557195-0f29cb4f3bcd"),
+  iphone18ProMax: P("iphone18-promax-512.jpg"),
+  iphone18Pro: P("iphone18-pro.jpg"),
+  iphoneDuo: P("iphone-duo-star-white-front-back.jpg"),
+  iphone17ProMax: P("iphone17promx.jpg"),
+  iphone17Pro: P("1.jpg"),
+  iphone17: P("iphone17-1.jpg"),
+  iphoneAir: P("air2.jpg"),
+  iphone: P("apple-iphone-18-pro-max-silver.jpg"),
+  cable: P("4.jpg"),
   watch: U("photo-1523275335684-37898b6baf30"),
-  phone: U("photo-1601784551446-20c9e07cdbdb"),
-  belt: U("photo-1624222247344-550fb60583fd"),
-  general: U("photo-1472851294607-0627dbdaad7a")
+  store: S("bagz-store.jpg"),
+  general: S("bagz-store.jpg")
 };
 
 const CATEGORY_STOCK = {
-  shoes: STOCK.shoes,
-  clothing: STOCK.clothing,
-  accessories: STOCK.sunglasses,
-  bags: STOCK.bag,
-  jewelry: STOCK.jewelry,
-  beauty: STOCK.beauty
+  iphone: STOCK.iphone,
+  watch: STOCK.watch,
+  accessor: STOCK.store,
+  pixel: STOCK.store,
+  samsung: STOCK.store,
+  macbook: STOCK.store,
+  audio: STOCK.store
 };
+
+/** Resize Unsplash URLs; local images are returned as-is. */
+function sized(url, size) {
+  if (size === 600 || !url.includes("images.unsplash.com")) return url;
+  return url.replace("w=600", `w=${size}`).replace("h=600", `h=${size}`);
+}
 
 function normalizeUrl(url) {
   if (!url || typeof url !== "string") return "";
@@ -83,43 +90,33 @@ export function stockPhotoForProduct(product, size = 600) {
   const cat = `${product?.category || ""}`.toLowerCase();
 
   const rules = [
-    [/sunglass|aviator|shade/, STOCK.sunglasses],
-    [/lipstick|lip gloss|matte lip|lip /, STOCK.lipstick],
-    [/foundation|makeup set|maange/, STOCK.foundation],
-    [/serum|skincare|face mask|beauty|hair styling/, STOCK.beauty],
-    [/earring|butterfly/, STOCK.earrings],
-    [/necklace|bracelet|pearl|jewel/, STOCK.jewelry],
-    [/backpack|duffel|laptop sleeve/, STOCK.backpack],
-    [/tote|handbag|crossbody|shoulder bag|mini bag|gym bag/, STOCK.bag],
-    [/beanie|cap adjustable|knit/, STOCK.hat],
-    [/dress|linen|hoodie|jogger|polo|shirt|trouser|pattern shirt/, STOCK.clothing],
-    [/sneaker|running|loafer|sandal|slide|canvas slip|formal shoe|leather casual/, STOCK.shoes],
-    [/watch|smart watch/, STOCK.watch],
-    [/phone case|earbuds/, STOCK.phone],
-    [/belt/, STOCK.belt]
+    [/iphone 18 pro max/, STOCK.iphone18ProMax],
+    [/iphone 18 pro/, STOCK.iphone18Pro],
+    [/iphone duo/, STOCK.iphoneDuo],
+    [/iphone 17 pro max/, STOCK.iphone17ProMax],
+    [/iphone 17 pro/, STOCK.iphone17Pro],
+    [/iphone air/, STOCK.iphoneAir],
+    [/iphone 17/, STOCK.iphone17],
+    [/iphone/, STOCK.iphone],
+    [/cable|charger|usb-c|lightning/, STOCK.cable],
+    [/watch/, STOCK.watch]
   ];
 
   for (const [re, url] of rules) {
-    if (re.test(name)) {
-      return size === 600 ? url : url.replace("w=600", `w=${size}`).replace("h=600", `h=${size}`);
-    }
+    if (re.test(name)) return sized(url, size);
   }
 
   for (const [key, url] of Object.entries(CATEGORY_STOCK)) {
-    if (cat.includes(key)) {
-      return size === 600 ? url : url.replace("w=600", `w=${size}`).replace("h=600", `h=${size}`);
-    }
+    if (cat.includes(key)) return sized(url, size);
   }
 
-  return size === 600 ? STOCK.general : STOCK.general.replace("w=600", `w=${size}`).replace("h=600", `h=${size}`);
+  return sized(STOCK.general, size);
 }
 
 export function stockPhotoForCategory(category, size = 320) {
   const cat = `${category || ""}`.toLowerCase();
   for (const [key, url] of Object.entries(CATEGORY_STOCK)) {
-    if (cat.includes(key)) {
-      return size === 600 ? url : url.replace("w=600", `w=${size}`).replace("h=600", `h=${size}`);
-    }
+    if (cat.includes(key)) return sized(url, size);
   }
   return stockPhotoForProduct({ name: category, category }, size);
 }

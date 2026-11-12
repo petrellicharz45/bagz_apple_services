@@ -1,14 +1,14 @@
 {
   "name": "Bagz Apple Services",
   "short_name": "Bagz",
-  "description": "Online shopping in Uganda — fashion, electronics, home & more. Mobile money checkout & wallet.",
+  "description": "Authentic iPhones, Pixel, Samsung, MacBooks and accessories in Kampala. Swap & top-up, warranty, same-day delivery.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0a0a0a",
-  "theme_color": "#ea580c",
-  "categories": ["shopping", "lifestyle"],
+  "background_color": "#ffffff",
+  "theme_color": "#13344f",
+  "categories": ["shopping", "business"],
   "icons": [
     {
       "src": "/pwa-icon-192.png",

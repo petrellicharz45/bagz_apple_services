@@ -60,3 +60,6 @@ admin/scripts/migrate-from-luxiva.mjs
 *.MOV
 *.mov
 brand-assets/raw/
+# Real env files (any folder). Templates (*.example) stay tracked.
+.env.*
+!*.example
