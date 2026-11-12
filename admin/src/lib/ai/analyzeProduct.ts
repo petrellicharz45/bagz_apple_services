@@ -49,9 +49,9 @@ export async function analyzeWithOpenRouter(
 
   const prompt = `You are an e-commerce copywriter for Bagz Apple Services, an authentic Apple & tech store in Kampala, Uganda.
 Look at the product image and return ONLY one JSON object with these keys:
-- "name": short product title (max 10 words)${productName ? ` (hint: ${productName})` : ""}
+- "name": short product title (max 10 words).${productName ? ` The admin typed the exact model: "${productName}". Use it as the name and do NOT change the model, generation or storage.` : " If you cannot read the exact model from the photo, use a generic name such as \"Apple iPhone (Pro model)\" — never guess a model number or year."}
 - "category": exactly ONE from: ${categoryList}${category ? ` (hint: ${category})` : ""}
-- "description": 2-3 sentences (model, key specs such as storage/chip/camera, condition if visible, who it's for). Never invent prices or warranty terms
+- "description": 2-3 sentences about what is visible (design, colour/finish, camera layout, what is in the box) and who it suits. Only mention a chip, storage size, battery or other spec if it is part of the product name given above; never guess specs, model years, prices or warranty terms
 - "colors": array of 2-4 dominant HEX colors like "#FF5733"
 
 Example: {"name":"iPhone 17 Pro Max 256GB Cosmic Orange","category":"iPhones","description":"...","colors":["#1E3A5F","#FFFFFF"]}`;
