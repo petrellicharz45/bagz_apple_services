@@ -340,7 +340,7 @@
   .welcome h2 {
     margin: 0;
     font-size: 28px;
-    color: #1b1512;
+    color: #13344f;
   }
   .welcome p {
     margin: 8px 0 0;

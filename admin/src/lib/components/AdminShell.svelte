@@ -266,7 +266,7 @@
     background: var(--fd-bg);
   }
   aside {
-    background: #1b1512;
+    background: #0c2236;
     color: #f0ebe8;
     padding: 22px 16px;
     display: flex;
@@ -292,7 +292,7 @@
   .console-label {
     font-size: 11px;
     font-weight: 500;
-    color: #a8a29e;
+    color: #9fb3c8;
     letter-spacing: 0.02em;
   }
   .logo {
@@ -323,7 +323,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #d6d3d1;
+    color: #d5dfe9;
     text-decoration: none;
     padding: 10px 14px;
     border-radius: 12px;
@@ -582,7 +582,7 @@
     cursor: pointer;
   }
   .logout {
-    background: #fff3e8;
+    background: #eef7fc;
     color: var(--fd-orange);
     border-radius: 999px;
     padding: 8px 12px;

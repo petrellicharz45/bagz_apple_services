@@ -327,7 +327,7 @@
     margin-top: 0;
     margin-bottom: 12px;
     font-size: 16px;
-    color: #1b1512;
+    color: #13344f;
   }
   .form-row {
     display: flex;
@@ -380,7 +380,7 @@
   .group-name {
     flex: 1;
     font-weight: 600;
-    color: #1b1512;
+    color: #13344f;
   }
   .rename-btn,
   .delete-btn,

@@ -289,7 +289,7 @@
   th, td { padding: 12px 14px; text-align: left; vertical-align: top; }
   th {
     background: #fafaf9;
-    color: #78716c;
+    color: #64748b;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -301,10 +301,10 @@
   .order-id { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: #57534e; }
   .product { font-weight: 600; max-width: 280px; }
   .customer { font-weight: 600; }
-  .muted { color: #78716c; font-size: 12px; margin-top: 2px; }
+  .muted { color: #64748b; font-size: 12px; margin-top: 2px; }
   .nowrap { white-space: nowrap; }
   .money { font-weight: 700; white-space: nowrap; }
-  .empty { text-align: center; padding: 28px; color: #78716c; }
+  .empty { text-align: center; padding: 28px; color: #64748b; }
   .pill {
     display: inline-block;
     padding: 4px 8px;

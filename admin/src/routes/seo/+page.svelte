@@ -157,7 +157,7 @@
   .tabs button.on, .save { background: #135fa3; color: #fff; border-color: #135fa3; }
   section, label { display: block; background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
   .row { width: 100%; display: flex; justify-content: space-between; background: none; border: 0; cursor: pointer; text-align: left; }
-  small { display: block; color: #78716c; }
-  input, textarea { width: 100%; margin-top: 6px; padding: 8px; border: 1px solid #d6d3d1; border-radius: 8px; }
+  small { display: block; color: #64748b; }
+  input, textarea { width: 100%; margin-top: 6px; padding: 8px; border: 1px solid #d5dfe9; border-radius: 8px; }
   .save { margin-top: 8px; }
 </style>

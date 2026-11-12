@@ -106,9 +106,9 @@
     font-weight: 600;
   }
   .tabs button.active {
-    background: #1b1512;
+    background: #13344f;
     color: #fff;
-    border-color: #1b1512;
+    border-color: #13344f;
   }
   .inbox {
     list-style: none;
