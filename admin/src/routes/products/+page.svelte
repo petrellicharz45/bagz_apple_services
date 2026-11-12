@@ -28,7 +28,7 @@
   $: loading = !catalogReady;
 
   // ---------- pagination (state lives in the URL: ?page=2&per=100) ----------
-  const PAGE_SIZES = [50, 100, 0] as const; // 0 = all
+  const PAGE_SIZES = [25, 50, 100, 0] as const; // 0 = all
   const LIST_URL_KEY = "admin_products_list_url";
   $: perParam = Number($page.url.searchParams.get("per") ?? 50);
   $: perPage = (PAGE_SIZES as readonly number[]).includes(perParam) ? perParam : 50;
@@ -165,6 +165,7 @@
     <label class="per-page">
       Show
       <select value={String(perPage)} on:change={setPerPage} aria-label="Products per page">
+        <option value="25">25</option>
         <option value="50">50</option>
         <option value="100">100</option>
         <option value="0">All</option>
@@ -340,8 +341,12 @@
     gap: 8px;
     font-size: 14px;
     color: #374151;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .per-page select {
+    width: auto;
+    min-width: 76px;
     padding: 6px 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
