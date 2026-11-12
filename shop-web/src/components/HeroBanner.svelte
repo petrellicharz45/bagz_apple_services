@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { BRAND } from "../lib/brand.js";
-  import { loadHomeBanners } from "../lib/homeBanners.js";
+  import { watchHomeBanners } from "../lib/homeBanners.js";
 
   export let onShop = () => {};
 
@@ -48,14 +48,24 @@
     index = (next + count) % count;
   }
 
-  onMount(async () => {
+  let stopWatching = () => {};
+
+  onMount(() => {
     timer = setInterval(() => {
-      if (!paused) go(index + 1);
+      if (!paused && !document.hidden) go(index + 1);
     }, 6000);
-    imageBanners = await loadHomeBanners();
-    index = 0;
+    // Live: banners added/edited/hidden in Admin appear without reloading the page.
+    stopWatching = watchHomeBanners((list) => {
+      const currentId = imageBanners[index]?.id;
+      imageBanners = list;
+      const keep = list.findIndex((b) => b.id === currentId);
+      index = keep >= 0 ? keep : 0;
+    });
   });
-  onDestroy(() => clearInterval(timer));
+  onDestroy(() => {
+    clearInterval(timer);
+    stopWatching();
+  });
 
   function openBanner(banner) {
     const link = banner?.link || "";
@@ -83,8 +93,8 @@
     class="img-hero"
     aria-label="Promotions"
     aria-roledescription="carousel"
-    on:mouseenter={() => (paused = true)}
-    on:mouseleave={() => (paused = false)}
+    on:pointerenter={(e) => (paused = e.pointerType === "mouse")}
+    on:pointerleave={() => (paused = false)}
     on:touchstart|passive={onTouchStart}
     on:touchend={onTouchEnd}
   >
@@ -105,8 +115,9 @@
             <img
               src={banner.imageUrl}
               alt={banner.caption || ""}
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchpriority={i === 0 ? "high" : "auto"}
+              loading="eager"
+              decoding="async"
+              fetchpriority={i === 0 ? "high" : "low"}
             />
           </picture>
         </button>
