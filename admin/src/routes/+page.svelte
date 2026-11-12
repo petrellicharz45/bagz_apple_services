@@ -47,11 +47,11 @@
   $: outStock = products.filter((p) => Number(p.stock || 0) <= 0).length;
   $: lowOnly = products.filter((p) => Number(p.stock || 0) > 0 && Number(p.stock || 0) <= 5).length;
   $: kpis = [
-    { label: "Total Products", value: String(products.length), tone: "green", hint: "Live catalog", dot: "green" },
-    { label: "Total Orders", value: String(orders.length), tone: "blue", hint: "Latest fetched", dot: "blue" },
-    { label: "Total Customers", value: String(customers), tone: "purple", hint: "Registered users", dot: "purple" },
-    { label: "Total Sales", value: ugx(revenue), tone: "gold", hint: "Paid orders only", dot: "gold" },
-    { label: "Low Stock Items", value: String(lowStock.length), tone: "red", hint: "Stock ≤ 5", dot: "red" }
+    { label: "Total Products", value: String(products.length), tone: "green", icon: "cube", hint: "Live catalog", dot: "green" },
+    { label: "Total Orders", value: String(orders.length), tone: "blue", icon: "shopping-bag", hint: "Latest fetched", dot: "blue" },
+    { label: "Total Customers", value: String(customers), tone: "purple", icon: "users", hint: "Registered users", dot: "purple" },
+    { label: "Total Sales", value: ugx(revenue), tone: "gold", icon: "money", hint: "Paid orders only", dot: "gold" },
+    { label: "Low Stock Items", value: String(lowStock.length), tone: "red", icon: "exclamation-triangle", hint: "Stock ≤ 5", dot: "red" }
   ];
 
   $: salesDays = buildDailySalesSeries(orders, 7);
@@ -160,7 +160,7 @@
   <div class="kpis">
     {#each kpis as kpi}
       <article class="kpi {kpi.tone}">
-        <div class="kpi-icon"></div>
+        <div class="kpi-icon"><i class="fa fa-{kpi.icon}" aria-hidden="true"></i></div>
         <div class="kpi-body">
           <span>{kpi.label}</span>
           <strong>{kpi.value}</strong>
@@ -173,7 +173,7 @@
   <div class="mid">
     <section class="panel sales">
       <header>
-        <h3><span class="panel-ico sales-ico"></span> Sales Overview</h3>
+        <h3><span class="panel-ico sales-ico"><i class="fa fa-line-chart" aria-hidden="true"></i></span> Sales Overview</h3>
         <span class="range-pill"><i class="fa fa-calendar" aria-hidden="true"></i> Last 7 days</span>
       </header>
       <svg viewBox="0 0 300 180" class="chart">
@@ -203,7 +203,7 @@
 
     <section class="panel">
       <header>
-        <h3><span class="panel-ico orders-ico"></span> Recent Orders</h3>
+        <h3><span class="panel-ico orders-ico"><i class="fa fa-list-alt" aria-hidden="true"></i></span> Recent Orders</h3>
         <a href="/orders">View all →</a>
       </header>
       <table>
@@ -389,12 +389,15 @@
     height: 42px;
     border-radius: 50%;
     flex: none;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
   }
-  .kpi.green .kpi-icon { background: #dcfce7; }
-  .kpi.blue .kpi-icon { background: #dbeafe; }
-  .kpi.purple .kpi-icon { background: #ede9fe; }
-  .kpi.gold .kpi-icon { background: #fef3c7; }
-  .kpi.red .kpi-icon { background: #fee2e2; }
+  .kpi.green .kpi-icon { background: #dcfce7; color: #16a34a; }
+  .kpi.blue .kpi-icon { background: #dbeafe; color: #1673c4; }
+  .kpi.purple .kpi-icon { background: #ede9fe; color: #7c3aed; }
+  .kpi.gold .kpi-icon { background: #fef3c7; color: #d97706; }
+  .kpi.red .kpi-icon { background: #fee2e2; color: #dc2626; }
   .kpi span, .kpi small {
     display: block;
     color: #64748b;
@@ -425,9 +428,12 @@
   .status-dot.gold { background: #f59e0b; }
   .status-dot.red { background: #ef4444; }
   .panel-ico {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
+    display: inline-grid;
+    place-items: center;
+    color: #fff;
+    font-size: 13px;
+    width: 26px;
+    height: 26px;
     border-radius: 6px;
     margin-right: 6px;
     vertical-align: -3px;
