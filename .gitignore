@@ -66,3 +66,5 @@ brand-assets/raw/
 # Firebase Admin private keys (never commit)
 firebase-service-account.json
 firebase-adminsdk.json
+# Local backups written by scripts/seed-bagz-catalog.mjs
+.seed-backup-*.json

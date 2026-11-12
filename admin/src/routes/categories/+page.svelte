@@ -15,6 +15,7 @@
   import { db } from "$lib/firebase";
   import { uploadProductImage } from "$lib/images/cloudinaryUpload";
   import { resizeToJpeg } from "$lib/images/productImage";
+  import { loadCategoryOrder, saveCategoryOrder, sortByOrder } from "$lib/data/categoryOrder";
 
   /** Category bubbles are small: resize, then upload to Cloudinary (same as product photos). */
   async function uploadCategoryImage(file: File, category: string): Promise<string> {
@@ -23,15 +24,33 @@
     return uploadProductImage(jpeg, `${slug}_${crypto.randomUUID()}`, "category_images");
   }
 
-  let categoriesList = ["Clothing", "Shoes", "Accessories", "Bags", "Jewelry"];
+  /** Defaults only used to create settings/categories on a brand-new project (no photos yet). */
+  const DEFAULT_CATEGORIES = ["iPhones", "Samsung", "Google Pixel", "MacBooks", "iPads", "Apple Watch", "AirPods & Audio", "Accessories"];
+  let categoriesList = [...DEFAULT_CATEGORIES];
   
-  let categoryImages: Record<string, string> = {
-    Clothing: "https://i.pinimg.com/736x/80/f7/32/80f7324d57c2e391b480b544b62dbba4.jpg",
-    Shoes: "https://i.pinimg.com/736x/6f/a6/cf/6fa6cf5c363d67f52ca8c919d77f80db.jpg",
-    Accessories: "https://i.pinimg.com/564x/0f/7d/5d/0f7d5deba4ec60155b5d122247fb7eec.jpg",
-    Bags: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=400&auto=format&fit=crop",
-    Jewelry: "https://images.unsplash.com/photo-1599643478524-fb66f7f2b1d6?q=80&w=400&auto=format&fit=crop"
-  };
+  let categoryImages: Record<string, string> = Object.fromEntries(DEFAULT_CATEGORIES.map((c) => [c, ""]));
+  let savingOrder = false;
+
+  async function persistOrder(list: string[]) {
+    categoriesList = list;
+    savingOrder = true;
+    try {
+      await saveCategoryOrder(db, list);
+    } catch (e: any) {
+      errorMsg = "Could not save category order: " + e.message;
+    } finally {
+      savingOrder = false;
+    }
+  }
+
+  function moveCategory(category: string, delta: number) {
+    const i = categoriesList.indexOf(category);
+    const j = i + delta;
+    if (i < 0 || j < 0 || j >= categoriesList.length) return;
+    const next = [...categoriesList];
+    [next[i], next[j]] = [next[j], next[i]];
+    void persistOrder(next);
+  }
 
   let loading = true;
   let uploadingCategory = "";
@@ -51,10 +70,11 @@
         const data = snapshot.data();
         // Use ONLY Firestore data — ignore hardcoded defaults
         categoryImages = data as Record<string, string>;
-        categoriesList = Object.keys(categoryImages);
+        categoriesList = sortByOrder(Object.keys(categoryImages), await loadCategoryOrder(db));
       } else {
-        // Create the default document if it doesn't exist
+        // Brand-new project: create the default Bagz categories (photos added later).
         await setDoc(docRef, categoryImages);
+        await saveCategoryOrder(db, categoriesList);
       }
     } catch (e: any) {
       errorMsg = "Error loading categories: " + e.message;
@@ -127,7 +147,7 @@
 
       // Update local state
       categoryImages = { ...categoryImages, [category]: downloadUrl };
-      categoriesList = [...categoriesList, category];
+      await persistOrder([...categoriesList, category]);
 
       successMsg = `Successfully added category "${category}"!`;
       newCategoryName = "";
@@ -184,7 +204,7 @@
       }
       await setDoc(docRef, renamed);
       categoryImages = renamed;
-      categoriesList = Object.keys(categoryImages);
+      await persistOrder(categoriesList.map((c) => (c === oldName ? newName : c)));
 
       // Keep its subcategories and products attached to the new name.
       const subRef = doc(db, "settings", "subcategories");
@@ -219,7 +239,7 @@
       await updateDoc(docRef, { [categoryName]: deleteField() });
       const { [categoryName]: _removed, ...rest } = categoryImages;
       categoryImages = rest;
-      categoriesList = Object.keys(categoryImages);
+      await persistOrder(categoriesList.filter((c) => c !== categoryName));
 
       successMsg = `Successfully deleted category "${categoryName}"!`;
     } catch (e: any) {
@@ -229,11 +249,11 @@
 </script>
 
 <div class="header">
-  <h1>Manage Category Images</h1>
+  <h1>Categories</h1>
   <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
-<p>Update the images that appear in the circular category bubbles on the mobile app home screen.</p>
+<p>Main shop categories, in the order customers see them. Use the arrows to reorder; photos appear in the category bubbles.</p>
 
 {#if !loading}
   <div class="add-category-card">
@@ -242,7 +262,7 @@
       <input
         type="text"
         bind:value={newCategoryName}
-        placeholder="Enter new category name (e.g. Outerwear)"
+        placeholder="Enter new category name (e.g. Gaming)"
         disabled={addingCategory}
         on:keydown={(e) => { if (e.key === 'Enter') addCategory(); }}
       />
@@ -284,8 +304,13 @@
   {/if}
 
   <div class="categories-grid">
-    {#each categoriesList as category}
+    {#each categoriesList as category, ci (category)}
       <div class="category-card">
+        <div class="order-row">
+          <span class="order-num">{ci + 1}</span>
+          <button type="button" class="order-btn" title="Move earlier" aria-label="Move {category} earlier" disabled={ci === 0 || savingOrder} on:click={() => moveCategory(category, -1)}><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+          <button type="button" class="order-btn" title="Move later" aria-label="Move {category} later" disabled={ci === categoriesList.length - 1 || savingOrder} on:click={() => moveCategory(category, 1)}><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
         {#if renamingCategory === category}
           <div class="rename-row">
             <input
@@ -507,6 +532,30 @@
     color: #6c757d;
   }
 
+  .order-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .order-num {
+    font-weight: 800;
+    color: #94a3b8;
+    margin-right: auto;
+  }
+  .order-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #13344f;
+    cursor: pointer;
+  }
+  .order-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
   .card-actions {
     display: flex;
     gap: 8px;

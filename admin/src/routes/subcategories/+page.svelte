@@ -5,6 +5,7 @@
   import { db, app } from "$lib/firebase";
   import { uploadProductImage } from "$lib/images/cloudinaryUpload";
   import { resizeToJpeg } from "$lib/images/productImage";
+  import { loadCategoryOrder, sortByOrder } from "$lib/data/categoryOrder";
 
   /** Subcategory bubbles are small: resize, then upload to Cloudinary (same as product photos). */
   async function uploadSubcategoryImage(file: File, category: string, subName: string): Promise<string> {
@@ -45,12 +46,12 @@
       const catSnap = await getDoc(catRef);
       if (catSnap.exists() && catSnap.data()) {
          const keys = Object.keys(catSnap.data());
-         // Filter out standard ones if you want, but for now just use all or keep static ones at the top
+         // Real shop categories first (in the admin order), then the virtual feeds.
          const staticCats = ["Just for You", "New In", "Sale"];
-         const dynamicCats = keys.filter(k => !staticCats.includes(k));
-         mainCategories = [...staticCats, ...dynamicCats];
+         const dynamicCats = sortByOrder(keys.filter(k => !staticCats.includes(k)), await loadCategoryOrder(db!));
+         mainCategories = [...dynamicCats, ...staticCats];
       } else {
-         mainCategories = ["Just for You", "New In", "Sale", "Clothing", "Shoes", "Accessories", "Bags", "Jewelry"];
+         mainCategories = ["iPhones", "Samsung", "Google Pixel", "MacBooks", "iPads", "Apple Watch", "AirPods & Audio", "Accessories", "Just for You", "New In", "Sale"];
       }
       
       if (mainCategories.length > 0) {
@@ -127,6 +128,49 @@
     } finally {
       adding = false;
       target.value = "";
+    }
+  }
+
+  async function saveMap(message: string) {
+    subcategoriesMap = { ...subcategoriesMap };
+    const docRef = doc(db, "settings", "subcategories");
+    await setDoc(docRef, subcategoriesMap, { merge: true });
+    successMsg = message;
+  }
+
+  /** Add a subcategory by name only — the photo can be added later with "Add photo". */
+  async function addByName() {
+    const name = newSubName.trim();
+    errorMsg = "";
+    successMsg = "";
+    if (!name || !selectedCategory) return;
+    const list = subcategoriesMap[selectedCategory] || [];
+    if (list.some((x) => String(x.name).toLowerCase() === name.toLowerCase())) {
+      errorMsg = `"${name}" already exists in ${selectedCategory}.`;
+      return;
+    }
+    adding = true;
+    try {
+      subcategoriesMap[selectedCategory] = [...list, { name, imageUrl: "" }];
+      await saveMap(`Added ${name} to ${selectedCategory}. Add its photo any time.`);
+      newSubName = "";
+    } catch (e: any) {
+      errorMsg = "Failed to add: " + e.message;
+    } finally {
+      adding = false;
+    }
+  }
+
+  async function moveSub(index: number, delta: number) {
+    const list = [...(subcategoriesMap[selectedCategory] || [])];
+    const j = index + delta;
+    if (j < 0 || j >= list.length) return;
+    [list[index], list[j]] = [list[j], list[index]];
+    subcategoriesMap[selectedCategory] = list;
+    try {
+      await saveMap("Order saved.");
+    } catch (e: any) {
+      errorMsg = "Failed to reorder: " + e.message;
     }
   }
 
@@ -214,7 +258,7 @@
   <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
-<p>Update the circular images that appear inside the Category Search tab.</p>
+<p>Subcategories appear as round tiles inside each category on the shop. Add them by name now and upload their photos later.</p>
 
 {#if loading}
   <p>Loading...</p>
@@ -228,8 +272,18 @@
     </select>
   </div>
 
+  <div class="card add-section" style="margin-bottom: 20px;">
+    <h3>Add subcategory to {selectedCategory}</h3>
+    <form class="form-row" on:submit|preventDefault={addByName}>
+      <input type="text" bind:value={newSubName} placeholder="e.g. iPhone 16 Series" disabled={adding} />
+      <button type="submit" class="btn btn-primary" disabled={adding || !newSubName.trim()}>
+        <i class="fa fa-plus" aria-hidden="true"></i> {adding ? "Adding…" : "Add"}
+      </button>
+    </form>
+  </div>
+
   <div class="card add-section">
-    <h3>Upload New Subcategory Image</h3>
+    <h3>Or upload a photo to create one</h3>
     <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Select an image. Our AI will try to identify the item type and assign it to the correct Main Category; if it can't, you'll be asked for the name and it goes into the category selected above.</p>
     <div class="form-row">
       <label class="btn btn-primary" style="margin:0; width: 100%; text-align: center;">
@@ -244,7 +298,16 @@
   <div class="grid">
     {#each subcategoriesMap[selectedCategory] || [] as subcat, i}
       <div class="subcat-item">
-        <img src={subcat.imageUrl} alt={subcat.name} />
+        <div class="order-row">
+          <button type="button" class="order-btn" title="Move earlier" aria-label="Move earlier" disabled={i === 0} on:click={() => moveSub(i, -1)}><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+          <span class="order-num">{i + 1}</span>
+          <button type="button" class="order-btn" title="Move later" aria-label="Move later" disabled={i === (subcategoriesMap[selectedCategory] || []).length - 1} on:click={() => moveSub(i, 1)}><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
+        {#if subcat.imageUrl}
+          <img src={subcat.imageUrl} alt={subcat.name} />
+        {:else}
+          <div class="no-photo"><i class="fa fa-picture-o" aria-hidden="true"></i><span>No photo yet</span></div>
+        {/if}
         
         {#if editingIndex === i}
           <input type="text" bind:value={editingName} style="width: 90%; margin-bottom: 5px; padding: 5px; text-align: center;"/>
@@ -261,7 +324,7 @@
           <p>{subcat.name}</p>
           <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
             <label class="btn" style="padding: 5px; font-size: 12px; margin: 0; cursor: pointer; background: #28a745;">
-              {updatingImage ? 'Wait...' : 'Change Image'}
+              {updatingImage ? 'Wait...' : subcat.imageUrl ? 'Change Image' : 'Add photo'}
               <input type="file" accept="image/*" on:change={(e) => handleUpdateImage(e, i)} disabled={updatingImage} style="display:none;" />
             </label>
             <div style="display: flex; gap: 5px; justify-content: center;">
@@ -273,7 +336,7 @@
       </div>
     {/each}
     {#if !subcategoriesMap[selectedCategory] || subcategoriesMap[selectedCategory].length === 0}
-      <p>No subcategories found for {selectedCategory}. It will use the app's default hardcoded list until you add one.</p>
+      <p>No subcategories in {selectedCategory} yet. The shop shows a single "Shop {selectedCategory}" tile until you add some.</p>
     {/if}
   </div>
 {/if}
@@ -290,4 +353,10 @@
   .subcat-item { text-align: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee; }
   .subcat-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 2px solid #ddd; margin-bottom: 10px; }
   .subcat-item p { margin: 0; font-weight: bold; }
+  .no-photo { width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 50%; border: 2px dashed #cbd5e1; background: #f8fafc; color: #94a3b8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 11px; }
+  .no-photo .fa { font-size: 22px; }
+  .order-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .order-num { font-weight: 800; color: #94a3b8; font-size: 12px; }
+  .order-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; color: #13344f; cursor: pointer; }
+  .order-btn:disabled { opacity: 0.35; cursor: default; }
 </style>

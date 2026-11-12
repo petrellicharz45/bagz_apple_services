@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
-import { categoryKeysFromSettings, imageMapFromSettings } from "./categoryImages.js";
+import { categoryKeysFromSettings, imageMapFromSettings, loadCategoryOrder, sortByOrder } from "./categoryImages.js";
 import {
   enrichProduct,
   resolveCoverUrl,
@@ -11,15 +11,7 @@ import {
 import { sortProductsNewestFirst } from "./shopBrowse.js";
 import { globalDeliveryFee } from "./deliveryFees.js";
 
-const DEFAULT_CATEGORIES = [
-  "iPhones",
-  "Google Pixel",
-  "Samsung",
-  "MacBooks & iPads",
-  "Apple Watch",
-  "Audio",
-  "Accessories"
-];
+const DEFAULT_CATEGORIES = ["iPhones", "Samsung", "Google Pixel", "MacBooks", "iPads", "Apple Watch", "AirPods & Audio", "Accessories"];
 
 /**
  * Sample catalog for local development only (shown when Firestore has no products).
@@ -41,7 +33,8 @@ function demoProducts() {
     ["Google Pixel", "Pixel 9 Pro XL 512GB", 3200000, 0],
     ["Google Pixel", "Pixel 9 Pro XL 256GB", 3000000, 0],
     ["Google Pixel", "Pixel 9 Pro 256GB", 2700000, 0],
-    ["Accessories", "USB-C charging cable", 0, 0]
+    ["Accessories", "USB-C charging cable", 0, 0],
+    ["Samsung", "Samsung Galaxy Z Fold8 512GB", 0, 0]
   ];
   return items.map(([category, name, price, offer], i) => {
     const id = `demo-${i + 1}`;
@@ -57,7 +50,7 @@ export async function loadCategories() {
   try {
     const snap = await getDoc(doc(db, "settings", "categories"));
     if (!snap.exists()) return DEFAULT_CATEGORIES;
-    const keys = categoryKeysFromSettings(snap.data());
+    const keys = sortByOrder(categoryKeysFromSettings(snap.data()), await loadCategoryOrder());
     return keys.length ? keys : DEFAULT_CATEGORIES;
   } catch {
     return DEFAULT_CATEGORIES;

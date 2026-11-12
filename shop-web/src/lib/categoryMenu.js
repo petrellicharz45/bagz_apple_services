@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase.js";
 import { coverUrl, stockPhotoForCategory, stockPhotoForProduct } from "./catalog.js";
-import { categoryKeysFromSettings, imageMapFromSettings } from "./categoryImages.js";
+import { categoryKeysFromSettings, imageMapFromSettings, loadCategoryOrder, sortByOrder } from "./categoryImages.js";
 import { SHOP_MERCH_GROUPS, filterShopProducts, sortProductsNewestFirst } from "./shopBrowse.js";
 
 const VIRTUAL_CATEGORIES = new Set(["Just for You", "New In", "Sale"]);
@@ -44,8 +44,8 @@ const STATIC_MENU_GROUPS = [
     id: "mac",
     label: "Mac, iPad & Watch",
     subs: [
-      { label: "MacBooks", filterCategory: "MacBooks & iPads", query: "macbook" },
-      { label: "iPads", filterCategory: "MacBooks & iPads", query: "ipad" },
+      { label: "MacBooks", filterCategory: "MacBooks" },
+      { label: "iPads", filterCategory: "iPads" },
       { label: "Apple Watch", filterCategory: "Apple Watch" }
     ]
   },
@@ -53,7 +53,7 @@ const STATIC_MENU_GROUPS = [
     id: "accessories",
     label: "Audio & accessories",
     subs: [
-      { label: "AirPods & audio", filterCategory: "Audio", hot: true },
+      { label: "AirPods & audio", filterCategory: "AirPods & Audio", hot: true },
       { label: "Cases & protectors", filterCategory: "Accessories", query: "case" },
       { label: "Chargers & cables", filterCategory: "Accessories", query: "charger" }
     ]
@@ -111,6 +111,19 @@ export function featuredSubImage(label, products = []) {
   return stockPhotoForCategory(stockCat, 200);
 }
 
+/**
+ * Search words for a subcategory tile. Product search needs every word to appear in the
+ * product, so drop filler like "Series", "&", "and", and plural "s"
+ * ("iPhone 15 Series" → "iPhone 15", "Cases & Covers" → "Case Cover").
+ */
+export function subQueryFromName(name) {
+  const words = String(name || "")
+    .split(/\s+/)
+    .filter((w) => w && !/^(series|&|and)$/i.test(w))
+    .map((w) => (w.length > 3 && /[a-z]s$/i.test(w) && !/ss$/i.test(w) ? w.slice(0, -1) : w));
+  return words.join(" ") || String(name || "");
+}
+
 function subFromFirestore(mainCategory, item, categoryImages) {
   const name = item?.name || item?.label || "Shop";
   const imageUrl =
@@ -127,7 +140,7 @@ function subFromFirestore(mainCategory, item, categoryImages) {
   return {
     label: name,
     filterCategory: mainCategory,
-    query: name,
+    query: subQueryFromName(name),
     imageUrl
   };
 }
@@ -147,13 +160,14 @@ export async function loadMerchGroups() {
 /** Load admin-managed categories + subcategories from Firestore. */
 export async function loadBrowseMenu() {
   try {
-    const [catSnap, subSnap] = await Promise.all([
+    const [catSnap, subSnap, order] = await Promise.all([
       getDoc(doc(db, "settings", "categories")),
-      getDoc(doc(db, "settings", "subcategories"))
+      getDoc(doc(db, "settings", "subcategories")),
+      loadCategoryOrder()
     ]);
     const rawCats = catSnap.exists() ? catSnap.data() : {};
     const categoryImages = imageMapFromSettings(rawCats);
-    const catNames = categoryKeysFromSettings(rawCats);
+    const catNames = sortByOrder(categoryKeysFromSettings(rawCats), order);
     const subMap = subSnap.exists() ? subSnap.data() : {};
 
     if (!catNames.length) {
