@@ -211,7 +211,7 @@
 
 <div class="header">
   <h1>Manage Subcategories</h1>
-  <a href="/" class="back-link">← Back to Dashboard</a>
+  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>Update the circular images that appear inside the Category Search tab.</p>

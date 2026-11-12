@@ -157,7 +157,7 @@
 
 <div class="header">
   <h1>Manage Home Banners</h1>
-  <a href="/" class="back-link">← Back to Dashboard</a>
+  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>Upload promotional images, models, or sales banners that appear in the top carousel on the mobile app home screen.</p>
@@ -185,7 +185,7 @@
         <div class="caption-input-group">
           <input type="text" bind:value={caption} placeholder="e.g. Special Collection 2026" required />
           <button type="button" class="ai-btn" on:click={handleGenerateCaption} disabled={generatingCaption}>
-            {generatingCaption ? '✨ Analyzing...' : '✨ Auto-Generate'}
+            <i class="fa fa-magic" aria-hidden="true"></i> {generatingCaption ? "Analyzing..." : "Auto-Generate"}
           </button>
         </div>
       </label>

@@ -45,7 +45,7 @@
   <p class="hint">
     Filled automatically from name, category, and description. Edit if you want — saved with each product.
   </p>
-  <button type="button" class="regen" on:click={autoFill}>↻ Regenerate SEO</button>
+  <button type="button" class="regen" on:click={autoFill}><i class="fa fa-refresh" aria-hidden="true"></i> Regenerate SEO</button>
 
   <label>
     SEO title <small>(~60 chars)</small>

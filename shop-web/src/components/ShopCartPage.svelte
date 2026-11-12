@@ -104,7 +104,7 @@
     >
       Proceed to checkout
     </button>
-    <p class="lock">🔒 Pay with mobile money on the next step — no charge until you approve on your phone.</p>
+    <p class="lock"><i class="fa fa-lock" aria-hidden="true"></i> Pay with mobile money on the next step — no charge until you approve on your phone.</p>
   </aside>
 </div>
 

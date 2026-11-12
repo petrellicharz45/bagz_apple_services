@@ -205,7 +205,7 @@
 
 <div class="header">
   <h1>Manage Groups</h1>
-  <a href="/" class="back-link">← Back to Dashboard</a>
+  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>
@@ -246,8 +246,8 @@
             bind:value={renameValue}
             on:keydown={(e) => { if (e.key === 'Enter') confirmRename(group); if (e.key === 'Escape') cancelRename(); }}
           />
-          <button class="rename-confirm-btn" on:click={() => confirmRename(group)} disabled={busy}>✓</button>
-          <button class="rename-cancel-btn" on:click={cancelRename}>✕</button>
+          <button class="rename-confirm-btn" aria-label="Save name" on:click={() => confirmRename(group)} disabled={busy}><i class="fa fa-check" aria-hidden="true"></i></button>
+          <button class="rename-cancel-btn" aria-label="Cancel rename" on:click={cancelRename}><i class="fa fa-times" aria-hidden="true"></i></button>
         {:else}
           <span class="group-name">{group}</span>
           <button class="rename-btn" on:click={() => startRename(group)} disabled={busy}>Rename</button>

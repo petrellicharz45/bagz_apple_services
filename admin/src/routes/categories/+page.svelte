@@ -230,7 +230,7 @@
 
 <div class="header">
   <h1>Manage Category Images</h1>
-  <a href="/" class="back-link">← Back to Dashboard</a>
+  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>Update the images that appear in the circular category bubbles on the mobile app home screen.</p>
@@ -294,8 +294,8 @@
               on:keydown={(e) => { if (e.key === 'Enter') confirmRename(category); if (e.key === 'Escape') cancelRename(); }}
               placeholder="New name..."
             />
-            <button class="rename-confirm-btn" on:click={() => confirmRename(category)}>✓</button>
-            <button class="rename-cancel-btn" on:click={cancelRename}>✕</button>
+            <button class="rename-confirm-btn" aria-label="Save name" on:click={() => confirmRename(category)}><i class="fa fa-check" aria-hidden="true"></i></button>
+            <button class="rename-cancel-btn" aria-label="Cancel rename" on:click={cancelRename}><i class="fa fa-times" aria-hidden="true"></i></button>
           </div>
         {:else}
           <h3>{category}</h3>

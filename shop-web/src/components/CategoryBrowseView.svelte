@@ -29,7 +29,7 @@
 
 <div class="browse">
   <header class="browse-head">
-    <button type="button" class="back" on:click={onBack}>← Back</button>
+    <button type="button" class="back" on:click={onBack}><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
     <h1>{title}</h1>
   </header>
 

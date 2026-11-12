@@ -33,14 +33,14 @@
             {:else}
               <span class="ph" />
             {/if}
-            <span class="flame">🔥</span>
+            <span class="flame"><i class="fa fa-fire" aria-hidden="true"></i></span>
             <span>{chip.query}</span>
           </button>
         {/each}
       </div>
     {:else if showMatches}
       {#if matchCount === 0}
-        <p class="not-found">Sorry, item not found 😢</p>
+        <p class="not-found"><i class="fa fa-search" aria-hidden="true"></i> Sorry, item not found</p>
       {:else}
         {#each suggestions as s}
           <button

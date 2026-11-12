@@ -203,7 +203,7 @@
     <h1>User Management</h1>
     <p>Invite staff, assign modules per person, and manage roles.</p>
   </div>
-  <button type="button" class="btn-invite" on:click={() => (inviteOpen = true)}>✉ Invite User</button>
+  <button type="button" class="btn-invite" on:click={() => (inviteOpen = true)}><i class="fa fa-envelope-o" aria-hidden="true"></i> Invite User</button>
 </section>
 
 {#if errorMsg}
@@ -298,8 +298,8 @@
             <td>{formatModulesSummary(inv.modules || [])}</td>
             <td><span class="pill pending">Pending</span></td>
             <td class="actions">
-              <button type="button" class="icon-btn" title="Resend email" on:click={() => resendInvite(inv)}>✉</button>
-              <button type="button" class="icon-btn danger" title="Revoke" on:click={() => revokeInvite(inv)}>✕</button>
+              <button type="button" class="icon-btn" title="Resend email" on:click={() => resendInvite(inv)}><i class="fa fa-envelope-o" aria-hidden="true"></i></button>
+              <button type="button" class="icon-btn danger" title="Revoke" on:click={() => revokeInvite(inv)}><i class="fa fa-times" aria-hidden="true"></i></button>
             </td>
           </tr>
         {/each}

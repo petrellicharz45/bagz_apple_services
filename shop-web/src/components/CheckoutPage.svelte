@@ -609,7 +609,7 @@
       <span>{amountDue > 0 ? "Due now" : "Total"}</span>
       <strong>{formatUgx(amountDue > 0 ? amountDue : total)}</strong>
     </div>
-    <p class="lock">🔒 Secure checkout — Bagz Apple Services</p>
+    <p class="lock"><i class="fa fa-lock" aria-hidden="true"></i> Secure checkout — Bagz Apple Services</p>
   </aside>
 </div>
 

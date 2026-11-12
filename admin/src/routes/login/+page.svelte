@@ -85,15 +85,15 @@
 
         <ul>
           <li>
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm3 8H9V6a3 3 0 016 0v3z"/></svg>
+            <i class="fa fa-lock" aria-hidden="true"></i>
             Secure access
           </li>
           <li>
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 7h11v7h2.5L20 11h3v7h-2a2 2 0 11-4 0H9a2 2 0 11-4 0H3V7zm2 11a1 1 0 100-2 1 1 0 000 2zm12 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+            <i class="fa fa-truck" aria-hidden="true"></i>
             Same-day delivery
           </li>
           <li>
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a7 7 0 00-7 7v2H4v6h4v-6H7v-2a5 5 0 0110 0v2h-1v6h4v-6h-1v-2a7 7 0 00-7-7z"/></svg>
+            <i class="fa fa-exchange" aria-hidden="true"></i>
             Swap &amp; top-up
           </li>
         </ul>
@@ -124,14 +124,14 @@
           <label>
             Email
             <span class="field">
-              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6h16a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2zm8 7l8-5H4l8 5z"/></svg>
+              <i class="fa fa-envelope-o" aria-hidden="true"></i>
               <input type="email" bind:value={email} required autocomplete="username" />
             </span>
           </label>
           <label>
             Password
             <span class="field">
-              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm3 8H9V7a3 3 0 016 0v3z"/></svg>
+              <i class="fa fa-lock" aria-hidden="true"></i>
               {#if showPassword}
                 <input type="text" bind:value={password} required autocomplete="current-password" />
               {:else}
@@ -139,15 +139,15 @@
               {/if}
               <button type="button" class="toggle" on:click={() => (showPassword = !showPassword)} aria-label="Toggle password">
                 {#if showPassword}
-                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 6c5 0 9 4.5 10 6-1 1.5-5 6-10 6S3 13.5 2 12c1-1.5 5-6 10-6zm0 2a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                  <i class="fa fa-eye" aria-hidden="true"></i>
                 {:else}
-                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 4l17 17-1.4 1.4L14.6 18C13.8 18.3 12.9 18.5 12 18.5 7 18.5 3 14 2 12c.4-.6 1.4-1.9 2.8-3.2L1.6 5.4 3 4zm6.1 6.1A4 4 0 0116 13.9l-2.1-2.1a1.5 1.5 0 00-1.7-1.7L9.1 10.1zM12 7.5c5 0 9 4.5 10 6-.3.5-1 1.4-1.9 2.4l-1.5-1.5c.9-.8 1.6-1.6 1.9-2C19.4 11 16 9 12 9c-.6 0-1.2.1-1.8.2L8.7 7.7C9.7 7.6 10.8 7.5 12 7.5z"/></svg>
+                  <i class="fa fa-eye-slash" aria-hidden="true"></i>
                 {/if}
               </button>
             </span>
           </label>
           <button class="submit" type="submit" disabled={loading}>
-            {loading ? "Signing in..." : "Log in →"}
+            {loading ? "Signing in..." : "Log in"} <i class="fa fa-arrow-right" aria-hidden="true"></i>
           </button>
         </form>
       </div>
@@ -253,9 +253,13 @@
     font-weight: 600;
     white-space: nowrap;
   }
-  li svg {
+  li .fa {
     width: 14px;
     height: 14px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
     background: #135fa3;
     border-radius: 50%;
@@ -323,9 +327,10 @@
     border-radius: 12px;
     padding: 0 12px;
   }
-  .field svg {
+  .field .fa {
     width: 18px;
-    height: 18px;
+    font-size: 16px;
+    text-align: center;
     color: #94a3b8;
     flex: none;
   }
@@ -344,9 +349,9 @@
     place-items: center;
     padding: 4px;
   }
-  .toggle svg {
+  .toggle .fa {
     width: 18px;
-    height: 18px;
+    font-size: 16px;
   }
   .submit {
     margin-top: 6px;

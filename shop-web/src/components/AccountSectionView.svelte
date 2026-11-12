@@ -770,7 +770,7 @@
 
 {#if section !== "hub"}
   <button type="button" class="back-section" on:click={() => onNavigateSection("hub")}>
-    ← All account sections
+    <i class="fa fa-arrow-left" aria-hidden="true"></i> All account sections
   </button>
 {/if}
 

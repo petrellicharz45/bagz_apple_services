@@ -4,7 +4,7 @@
 
 {#if $toastStore}
   <div class="toast-bar" class:fading={$toastStore.fading} role="status" aria-live="polite">
-    <span class="toast-icon" aria-hidden="true">✓</span>
+    <span class="toast-icon" aria-hidden="true"><i class="fa fa-check"></i></span>
     <span class="toast-text">{$toastStore.message}</span>
   </div>
 {/if}

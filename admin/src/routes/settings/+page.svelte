@@ -419,7 +419,7 @@
 
 <div class="page">
   <header>
-    <a href="/" class="back-link">← Back to Dashboard</a>
+    <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
     <h1>Settings</h1>
   </header>
 
@@ -679,7 +679,7 @@
     <form on:submit|preventDefault={handleSave}>
       <section class="section-card">
         <div class="section-header">
-          <h2>💳 Mobile Money (MTN / Airtel)</h2>
+          <h2><i class="fa fa-credit-card" aria-hidden="true"></i> Mobile Money (MTN / Airtel)</h2>
           <span class="active-badge {activeProvider}">
             Default: {activeProvider === 'airtel' ? 'Airtel Money' : 'MTN Mobile Money'}
           </span>
@@ -763,7 +763,7 @@
 
       <!-- SECTION: GENERAL SETTINGS -->
       <section class="section-card">
-        <h2>💬 Customer Support</h2>
+        <h2><i class="fa fa-comments-o" aria-hidden="true"></i> Customer Support</h2>
         <div class="form-group">
           <label for="whatsapp">WhatsApp Support Number</label>
           <input
@@ -787,7 +787,7 @@
       </section>
 
       <section class="section-card">
-        <h2>🔗 Social media</h2>
+        <h2><i class="fa fa-share-alt" aria-hidden="true"></i> Social media</h2>
         <p class="section-help">Paste the full link to each profile. Only filled-in links appear in the shop footer; leave a field empty to hide it.</p>
         {#each SOCIAL_FIELDS as f}
           <div class="form-group">

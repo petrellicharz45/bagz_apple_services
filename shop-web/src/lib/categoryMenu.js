@@ -271,14 +271,16 @@ export function iconForMenuGroup(group) {
   const id = group?.id || "";
   const label = `${group?.label || ""}`.toLowerCase();
   if (id === "featured") return "star";
-  if (label.includes("shoe")) return "package";
-  if (label.includes("bag") || label.includes("luggage")) return "bag";
-  if (label.includes("cloth") || label.includes("fashion")) return "layers";
-  if (label.includes("jewel")) return "sparkles";
-  if (label.includes("beauty") || label.includes("health")) return "tag";
-  if (label.includes("accessor")) return "tag";
-  if (label.includes("home") || label.includes("util")) return "home";
-  if (label.includes("electronic")) return "bolt";
+  if (id === "iphone" || label.includes("iphone") || label.includes("apple")) return "apple";
+  if (id === "android" || label.includes("pixel") || label.includes("samsung") || label.includes("android")) return "android";
+  if (label.includes("watch")) return "watch";
+  if (label.includes("ipad") || label.includes("tablet")) return "tablet";
+  if (id === "mac" || label.includes("mac") || label.includes("laptop")) return "laptop";
+  if (label.includes("audio") || label.includes("airpod") || label.includes("headphone")) return "headset";
+  if (label.includes("charg") || label.includes("cable")) return "plug";
+  if (label.includes("accessor") || label.includes("case")) return "tag";
+  if (label.includes("swap") || label.includes("trade")) return "swap";
+  if (label.includes("phone")) return "phone";
   return "grid";
 }
 

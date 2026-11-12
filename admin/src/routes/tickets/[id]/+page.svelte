@@ -284,11 +284,11 @@
               {:else}
                 <video src={URL.createObjectURL(selectedFile)} controls class="preview-thumb"></video>
               {/if}
-              <button class="btn-remove-media" on:click={() => { selectedFile = null; selectedMediaType = ""; }}>✕</button>
+              <button class="btn-remove-media" on:click={() => { selectedFile = null; selectedMediaType = ""; }}><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
           {/if}
           <div class="chat-input-row">
-            <label class="btn-attach" for="chatFileInput">📎</label>
+            <label class="btn-attach" for="chatFileInput" aria-label="Attach photo or video"><i class="fa fa-paperclip" aria-hidden="true"></i></label>
             <input type="file" id="chatFileInput" accept="image/*,video/*" on:change={handleFileSelect} style="display:none" />
             <input
               type="text"

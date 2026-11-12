@@ -151,7 +151,7 @@
     <div class="welcome-art" aria-hidden="true">
       <div class="laptop">
         <div class="screen">
-          <span class="cart-ico">🛒</span>
+          <span class="cart-ico"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
         </div>
       </div>
     </div>
@@ -174,7 +174,7 @@
     <section class="panel sales">
       <header>
         <h3><span class="panel-ico sales-ico"></span> Sales Overview</h3>
-        <span class="range-pill">📅 Last 7 days</span>
+        <span class="range-pill"><i class="fa fa-calendar" aria-hidden="true"></i> Last 7 days</span>
       </header>
       <svg viewBox="0 0 300 180" class="chart">
         <polyline fill="none" stroke="#1673c4" stroke-width="3" points={linePoints} />

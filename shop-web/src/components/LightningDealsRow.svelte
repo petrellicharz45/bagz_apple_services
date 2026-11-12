@@ -40,7 +40,7 @@
 <section class="lightning" aria-label="Lightning deals">
   <div class="head">
     <div class="title">
-      <span class="bolt" aria-hidden="true">⚡</span>
+      <span class="bolt" aria-hidden="true"><i class="fa fa-bolt"></i></span>
       <strong>Lightning deals</strong>
       <span class="ends">Ends in {remaining}</span>
     </div>
@@ -74,8 +74,8 @@
 
 <style>
   .lightning {
-    background: linear-gradient(180deg, #fff5eb 0%, #fff 40%);
-    border: 1px solid #ffe0c2;
+    background: linear-gradient(180deg, #eef7fc 0%, #fff 40%);
+    border: 1px solid #cbe8f7;
     border-radius: 6px;
     padding: 10px 0 12px;
     margin: 0;
@@ -106,7 +106,7 @@
     background: #fff;
     padding: 2px 8px;
     border-radius: 4px;
-    border: 1px solid #ffd4a8;
+    border: 1px solid #b9e0f5;
   }
   .more {
     border: none;

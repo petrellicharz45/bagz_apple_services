@@ -1036,7 +1036,7 @@
     color: var(--trust-green);
   }
   .pill.urgent {
-    background: #fff3e8;
+    background: #eef7fc;
     color: var(--header-orange);
   }
   .pill.soon {
@@ -1049,7 +1049,7 @@
     align-items: center;
     gap: 16px 20px;
     background: #fff8f0;
-    border: 1px solid #ffe0c2;
+    border: 1px solid #cbe8f7;
     padding: 12px 14px;
     border-radius: 8px;
     margin-bottom: 16px;

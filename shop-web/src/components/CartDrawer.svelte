@@ -44,7 +44,7 @@
     </header>
     <div class="sub-body">
       <p class="sub-price">{formatUgx(selectedTotal || subtotal)}</p>
-      <p class="ship-ok">✓ Free shipping on eligible orders</p>
+      <p class="ship-ok"><i class="fa fa-check-circle" aria-hidden="true"></i> Free delivery on eligible orders</p>
       {#if needMore > 0}
         <button type="button" class="checkout min" disabled>
           {formatUgx(MIN_CHECKOUT_UGX)} min. to checkout

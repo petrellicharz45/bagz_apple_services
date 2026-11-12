@@ -538,7 +538,7 @@
     <div class="full-width ai-banner">
       <p>Hate writing descriptions? Upload your images first, then let AI analyze the product!</p>
       <button type="button" class="ai-btn" on:click={handleAIAutoFill} disabled={analyzing}>
-        {analyzing ? '✨ Analyzing Image...' : '✨ Auto-Fill Description with AI'}
+        <i class="fa fa-magic" aria-hidden="true"></i> {analyzing ? "Analyzing Image..." : "Auto-Fill Description with AI"}
       </button>
     </div>
 

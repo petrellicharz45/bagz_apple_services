@@ -5,7 +5,7 @@
   export let onBack = () => {};
 </script>
 
-<button type="button" class="back" on:click={onBack}>← Back to shop</button>
+<button type="button" class="back" on:click={onBack}><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to shop</button>
 <h1>{title}</h1>
 <div class="body info-body">
   <slot />

@@ -787,7 +787,7 @@
     </main>
   {:else if tab === "account"}
     <main class="site-main account-main">
-      <button type="button" class="back-shop" on:click={goHome}>← Back to shop</button>
+      <button type="button" class="back-shop" on:click={goHome}><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to shop</button>
       <AccountSectionView
         section={accountSection}
         refreshKey={accountRefresh}
@@ -865,7 +865,7 @@
               {/each}
             </div>
             {#if search.trim() && shopProducts.length === 0}
-              <p class="status empty-search">Sorry, item not found 😢</p>
+              <p class="status empty-search"><i class="fa fa-search" aria-hidden="true"></i> Sorry, item not found</p>
             {:else if !search.trim() && (activeCategory !== "All" || activeGroup) && shopProducts.length === 0}
               <p class="status empty-filter">
                 No products in <strong>{filterLabel}</strong> yet. Add products in Admin → Products: set

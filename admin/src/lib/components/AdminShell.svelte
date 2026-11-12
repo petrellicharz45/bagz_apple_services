@@ -26,7 +26,7 @@
     { href: "/delivery-fees", label: "Delivery fees", icon: "truck" },
     { href: "/banners", label: "Home Banners", icon: "image" },
     { href: "/orders", label: "Orders", icon: "bag" },
-    { href: "/product-reports", label: "Wrong product info", icon: "chat" },
+    { href: "/product-reports", label: "Wrong product info", icon: "flag" },
     { href: "/tickets", label: "Support Tickets", icon: "chat" },
     { href: "/notifications", label: "Notifications", icon: "bell" },
     { href: "/system-insights", label: "System insights", icon: "pulse" },
@@ -35,6 +35,26 @@
     { href: "/seo", label: "SEO", icon: "chart" },
     { href: "/settings", label: "Settings", icon: "gear" }
   ];
+
+  /** Sidebar icon names → Font Awesome 4.7 classes. */
+  const NAV_FA: Record<string, string> = {
+    grid: "th-large",
+    box: "cube",
+    chart: "bar-chart",
+    layers: "clone",
+    tag: "tag",
+    circles: "sitemap",
+    truck: "truck",
+    image: "picture-o",
+    bag: "shopping-bag",
+    flag: "flag-o",
+    chat: "comments-o",
+    bell: "bell-o",
+    pulse: "heartbeat",
+    send: "paper-plane-o",
+    users: "users",
+    gear: "cog"
+  };
 
   let alertUnread = 0;
 
@@ -152,7 +172,7 @@
           aria-current={link.href === activeNavHref ? "page" : undefined}
           on:click={onNavClick}
         >
-          <span class="icon" data-icon={link.icon}></span>
+          <i class="fa fa-fw fa-{NAV_FA[link.icon] || 'circle-o'} icon" aria-hidden="true"></i>
           {link.label}
         </a>
       {/each}
@@ -162,16 +182,16 @@
         <img class="promo-mark" src="/favicon.png" alt="" width="40" height="40" />
       </div>
       <p class="promo-title">Bagz Apple Services — Authentic Genuine Gadget Store</p>
-      <button type="button" class="promo-cta" on:click={openShopInBrowser}>View shop →</button>
+      <button type="button" class="promo-cta" on:click={openShopInBrowser}>View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     </div>
   </aside>
 
   <div class="main">
     <AdminToast />
     <header>
-      <button class="menu" on:click={() => (open = !open)} aria-label="Open menu">☰</button>
+      <button class="menu" on:click={() => (open = !open)} aria-label="Open menu"><i class="fa fa-bars" aria-hidden="true"></i></button>
       <form class="search" on:submit|preventDefault={search}>
-        <span>⌕</span>
+        <span><i class="fa fa-search" aria-hidden="true"></i></span>
         <input
           bind:value={query}
           on:input={onQueryInput}
@@ -209,16 +229,11 @@
           title="Open shop in your browser (not the installed app)"
           on:click={openShopInBrowser}
         >
-          <svg class="website-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path
-              fill="currentColor"
-              d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-6h-2v6H5V5z"
-            />
-          </svg>
+          <i class="fa fa-external-link website-icon" aria-hidden="true"></i>
           <span class="website-label">View shop</span>
         </button>
         <a class="bell" href="/notifications" aria-label="Notifications" title="Alerts & inbox">
-          🔔
+          <i class="fa fa-bell-o" aria-hidden="true"></i>
           {#if alertUnread > 0}<span class="bell-badge">{alertUnread > 99 ? "99+" : alertUnread}</span>{/if}
         </a>
         <a class="profile-link" href="/settings?tab=account" title="My account">
@@ -319,7 +334,7 @@
       color 0.15s ease;
   }
   nav a:hover:not(.nav-active) {
-    background: #eab308;
+    background: rgba(43, 168, 224, 0.18);
     color: #fff !important;
   }
   nav a.nav-active {
@@ -335,57 +350,13 @@
   nav a.nav-active .icon,
   nav a:hover:not(.nav-active) .icon {
     opacity: 1;
-    background-color: #fff;
+    color: #fff;
   }
   .icon {
     width: 18px;
-    height: 18px;
-    border-radius: 4px;
-    background: currentColor;
+    font-size: 16px;
+    text-align: center;
     opacity: 0.75;
-    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg>") center / contain no-repeat;
-  }
-  .icon[data-icon="box"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M3 7l9-4 9 4-9 4-9-4zm0 4l9 4 9-4v6l-9 4-9-4v-6z'/></svg>");
-  }
-  .icon[data-icon="tag"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M2 12l10 10 10-10V4H12L2 12zm15-6a1.5 1.5 0 110 3 1.5 1.5 0 010-3z'/></svg>");
-  }
-  .icon[data-icon="circles"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='8' cy='12' r='4' fill='black'/><circle cx='16' cy='12' r='4' fill='black'/></svg>");
-  }
-  .icon[data-icon="image"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='3' y='5' width='18' height='14' rx='2' fill='black'/></svg>");
-  }
-  .icon[data-icon="bag"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M6 8h12l-1 12H7L6 8zm3 0V6a3 3 0 016 0v2'/></svg>");
-  }
-  .icon[data-icon="truck"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M3 6h11v9H3V6zm12 0h3l2 3v6h-5V6zm-9 13a2 2 0 110-4 2 2 0 010 4zm10 0a2 2 0 110-4 2 2 0 010 4z'/></svg>");
-  }
-  .icon[data-icon="chat"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M4 4h16v12H7l-3 3V4z'/></svg>");
-  }
-  .icon[data-icon="bell"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 22a2 2 0 002-2H10a2 2 0 002 2zm6-6V11a6 6 0 10-12 0v5L4 18v1h16v-1l-2-2z'/></svg>");
-  }
-  .icon[data-icon="users"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='9' cy='8' r='3' fill='black'/><path fill='black' d='M3 19c0-3 3-5 6-5s6 2 6 5H3zm12-9a3 3 0 110-2 3 3 0 010 2zm3 9c0-2-1-3.5-3-4.5'/></svg>");
-  }
-  .icon[data-icon="gear"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='3' fill='black'/><path fill='black' d='M19 12l2-1-1-3-2 .5a7 7 0 00-1.5-1.5L17 5l-3-1-1 2a7 7 0 00-2 0L10 4 7 5l.5 2A7 7 0 006 8.5L4 8 3 11l2 1a7 7 0 000 2l-2 1 1 3 2-.5A7 7 0 007.5 18L7 20l3 1 1-2a7 7 0 002 0l1 2 3-1-.5-2a7 7 0 001.5-1.5l2 .5 1-3-2-1a7 7 0 000-2z'/></svg>");
-  }
-  .icon[data-icon="chart"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M4 19h16v2H2V3h2v16zm4-8h2v8H8v-8zm4-6h2v14h-2V5zm4 4h2v10h-2V9z'/></svg>");
-  }
-  .icon[data-icon="layers"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 2l10 5-10 5L2 7l10-5zm0 8l10 5-10 5-10-5 10-5z'/></svg>");
-  }
-  .icon[data-icon="pulse"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M3 12h3l2-7 4 14 3-9 2 2h6v-2h-4l-2-2-3 9-4-14-2 7H3v2z'/></svg>");
-  }
-  .icon[data-icon="send"] {
-    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M2 21l21-9L2 3v7l15 2-15 2v7z'/></svg>");
   }
   .bell {
     position: relative;

@@ -58,7 +58,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #fff3e8;
+    background: #eef7fc;
     color: var(--temu-orange);
     display: flex;
     align-items: center;

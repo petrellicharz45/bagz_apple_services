@@ -113,7 +113,7 @@
     position: absolute;
     left: 0;
     bottom: 28px;
-    background: #fff3e8;
+    background: #eef7fc;
     color: var(--header-orange);
     font-size: 10px;
     font-weight: 700;

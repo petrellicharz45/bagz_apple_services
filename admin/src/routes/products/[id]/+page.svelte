@@ -522,7 +522,7 @@
                     type="button"
                     class="remove-x"
                     aria-label="Remove photo"
-                    on:click={() => removeImage(i)}>✕</button
+                    on:click={() => removeImage(i)}><i class="fa fa-times" aria-hidden="true"></i></button
                   >
                 </div>
                 <input
