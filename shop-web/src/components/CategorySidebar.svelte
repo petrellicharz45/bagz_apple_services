@@ -5,6 +5,8 @@
   /** Menu groups from categoryMenu.js ({ id, label, subs: [{ label, filterCategory, query, imageUrl }] }). */
   export let groups = [];
   export let onPick = () => {};
+  /** Which side of the page the sidebar sits on — the flyout opens toward the other side. */
+  export let side = "left";
 
   let openId = null;
   let closeTimer;
@@ -39,7 +41,7 @@
 </script>
 
 {#if items.length}
-  <nav class="cat-sidebar" aria-label="Shop by category" on:mouseleave={scheduleClose}>
+  <nav class="cat-sidebar" class:right={side === "right"} aria-label="Shop by category" on:mouseleave={scheduleClose}>
     <ul>
       {#each items as group (group.id)}
         <li>
@@ -143,6 +145,11 @@
     border-radius: 12px;
     box-shadow: 0 16px 40px rgba(12, 34, 54, 0.22);
     padding: 16px 18px;
+  }
+  /* Sidebar on the right: open the panel to the left, over the banner. */
+  .cat-sidebar.right .flyout {
+    left: auto;
+    right: calc(100% + 6px);
   }
   .flyout-head {
     display: flex;

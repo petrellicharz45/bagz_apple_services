@@ -715,11 +715,11 @@
     <div class="bleed-block">
       {#if !selected}
         <div class="home-top">
-          <div class="home-sidebar">
-            <CategorySidebar groups={resolveMenuGroups(categories, browseGroups)} onPick={handleCategorySub} />
-          </div>
           <div class="home-hero">
             <HeroBanner onShop={goHome} />
+          </div>
+          <div class="home-sidebar">
+            <CategorySidebar side="right" groups={resolveMenuGroups(categories, browseGroups)} onPick={handleCategorySub} />
           </div>
         </div>
       {/if}
@@ -1248,14 +1248,14 @@
       display: none;
     }
   }
-  /* Home top: category sidebar + banner slider on wide screens (Jumia-style); slider only below. */
+  /* Home top: banner slider + category sidebar on its right (wide screens); slider only below. */
   .home-sidebar {
     display: none;
   }
   @media (min-width: 1100px) {
     .home-top {
       display: grid;
-      grid-template-columns: 230px minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) 230px;
       gap: 12px;
       max-width: var(--page-max);
       margin: 12px auto;
