@@ -4,14 +4,6 @@
       "collectionGroup": "product",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "offerPercentage", "order": "ASCENDING" },
-        { "fieldPath": "offerPercentage", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "product",
-      "queryScope": "COLLECTION",
-      "fields": [
         { "fieldPath": "category", "order": "ASCENDING" },
         { "fieldPath": "offerPercentage", "order": "DESCENDING" }
       ]
