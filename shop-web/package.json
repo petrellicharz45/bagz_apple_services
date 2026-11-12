@@ -1,0 +1,20 @@
+{
+  "name": "fancydeals-shop-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5180",
+    "dev:clean": "vite --port 5180 --force",
+    "build": "vite build && node scripts/patch-seo-files.mjs",
+    "build:hostinger": "node scripts/build-hostinger.mjs",
+    "preview": "vite preview --port 5180"
+  },
+  "dependencies": {
+    "firebase": "^12.13.0",
+    "svelte": "^4.2.19"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "vite": "^5.4.21"
+  }
+}

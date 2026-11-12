@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shopping_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="productId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="categoryQuery"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="searchQuery"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="groupQuery"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <deepLink app:uri="luxiva://product/{productId}" />
+        <action
+            android:id="@+id/action_searchFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trendsFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.TrendsFragment"
+        android:label="Trends"
+        tools:layout="@layout/fragment_trends">
+        <action
+            android:id="@+id/action_trendsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_cartFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_cartFragment_to_billingFragment"
+            app:destination="@id/billingFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_userAccountFragment"
+            app:destination="@id/userAccountFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profileFragment_to_newProductFragment"
+            app:destination="@id/newProductFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profileFragment_to_orderListFragment"
+            app:destination="@id/orderListFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profileFragment_to_billingFragment"
+            app:destination="@id/billingFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profileFragment_to_allOrderListFragment"
+            app:destination="@id/allOrderListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_termsFragment"
+            app:destination="@id/termsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profileFragment_to_reportIssueFragment"
+            app:destination="@id/reportIssueFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profileFragment_to_ticketListFragment"
+            app:destination="@id/ticketListFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/termsFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.TermsFragment"
+        android:label="fragment_terms"
+        tools:layout="@layout/fragment_terms" />
+    <fragment
+        android:id="@+id/reportIssueFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.ReportIssueFragment"
+        android:label="fragment_report_issue"
+        tools:layout="@layout/fragment_report_issue" />
+    <fragment
+        android:id="@+id/ticketListFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.TicketListFragment"
+        android:label="fragment_ticket_list"
+        tools:layout="@layout/fragment_ticket_list">
+        <action
+            android:id="@+id/action_ticketListFragment_to_ticketDetailFragment"
+            app:destination="@id/ticketDetailFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/ticketDetailFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.TicketDetailFragment"
+        android:label="fragment_ticket_detail"
+        tools:layout="@layout/fragment_ticket_detail">
+        <argument
+            android:name="ticket"
+            app:argType="com.carthigan.luxiva.data.Ticket" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details">
+        <argument
+            android:name="product"
+            app:argType="com.carthigan.luxiva.data.Product" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_newProductFragment"
+            app:destination="@id/newProductFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_productDetailsFragment_self"
+            app:destination="@id/productDetailsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popUpTo="@id/productDetailsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.AddressFragment"
+        android:label="fragment_address"
+        tools:layout="@layout/fragment_address">
+        <argument
+            android:name="address"
+            android:defaultValue="@null"
+            app:argType="com.carthigan.luxiva.data.Address"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.BillingFragment"
+        android:label="BillingFragment"
+        tools:layout="@layout/fragment_billing">
+        <action
+            android:id="@+id/action_billingFragment_to_addressFragment"
+            app:destination="@id/addressFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <argument
+            android:name="totalPrice"
+            app:argType="float" />
+        <argument
+            android:name="product"
+            app:argType="com.carthigan.luxiva.data.CartProduct[]" />
+        <argument
+            android:name="isPayment"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/userAccountFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.UserAccountFragment"
+        android:label="fragment_user_account"
+        tools:layout="@layout/fragment_user_account">
+        <argument
+            android:name="user"
+            android:defaultValue="@null"
+            app:argType="com.carthigan.luxiva.data.User"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/newProductFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.adminpanel.NewProductFragment"
+        android:label="fragment_new_product"
+        tools:layout="@layout/fragment_new_product">
+        <argument
+            android:name="product"
+            android:defaultValue="@null"
+            app:argType="com.carthigan.luxiva.data.Product"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderListFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.OrderListFragment"
+        android:label="fragment_order_list"
+        tools:layout="@layout/fragment_order_list">
+        <argument
+            android:name="orderId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <deepLink app:uri="luxiva://orders" />
+        <deepLink app:uri="luxiva://orders/{orderId}" />
+        <action
+            android:id="@+id/action_orderListFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.settings.OrderDetailsFragment"
+        android:label="fragment_order_details"
+        tools:layout="@layout/fragment_order_details">
+        <argument
+            android:name="order"
+            app:argType="com.carthigan.luxiva.data.Order" />
+        <action
+            android:id="@+id/action_orderDetailsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allOrderListFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.adminpanel.AllOrderListFragment"
+        android:label="AllOrderListFragment"
+        tools:layout="@layout/fragment_order_list">
+        <action
+            android:id="@+id/action_allOrderListFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/wishlistFragment"
+        android:name="com.carthigan.luxiva.ui.fragments.shopping.WishlistFragment"
+        android:label="fragment_wishlist"
+        tools:layout="@layout/fragment_wishlist">
+        <action
+            android:id="@+id/action_wishlistFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+</navigation>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/imgBestDealRvItem"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginVertical="4dp"
+            android:layout_marginStart="4dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:id="@+id/tvBestDealProductInfo"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/imgBestDealRvItem"
+            app:layout_constraintStart_toEndOf="@id/imgBestDealRvItem"
+            app:layout_constraintTop_toTopOf="@id/imgBestDealRvItem">
+
+            <TextView
+                android:id="@+id/tvBestDealProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_light"
+                android:maxLines="2"
+                android:textColor="@color/semi_black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/tvBestDealNewPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_pro_display"
+                    android:singleLine="true"
+                    android:textColor="@color/semi_black"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="@id/tvBestDealProductName"
+                    app:layout_constraintTop_toBottomOf="@id/tvBestDealProductName" />
+
+                <TextView
+                    android:id="@+id/tvBestDealOldPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:alpha="0.6"
+                    android:fontFamily="@font/sf_pro_display"
+                    android:singleLine="true"
+                    android:textColor="@color/g_gray700"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toEndOf="@id/tvBestDealNewPrice"
+                    app:layout_constraintTop_toBottomOf="@id/tvBestDealProductName" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_star_rating"
+                    app:tint="@color/g_orange_yellow"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvProductRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:textColor="#888888"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSeeProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/blue_background_less_rounded"
+            android:clickable="false"
+            android:focusable="false"
+            android:fontFamily="@font/poppins_light"
+            android:minHeight="0dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="@string/view_product"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvBestDealProductInfo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

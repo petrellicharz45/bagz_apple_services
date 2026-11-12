@@ -1,0 +1,66 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Shopping bag body -->
+    <path
+        android:pathData="M32,38 L32,80 C32,82 34,84 36,84 L72,84 C74,84 76,82 76,80 L76,38 Z"
+        android:fillColor="#FF6B00" />
+
+    <!-- Bag handle left -->
+    <path
+        android:pathData="M42,38 C42,28 46,22 54,22"
+        android:strokeWidth="4"
+        android:strokeColor="#FF6B00"
+        android:fillColor="#00000000" />
+
+    <!-- Bag handle right -->
+    <path
+        android:pathData="M66,38 C66,28 62,22 54,22"
+        android:strokeWidth="4"
+        android:strokeColor="#FF6B00"
+        android:fillColor="#00000000" />
+
+    <!-- Letter F - vertical stroke -->
+    <path
+        android:pathData="M46,48 L46,74"
+        android:strokeWidth="5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Letter F - top horizontal -->
+    <path
+        android:pathData="M46,48 L64,48"
+        android:strokeWidth="5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Letter F - middle horizontal -->
+    <path
+        android:pathData="M46,60 L58,60"
+        android:strokeWidth="5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Price tag -->
+    <path
+        android:pathData="M74,52 L84,52 L84,68 L74,68 L70,60 Z"
+        android:fillColor="#E84A00" />
+
+    <!-- Tag hole -->
+    <path
+        android:pathData="M76,56 A2,2 0 1,1 76.01,56"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Sparkle star -->
+    <path
+        android:pathData="M82,46 L83,49 L86,50 L83,51 L82,54 L81,51 L78,50 L81,49 Z"
+        android:fillColor="#FFFFFF" />
+
+</vector>

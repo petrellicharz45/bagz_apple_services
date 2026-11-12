@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.categories.MainCategoryFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollMainCategory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/layoutSpecialProducts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/vpSpecialProducts"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:clipToPadding="false"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/indicatorSpecialProducts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone"
+                        app:ci_drawable="@drawable/indicator_active"
+                        app:ci_drawable_unselected="@drawable/indicator_inactive"
+                        app:layout_constraintBottom_toBottomOf="@id/vpSpecialProducts"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <include
+                    android:id="@+id/shimmerSpecialProducts"
+                    layout="@layout/shimmer_special_product" />
+
+            </FrameLayout>
+
+            <!-- Luxury Promo Grid (Inspired by Telegram UI Screenshot) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutPromoGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="15dp"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="#FAF6F0"
+                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutSpecialProducts"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="12dp">
+
+                    <!-- Free Shipping Info -->
+                    <LinearLayout
+                        android:id="@+id/btnFreeShippingPromo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_delivery_truck"
+                            app:tint="#5D4037"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_pro_display"
+                                android:text="Free Shipping"
+                                android:textColor="#1B1512"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_light"
+                                android:text="On 10 items +"
+                                android:textColor="#7E6A5A"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="28dp"
+                        android:layout_marginHorizontal="6dp"
+                        android:background="#E5DEC9" />
+
+                    <!-- Flash Sale Info -->
+                    <LinearLayout
+                        android:id="@+id/btnFlashSalePromo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_lightning_flash"
+                            app:tint="#5D4037"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/sf_pro_display"
+                                android:text="Flash Sale"
+                                android:textColor="#1B1512"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_light"
+                                android:text="Up to 50% Off | View all"
+                                android:textColor="#7E6A5A"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/rvHomeGroups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="15dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="8dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutPromoGrid" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCircularCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                android:paddingHorizontal="15dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/rvHomeGroups" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressbarSpecialProducts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorColor="#CED5DC"
+                app:indicatorDirectionCircular="clockwise"
+                app:indicatorInset="4dp"
+                app:indicatorSize="24dp"
+                app:layout_constraintBottom_toBottomOf="@id/layoutSpecialProducts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/layoutSpecialProducts"
+                app:trackColor="@color/transparent"
+                app:trackCornerRadius="5dp"
+                app:trackThickness="3dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutFlashSalesHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvCircularCategories">
+
+                <TextView
+                    android:id="@+id/tvBestDeals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_thin"
+                    android:text="@string/best_deals"
+                    android:textColor="@color/semi_black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tvFlashCountdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="#EA580C"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/layoutBestDealsProducts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/layoutSpecialProducts"
+                app:layout_constraintTop_toBottomOf="@id/layoutFlashSalesHeader">
+
+                <com.carthigan.luxiva.utils.ExpandableRecyclerView
+                    android:id="@+id/rvBestDealsProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:minHeight="100dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="54dp"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/shimmerBestDealsProducts"
+                    layout="@layout/shimmer_best_deals" />
+
+            </FrameLayout>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressbarBestDealsProducts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorColor="#CED5DC"
+                app:indicatorDirectionCircular="clockwise"
+                app:indicatorInset="4dp"
+                app:indicatorSize="24dp"
+                app:layout_constraintBottom_toBottomOf="@id/layoutBestDealsProducts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/layoutBestDealsProducts"
+                app:trackColor="@color/transparent"
+                app:trackCornerRadius="5dp"
+                app:trackThickness="3dp" />
+
+            <TextView
+                android:id="@+id/tvBestProducts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/poppins_thin"
+                android:text="@string/best_products"
+                android:textColor="@color/semi_black"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="@id/layoutSpecialProducts"
+                app:layout_constraintTop_toBottomOf="@id/layoutBestDealsProducts" />
+
+            <FrameLayout
+                android:id="@+id/layoutBestProducts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvBestProducts"
+                app:layout_constraintVertical_bias="0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvBestProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="16dp"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/shimmerBestProducts"
+                    layout="@layout/shimmer_product" />
+
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSeeMoreBestProducts"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/blue_background"
+                android:text="See more"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutBestProducts" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressbarBestProducts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="15dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorColor="#CED5DC"
+                app:indicatorDirectionCircular="clockwise"
+                app:indicatorInset="4dp"
+                app:indicatorSize="24dp"
+                app:layout_constraintBottom_toBottomOf="@id/layoutBestProducts"
+                app:layout_constraintEnd_toEndOf="@id/layoutBestProducts"
+                app:layout_constraintStart_toStartOf="@id/layoutBestProducts"
+                app:trackColor="@color/transparent"
+                app:trackCornerRadius="5dp"
+                app:trackThickness="3dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutHomeFooter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="#1B1512"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="28dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnSeeMoreBestProducts">
+
+                <TextView
+                    android:id="@+id/tvHomeFooterHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:text="HELP CENTER"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvHomeFooterChat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:text="CHAT WITH US"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvHomeFooterContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:text="CONTACT US"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvHomeFooterOrders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:text="ORDERS"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvHomeFooterAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:text="ACCOUNT"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

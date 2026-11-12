@@ -1,0 +1,66 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/unselected_button_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/poppins_thin"
+        android:gravity="start|center_vertical"
+        android:minHeight="40dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:text="@string/home"
+        android:textAllCaps="false"
+        android:textColor="@color/g_blue_gray200"
+        app:layout_constraintEnd_toStartOf="@id/iconLocation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iconLocation"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="4dp"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/buttonAddress"
+        app:layout_constraintEnd_toStartOf="@id/buttonEditAddress"
+        app:layout_constraintTop_toTopOf="@id/buttonAddress"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/buttonEditAddress"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="6dp"
+        android:src="@android:drawable/ic_menu_edit"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/buttonAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/buttonAddress"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvAddressDetails"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/poppins_light"
+        android:textColor="@color/semi_black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonAddress"
+        tools:text="Kabowa, Kampala" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

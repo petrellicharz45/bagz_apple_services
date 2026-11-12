@@ -1,0 +1,62 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/.worktrees
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/app/google-services.json
+.kotlin/
+/app/release/
+.idea/
+functions/.env
+firebase-deploy-key.json
+*firebase-adminsdk*.json
+shop-web/public/api/pesapal-config.php
+shop-web/public/api/firestore-config.php
+*.apk
+*.aab
+*.jks
+admin/build/analyze-config.php
+admin/cpanel/analyze-config.php
+keystore.properties
+node_modules/
+.env
+dist/
+deploy/hostinger/packages/
+admin/.tmp-png/
+firebase-debug.log
+*.mp4
+
+# --- Bagz Apple Services repo hygiene ---
+# Old Fancy Deals working notes / logs (local only)
+session-*.md
+recent_changes.diff
+*.patch
+fix_kotlin.sh
+patch.xml
+TODAY_*.md
+VARIANT_STOCK.docx
+# Build outputs & deploy packages
+deploy/
+build/
+admin/.svelte-kit/
+functions/lib/
+# Previous client's listing assets & one-off migration
+luxiva/
+play_store_assets/
+screenshots/
+admin/scripts/migrate-from-luxiva.mjs
+# Raw client media (large videos stay out of git)
+*.MOV
+*.mov
+brand-assets/raw/

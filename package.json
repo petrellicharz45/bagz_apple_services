@@ -1,0 +1,11 @@
+{
+  "name": "fancydeals-luxiva",
+  "private": true,
+  "scripts": {
+    "build:hostinger": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-hostinger.ps1",
+    "deploy:firebase-backend": "scripts/deploy-firebase-backend.cmd"
+  },
+  "dependencies": {
+    "firebase-tools": "^13.29.1"
+  }
+}

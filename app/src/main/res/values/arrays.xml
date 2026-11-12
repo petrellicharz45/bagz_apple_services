@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="initial_slider_values">
+        <item>100.0</item>
+        <item>500.0</item>
+    </array>
+
+    <string-array name="product_categories">
+        <item>Clothing</item>
+        <item>Shoes</item>
+        <item>Jewelry</item>
+        <item>Bags</item>
+        <item>Accessories</item>
+    </string-array>
+</resources>

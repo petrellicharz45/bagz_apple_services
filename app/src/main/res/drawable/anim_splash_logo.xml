@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="150dp"
+            android:height="127.6dp"
+            android:viewportWidth="150"
+            android:viewportHeight="127.6">
+
+            <!-- === BACKGROUND (cls-0 rect) === -->
+            <path
+                android:name="bg"
+                android:fillColor="#020000"
+                android:pathData="M0,-0.2h150v127.8h-150z" />
+
+            <!-- === SHADOW (radialGradient SVGID_3_) ===
+                 cx=74.46 cy=87.22 r=50.5
+                 gradientTransform=matrix(1 .008428 -.0007546 .1 .0669 80.53)
+                 Actual center after transform: ~ (75.26, 89.20)
+                 Android radial gradient is isotropic, so this is an approximation. -->
+            <group
+                android:name="shadowGroup"
+                android:pivotX="74.5"
+                android:pivotY="87.2">
+                <path
+                    android:name="shadow"
+                    android:fillAlpha="0"
+                    android:pathData="m125 87.2c0 1.5-22.5 2.8-50.5 2.8s-50.5-1.2-50.5-2.8 22.5-2.8 50.5-2.8 50.5 1.2 50.5 2.8z">
+                    <aapt:attr name="android:fillColor">
+                        <gradient
+                            android:type="radial"
+                            android:centerX="74.46"
+                            android:centerY="87.22"
+                            android:gradientRadius="50.5">
+                            <item android:offset="0" android:color="#FF782308" />
+                            <item android:offset="1" android:color="#00130500" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+
+            <!-- === LOGO GROUP (logo-mark, for floating animation) ===
+                 floating: 4s ease-in-out infinite, delay 0.7s
+                 translateY 0 → -4 → 0 -->
+            <group
+                android:name="logoMark"
+                android:pivotX="75"
+                android:pivotY="45">
+
+                <!-- Shard 1 (cls-1, gradient SVGID_1_)
+                     x1=58.14 y1=16.9 x2=92.92 y2=16.9
+                     #F06B0A → #DE361B
+                     popIn: 0.7s, delay 0.1s -->
+                <group
+                    android:name="shard1Group"
+                    android:pivotX="75"
+                    android:pivotY="20"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard1"
+                        android:pathData="m58.1 22.6h3.1v-2.9c0-7.4 6-14.5 14.3-14.4 7-0.1 14.2 5.9 14.3 14l0.2-0.3v-2l2.9 4c0.1-21.8-24.6-28.4-33.4-9.2-1.1 2.6-1.6 5.6-1.4 10.8z">
+                        <aapt:attr name="android:fillColor">
+                            <gradient
+                                android:type="linear"
+                                android:startX="58.14"
+                                android:startY="16.9"
+                                android:endX="92.92"
+                                android:endY="16.9">
+                                <item android:offset="0" android:color="#FFF06B0A" />
+                                <item android:offset="1" android:color="#FFDE361B" />
+                            </gradient>
+                        </aapt:attr>
+                    </path>
+                </group>
+
+                <!-- Shard 2 (cls-2, gradient SVGID_2_)
+                     x1=72.54 y1=26.22 x2=88.66 y2=9.219
+                     gradientTransform=translate(7.41) → x1=79.95 x2=96.07
+                     #CF0C1F → #EF7C10
+                     popIn: 0.7s, delay 0.2s -->
+                <group
+                    android:name="shard2Group"
+                    android:pivotX="99"
+                    android:pivotY="17"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard2"
+                        android:pathData="m89.5 20.7v6.3c0 1.1 0.6 2 1.7 2s1.7-0.9 1.7-2v-6.6l0.1-1.4c-0.4-8.1-7.3-17-16.8-17.1v3.4c6.4 0.3 13.3 6.3 13.3 15.4z">
+                        <aapt:attr name="android:fillColor">
+                            <gradient
+                                android:type="linear"
+                                android:startX="79.95"
+                                android:startY="26.22"
+                                android:endX="96.07"
+                                android:endY="9.219">
+                                <item android:offset="0" android:color="#FFCF0C1F" />
+                                <item android:offset="1" android:color="#FFEF7C10" />
+                            </gradient>
+                        </aapt:attr>
+                    </path>
+                </group>
+
+                <!-- Shard 3 (cls-3, gradient XMLID_48_)
+                     x1=93.6 y1=42.44 x2=108.3 y2=42.44
+                     #ED4829 → #DC2626
+                     popIn: 0.7s, delay 0.3s -->
+                <group
+                    android:name="shard3Group"
+                    android:pivotX="103"
+                    android:pivotY="42"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard3"
+                        android:pathData="m105.4 25.4c-1.1-1.5-2.7-2.6-5.4-2.6h-6.2l-0.1 3.3c1.8 1.9-0.2 3.9-0.2 3.9l0.5 3.1h6.1l-3.6 8.3 3.5 8.6c1.8-0.8 3.3-1 5 0l3.3 2.2-0.1 0.1 0.1 0.1-0.1-0.5 0.2 0.3-0.1-0.6 0.2 0.6-0.1-0.6 0.2 0.6 0.2 0.1-1-9.9-2.4-17z">
+                        <aapt:attr name="android:fillColor">
+                            <gradient
+                                android:type="linear"
+                                android:startX="93.6"
+                                android:startY="42.44"
+                                android:endX="108.3"
+                                android:endY="42.44">
+                                <item android:offset="0" android:color="#FFED4829" />
+                                <item android:offset="1" android:color="#FFDC2626" />
+                            </gradient>
+                        </aapt:attr>
+                    </path>
+                </group>
+
+                <!-- Shard 4 (cls-4, gradient XMLID_99_)
+                     x1=38.78 y1=52.69 x2=97.03 y2=52.69
+                     #F5700A → #CB101B
+                     popIn: 0.7s, delay 0.4s -->
+                <group
+                    android:name="shard4Group"
+                    android:pivotX="75"
+                    android:pivotY="65"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard4"
+                        android:pathData="m92.1 65.6c-0.3-1.4-0.1-2.5 0.5-3.8l5.3-9.6 1.1-1.4-3.6-8c-1.4 0.9-2.9 1.2-4.4 1.2h-17c-1.8 0-4.9 1.4-5.5 4s-0.9 5.6-0.9 5.6h21.5l0.2 0.4c-0.5 3.6-4.2 10.4-10.4 10.5l-12.7 0.1-2.6 15.9-1.3 1.9 34.6 0.1-0.4-1.1-4.4-15.8z">
+                        <aapt:attr name="android:fillColor">
+                            <gradient
+                                android:type="linear"
+                                android:startX="38.78"
+                                android:startY="52.69"
+                                android:endX="97.03"
+                                android:endY="52.69">
+                                <item android:offset="0" android:color="#FFF5700A" />
+                                <item android:offset="1" android:color="#FFCB101B" />
+                            </gradient>
+                        </aapt:attr>
+                    </path>
+                </group>
+
+                <!-- Shard 5 (cls-5, gradient XMLID_100_)
+                     x1=38.82 y1=49.55 x2=93.92 y2=49.55
+                     #EB5D0B → #EE8D10
+                     popIn: 0.7s, delay 0.5s -->
+                <group
+                    android:name="shard5Group"
+                    android:pivotX="65"
+                    android:pivotY="50"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard5"
+                        android:pathData="m57.7 47.9c1.3-8.3 7.5-14.7 15.4-14.8h20.9l-0.4-3.2c-1.7 1.6-5.4 0.9-5.4-2.3l0.8-1.4v-3.5l-38.2 0.1c-2.9 0-5.9 2.3-6.2 5.2l-5.8 48.2c-0.1 3.3 2.7 6.2 6 6.2h7.1l0.5-0.4 4.7-31c0.3-1.3 0.4-2.4 0.6-3.1z">
+                        <aapt:attr name="android:fillColor">
+                            <gradient
+                                android:type="linear"
+                                android:startX="38.82"
+                                android:startY="49.55"
+                                android:endX="93.92"
+                                android:endY="49.55">
+                                <item android:offset="0" android:color="#FFEB5D0B" />
+                                <item android:offset="1" android:color="#FFEE8D10" />
+                            </gradient>
+                        </aapt:attr>
+                    </path>
+                </group>
+
+                <!-- Shard 6 (cls-9, gradient XMLID_101_)
+                     x1=96.09 y1=54.55 x2=116.6 y2=75.11
+                     #EC4729 → #CE0F1F at offset 0.9213
+                     popIn: 0.7s, delay 0.6s -->
+                <group
+                    android:name="shard6Group"
+                    android:pivotX="108"
+                    android:pivotY="65"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard6"
+                        android:pathData="m114 57.9c-0.6-0.9-1.1-0.9-10.1-6-0.9-0.3-2.1-0.1-2.9 0.3l1.6 3 0.8-0.1c1.1 0 2.4 1.2 1.6 3-1.8 2-4.5-0.3-3.4-2.1l-1.7-2.7-4.3 8.2c-0.5 1.1-0.6 2-0.4 2.6l4.5 15.4c0.7 1.6 1.5 2.1 3.2 1.7l13.5-3.5c2.1-0.3 2.1-2.5 1.8-3.1l-4.2-16.7zm-2 10.8c-3.1 1.1-4 2.7-3.5 5.8 0.2 0.9-0.5 0.7-0.6 0.3-1.2-3.3-2.9-4.3-5.9-3.6-0.4 0-0.9-0.6 0-0.8 3.1-1 4-2.8 2.8-5.9l0.6-0.5c1.1 2.9 2.2 4.9 6.2 3.9l0.8-0.1v0.6l-0.4 0.3z">
+                        <aapt:attr name="android:fillColor">
+                            <gradient
+                                android:type="linear"
+                                android:startX="96.09"
+                                android:startY="54.55"
+                                android:endX="116.6"
+                                android:endY="75.11">
+                                <item android:offset="0" android:color="#FFEC4729" />
+                                <item android:offset="0.9213" android:color="#FFCE0F1F" />
+                            </gradient>
+                        </aapt:attr>
+                    </path>
+                </group>
+
+                <!-- Shard 7 (polygon cls-0, same fill as bg)
+                     points="96.5 41.1 100.1 49.9 99.5 50.9 95.2 42"
+                     popIn: 0.7s, delay 0.3s (matches shard-3) -->
+                <group
+                    android:name="shard7Group"
+                    android:pivotX="98"
+                    android:pivotY="46"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="shard7"
+                        android:fillColor="#020000"
+                        android:pathData="M96.5,41.1 L100.1,49.9 L99.5,50.9 L95.2,42 Z" />
+                </group>
+
+            </group>
+
+            <!-- === LARGE TEXT: "Fancy Deals" (10 letters) ===
+                 bounceUp: 0.6s cubic-bezier(0.2,0.8,0.2,1)
+                 0%: opacity 0, translateY(10)
+                 60%: opacity 1, translateY(-2)
+                 100%: opacity 1, translateY(0)
+                 Staggered delays: 0.50s → 0.95s (50ms apart) -->
+
+            <!-- F — fill="#f07c0a", delay 0.50s -->
+            <group android:name="letter1Group" android:pivotX="8" android:pivotY="102">
+                <path android:name="letter1" android:fillColor="#FFF07C0A" android:fillAlpha="0"
+                    android:pathData="m2.4 92.5h12.5v3.7h-9v5.2h7.8v3.2h-7.8v8h-3.5v-20.1z" />
+            </group>
+
+            <!-- a — fill="#ef6C0b", delay 0.55s -->
+            <group android:name="letter2Group" android:pivotX="22" android:pivotY="105">
+                <path android:name="letter2" android:fillColor="#FFEF6C0B" android:fillAlpha="0"
+                    android:pathData="m16.1 108.3c0-2.7 1.7-4.4 7.2-4.6l2.6 0.1v-0.4c0-1.6-1-2.3-3-2.3-1.7 0-2.8 0.7-3.2 1.9l-3-1.2c0.7-2.1 2.9-3.7 6.4-3.7 4.3 0 6.4 1.8 6.4 5.3v7l0.2 2.2h-3.3l-0.3-2.4c-0.7 1.6-2.5 2.8-5 2.8-3.2 0-5-1.8-5-4.7zm9.8-1.7v-0.4h-1.2c-3.7 0.2-4.9 0.6-4.9 2 0 0.9 0.8 1.6 2.2 1.6 2.5 0 3.9-1.2 3.9-3.2z" />
+            </group>
+
+            <!-- n — fill="#ea5d0A", delay 0.60s -->
+            <group android:name="letter3Group" android:pivotX="38" android:pivotY="105">
+                <path android:name="letter3" android:fillColor="#FFEA5D0A" android:fillAlpha="0"
+                    android:pathData="m32.1 98.5h3.8v2.5c0.8-1.8 2.5-2.9 4.7-2.9 3.3 0 5.3 2.3 5.3 5.7v8.8h-3.5v-8.2c0-2-1-3.2-3-3.2s-3.4 1.4-3.4 3.4v8h-4l0.1-14.1z" />
+            </group>
+
+            <!-- c — fill="#f2790B", delay 0.65s -->
+            <group android:name="letter4Group" android:pivotX="55" android:pivotY="105">
+                <path android:name="letter4" android:fillColor="#FFF2790B" android:fillAlpha="0"
+                    android:pathData="m47.9 105.4c0-4.2 3.2-7.3 7.7-7.3 3.5 0 5.8 1.9 6.6 4.3l-2.8 1.2c-0.8-1.5-2-2.4-3.6-2.4-2.2 0-3.9 1.6-3.9 4 0 2.6 1.5 4.2 3.7 4.2 1.9 0 3-0.8 3.8-2.2l3 1.2c-0.9 2.4-3.3 4.6-6.8 4.6-4.5-0.1-7.7-3.4-7.7-7.6z" />
+            </group>
+
+            <!-- y — fill="#ec640A", delay 0.70s -->
+            <group android:name="letter5Group" android:pivotX="68" android:pivotY="105">
+                <path android:name="letter5" android:fillColor="#FFEC640A" android:fillAlpha="0"
+                    android:pathData="m64.4 118.2 0.5-2.6c0.3 0.1 0.7 0.1 1 0.1 1.2 0 2-0.5 2.5-2.1l0.1-1.1-5.9-14h3.9l3.7 9.4 3.7-9.4h3.6l-6.5 16.4c-1 2.9-2.4 3.9-4.6 3.9-0.9 0-1.5-0.1-2-0.2z" />
+            </group>
+
+            <!-- D — gradient SVGID_4_, delay 0.75s
+                 x1=79.63 y1=102.6 x2=97.4 y2=102.6
+                 #DB2D26 → #DD2E28 -->
+            <group android:name="letter6Group" android:pivotX="88" android:pivotY="102">
+                <path android:name="letter6" android:fillAlpha="0"
+                    android:pathData="m79.7 92.5h7.8c5.3 0 9.9 3.9 9.9 9.9 0 5.8-3.9 10.2-9.9 10.2h-7.8v-20.1zm7.7 16.4c3.7 0 6.2-2.7 6.2-6 0-3.9-2-6.7-6.2-6.7h-3.8v12.6l3.8 0.1z">
+                    <aapt:attr name="android:fillColor">
+                        <gradient android:type="linear"
+                            android:startX="79.63" android:startY="102.6"
+                            android:endX="97.4" android:endY="102.6">
+                            <item android:offset="0" android:color="#FFDB2D26" />
+                            <item android:offset="1" android:color="#FFDD2E28" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+
+            <!-- e — gradient SVGID_5_, delay 0.80s
+                 x1=99.08 y1=105.4 x2=113.8 y2=105.4
+                 #DA2626 → #CD171C -->
+            <group android:name="letter7Group" android:pivotX="106" android:pivotY="105">
+                <path android:name="letter7" android:fillAlpha="0"
+                    android:pathData="m99.1 105.4c0-4 2.8-7.3 7.4-7.3 4.4 0 7.4 3 7.3 7v1.1h-11c0.2 1.9 1.6 3.3 3.7 3.3 1.9 0 3-0.7 3.7-2l3.2 1.5c-1.3 2.5-3.5 4-7 4-4 0-7.3-3-7.3-7.6zm10.8-1.5c-0.1-1.7-1.8-2.7-3.5-2.7-1.8 0-3.4 1-3.6 2.7h7.1z">
+                    <aapt:attr name="android:fillColor">
+                        <gradient android:type="linear"
+                            android:startX="99.08" android:startY="105.4"
+                            android:endX="113.8" android:endY="105.4">
+                            <item android:offset="0" android:color="#FFDA2626" />
+                            <item android:offset="1" android:color="#FFCD171C" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+
+            <!-- a — gradient SVGID_6_, delay 0.85s
+                 x1=115.3 y1=105.4 x2=128.7 y2=105.4
+                 #D1161D → #DF2326 -->
+            <group android:name="letter8Group" android:pivotX="122" android:pivotY="105">
+                <path android:name="letter8" android:fillAlpha="0"
+                    android:pathData="m115.3 108.1c0-2.7 1.7-4.2 7.2-4.5l2.4 0.1v-0.3c0-1.6-0.8-2.3-2.7-2.3-1.7 0-2.8 0.5-3.3 1.8l-3-1.1c0.7-2.2 3-3.7 6.3-3.7 4 0 6.4 1.8 6.4 5.3v7l0.1 2.2h-3.3l-0.4-2.4c-0.8 1.4-2.5 2.8-5 2.8-3 0-4.7-1.8-4.7-4.9zm9.5-1.5v-0.4h-1c-3.6 0.2-5.1 0.6-5.1 1.9 0 1 0.9 1.6 2.3 1.6 2.4-0.1 3.8-1.1 3.8-3.1z">
+                    <aapt:attr name="android:fillColor">
+                        <gradient android:type="linear"
+                            android:startX="115.3" android:startY="105.4"
+                            android:endX="128.7" android:endY="105.4">
+                            <item android:offset="0" android:color="#FFD1161D" />
+                            <item android:offset="1" android:color="#FFDF2326" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+
+            <!-- l — gradient SVGID_7_, delay 0.90s
+                 x1=131.2 y1=102.5 x2=135 y2=102.5
+                 #D61D20 → #D92122 -->
+            <group android:name="letter9Group" android:pivotX="133" android:pivotY="102">
+                <path android:name="letter9" android:fillAlpha="0"
+                    android:pathData="m131.2 92.4h3.7v20.2h-3.7v-20.2z">
+                    <aapt:attr name="android:fillColor">
+                        <gradient android:type="linear"
+                            android:startX="131.2" android:startY="102.5"
+                            android:endX="135" android:endY="102.5">
+                            <item android:offset="0" android:color="#FFD61D20" />
+                            <item android:offset="1" android:color="#FFD92122" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+
+            <!-- s — gradient SVGID_8_, delay 0.95s
+                 x1=136.5 y1=105.2 x2=147.6 y2=105.2
+                 #D4181F → #D71E20 -->
+            <group android:name="letter10Group" android:pivotX="142" android:pivotY="105">
+                <path android:name="letter10" android:fillAlpha="0"
+                    android:pathData="m136.5 109.4 2.4-1.6c0.6 1.3 2.1 1.9 3.6 2 1.1 0 1.9-0.6 1.9-1.4 0-3-7.5-1-7.5-6 0-2.8 2.3-4.3 5.2-4.3 2.4 0 4.5 1 5.3 3l-2.4 1.5c-0.5-1.1-1.8-1.5-2.9-1.6-1.2 0-1.9 0.5-1.9 1.5 0 1.9 7.3 0.9 7.3 5.3 0.2 3.7-2.5 5.2-5.1 5.2-2.8 0.1-5.3-0.9-5.9-3.6z">
+                    <aapt:attr name="android:fillColor">
+                        <gradient android:type="linear"
+                            android:startX="136.5" android:startY="105.2"
+                            android:endX="147.6" android:endY="105.2">
+                            <item android:offset="0" android:color="#FFD4181F" />
+                            <item android:offset="1" android:color="#FFD71E20" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+
+            <!-- === SMALL TAGLINE TEXT (cls-6, fill #FFFFFF, 26 paths) ===
+                 "Great products, Fancy prices."
+                 fadeIn: 1.2s ease-out, delay 1.2s
+                 All paths combined into one pathData with multiple subpaths -->
+            <path
+                android:name="smallText"
+                android:fillColor="#FFFFFF"
+                android:fillAlpha="0"
+                android:pathData="m24 120.6c0.7 0 1.2 0.3 1.5 0.8l-0.4 0.2c-0.2-0.2-0.6-0.5-1-0.5-0.7 0-1.5 0.6-1.5 1.5s0.6 1.4 1.4 1.4c0.5 0 0.9-0.1 1-0.4v-0.7h-1.1v-0.4h1.6v1.4c-0.4 0.3-0.9 0.6-1.5 0.6-1 0-1.9-0.7-1.9-1.9 0-1.1 0.8-2 1.9-2z m27.4 121.8h0.5v0.3c0.2-0.2 0.5-0.5 0.8-0.5l0.3 0.4h-0.3c-0.2 0-0.6 0.2-0.8 0.5v1.9h-0.5v-2.6z m31.7 121.6c0.8 0 1.3 0.6 1.3 1.5v0.1h-2.1c0 0.6 0.5 0.9 1 0.8 0.3 0.1 0.6-0.1 0.7-0.2l0.4 0.2c-0.3 0.2-0.6 0.5-1.1 0.5-0.9 0-1.5-0.6-1.5-1.5 0-0.8 0.5-1.4 1.3-1.4zm-0.8 1.2h1.6c0-0.3-0.3-0.8-0.8-0.8s-0.8 0.5-0.8 0.8z m36.7 124c-0.2 0.2-0.5 0.4-1 0.5-0.3 0-1-0.3-1-0.9s0.5-1 1-1 0.9 0 1 0.3v-0.4c0-0.4-0.2-0.5-0.6-0.5s-0.6 0.1-0.9 0.2l-0.2-0.2c0.4-0.4 0.7-0.4 1.1-0.4 0.6 0 1.1 0.3 1.1 1v1.8h-0.5v-0.4zm0-0.8c-0.1-0.1-0.3-0.2-0.7-0.2s-0.6 0.2-0.6 0.6c0 0.3 0.2 0.5 0.6 0.5s0.6-0.2 0.7-0.3v-0.6z m39.2 123.8v-1.7h-0.5v-0.3h0.5v-0.8h0.4v0.8h0.6v0.3h-0.5v1.7c0 0.1 0.2 0.2 0.3 0.2s0.2 0 0.2-0.1l0.2 0.3c-0.2 0.2-0.3 0.2-0.5 0.2-0.4 0-0.7-0.2-0.7-0.6z m44.6 125.4v-3.6h0.6v0.3c0.2-0.2 0.4-0.5 0.8-0.5 0.7 0 1.4 0.5 1.4 1.5s-0.5 1.4-1.3 1.4c-0.4-0.1-0.6-0.3-0.9-0.5v1.4h-0.6zm1.4-3.4c-0.4 0-0.6 0.2-0.8 0.5v1.1c0.2 0.2 0.4 0.4 0.8 0.4 0.5 0 0.9-0.4 0.9-1s-0.4-1-0.9-1z m49.4 121.8h0.5v0.3c0.1-0.2 0.5-0.5 0.8-0.5l0.4 0.4h-0.4c-0.3 0-0.6 0.2-0.8 0.5v1.9h-0.5v-2.6z m52.4 123c0-0.8 0.5-1.4 1.3-1.4s1.4 0.6 1.5 1.4c0 0.8-0.6 1.5-1.5 1.5-0.8 0-1.3-0.7-1.3-1.5zm2.2 0c0-0.5-0.4-1-0.9-1s-0.8 0.5-0.8 1c0 0.6 0.3 1 0.8 1 0.7 0 0.9-0.4 0.9-1z m58.9 124c-0.3 0.2-0.5 0.5-0.9 0.5-0.6 0-1.3-0.6-1.3-1.5s0.5-1.4 1.3-1.4c0.4 0 0.6 0.2 0.9 0.5v-1.3h0.5v3.6h-0.5v-0.4zm-0.9-2c-0.5 0-0.8 0.5-0.8 1 0 0.6 0.3 1 0.8 1 0.4 0 0.6-0.1 0.9-0.4v-1.1c-0.2-0.3-0.5-0.5-0.9-0.5z m63.4 124c-0.3 0.2-0.7 0.5-1 0.5-0.7 0-0.9-0.4-0.9-0.9v-1.8h0.5v1.7c0 0.5 0.2 0.5 0.6 0.5s0.6-0.1 0.8-0.4v-1.8h0.3v2.6h-0.3v-0.4z m66.9 121.6c0.5 0 0.8 0.3 1.1 0.6l-0.4 0.3c-0.1-0.3-0.4-0.4-0.7-0.4-0.5 0-0.9 0.4-0.9 1 0 0.5 0.2 1 0.9 1 0.3 0 0.6-0.2 0.7-0.3l0.4 0.2c-0.3 0.2-0.6 0.6-1.1 0.5-0.9 0-1.4-0.6-1.4-1.5 0-0.8 0.6-1.4 1.4-1.4z m69.7 123.8v-1.7h-0.3v-0.3h0.3v-0.8h0.5v0.8h0.7v0.3h-0.7v1.7c0 0.1 0.2 0.2 0.3 0.2s0.2 0 0.2-0.1l0.3 0.3c-0.1 0.2-0.3 0.2-0.6 0.2-0.4 0-0.7-0.2-0.7-0.6z m72.6 123.6c0.3 0.2 0.5 0.4 0.9 0.4s0.6-0.2 0.6-0.4c0-0.5-1.6-0.2-1.6-1.2 0-0.4 0.4-0.8 1-0.8 0.5 0 0.9 0.2 1 0.4l-0.1 0.4c-0.2-0.3-0.5-0.4-0.8-0.4s-0.7 0.1-0.7 0.4c0 0.5 1.6 0.2 1.6 1.2 0 0.4-0.4 0.9-1 0.9-0.5 0-0.9-0.1-1.1-0.4l0.2-0.5z m76.2 124.8c0.2 0 0.4-0.2 0.4-0.4h-0.1c-0.1 0-0.3-0.2-0.3-0.3 0-0.2 0.2-0.3 0.4-0.3 0.1 0 0.3 0.2 0.3 0.4 0 0.4-0.2 0.7-0.5 0.8l-0.2-0.2z m81.2 120.8h2.4v0.4h-1.9v1.2h1.9v0.4h-1.9v1.6h-0.5v-3.6z m87.2 124c-0.2 0.2-0.6 0.4-0.8 0.5-0.5 0-1-0.3-1-0.9s0.5-1 1-1c0.3 0 0.7 0 0.8 0.3v-0.4c0-0.4-0.3-0.5-0.7-0.5-0.3 0-0.6 0.1-0.8 0.2v-0.2c0.3-0.4 0.7-0.4 1-0.4 0.5 0 1.2 0.3 1.2 1v1.8h-0.7v-0.4zm0-0.8c-0.2-0.1-0.5-0.2-0.7-0.2-0.4 0-0.6 0.2-0.6 0.6 0 0.3 0.2 0.5 0.6 0.5 0.2 0 0.5-0.2 0.7-0.3v-0.6z m91.6 122.6c0-0.5-0.1-0.6-0.6-0.6-0.4 0-0.6 0.2-0.8 0.5v1.9h-0.5v-2.8h0.5v0.5c0.2-0.2 0.5-0.5 1-0.5s0.9 0.4 0.9 0.9v1.9h-0.5v-1.8z m95.2 121.6c0.5 0 0.9 0.3 1.2 0.6l-0.4 0.2c-0.1-0.3-0.4-0.4-0.6-0.4-0.7 0-0.9 0.5-0.9 1 0 0.6 0.2 1 0.9 1 0.2 0 0.5-0.1 0.6-0.4l0.4 0.2c-0.2 0.4-0.7 0.6-1.2 0.6-0.7 0-1.3-0.6-1.3-1.4s0.5-1.4 1.3-1.4z m98.2 124.9c0.2 0 0.4 0 0.4-0.3l0.3-0.4-1.2-2.6h0.7l0.8 2 0.8-2h0.5l-1.4 3.3c-0.1 0.5-0.5 0.5-0.9 0.5h-0.3l0.1-0.5h0.2z m104.7 125.2v-3.6h0.7v0.4c0.1-0.2 0.5-0.4 0.8-0.4 0.7 0 1.3 0.5 1.3 1.4s-0.5 1.5-1.3 1.5c-0.3-0.1-0.6-0.3-0.8-0.5v1.2h-0.7zm1.4-3.2c-0.4 0-0.6 0.2-0.7 0.5v1.1c0.1 0.2 0.3 0.4 0.7 0.4 0.5 0 0.9-0.4 0.9-1 0-0.5-0.4-1-0.9-1z m109.4 121.8h0.3v0.3c0.3-0.2 0.7-0.5 0.9-0.5l0.3 0.4h-0.3c-0.2 0-0.6 0.2-0.9 0.5v1.9h-0.3v-2.6z m112.5 121c0-0.1 0.1-0.4 0.2-0.4s0.4 0.3 0.5 0.4c0.2 0.2-0.3 0.5-0.5 0.2-0.1 0-0.2 0-0.2-0.2zm0.1 0.6h0.6v2.8h-0.5l-0.1-2.8z m116.4 121.6c0.5 0 0.8 0.3 1.1 0.5l-0.4 0.3c-0.1-0.3-0.4-0.4-0.7-0.4-0.5 0-0.9 0.5-0.9 1s0.2 1 0.9 1c0.2 0 0.5-0.1 0.8-0.4l0.3 0.2c-0.1 0.4-0.6 0.6-1.1 0.6-0.8 0-1.5-0.6-1.5-1.4s0.6-1.4 1.5-1.4z m120.2 121.6c0.9 0 1.3 0.6 1.3 1.5v0.1h-2.1c0 0.6 0.3 0.8 1 0.8 0.2 0 0.5-0.1 0.7-0.4l0.4 0.3c-0.3 0.3-0.8 0.5-1.1 0.5-0.9 0-1.7-0.5-1.7-1.4 0-0.8 0.7-1.4 1.5-1.4zm-0.8 1.2h1.6c0-0.3-0.3-0.8-0.8-0.8s-0.8 0.5-0.8 0.8z m123.4 123.6c0.1 0.2 0.5 0.4 0.8 0.4 0.4 0 0.7-0.1 0.7-0.4 0-0.5-1.7-0.2-1.7-1.2 0-0.4 0.4-0.8 1-0.8 0.5 0 0.9 0.2 1.2 0.4l-0.2 0.4c-0.2-0.3-0.6-0.4-1-0.4s-0.6 0.1-0.6 0.4c0 0.5 1.6 0.2 1.9 1.2 0 0.4-0.4 0.9-1.1 0.9-0.5 0-0.9-0.1-1.2-0.4l0.2-0.5z m127.6 123.8c0.1 0.1 0 0.6-0.2 0.6-0.3 0-0.4-0.2-0.3-0.6 0.1-0.2 0.4-0.2 0.5 0z" />
+
+            <!-- === ACCENT LINES (cls-7, cls-8) ===
+                 drawLine: 0.7s ease-out, delay 1.5s
+                 stroke-dashoffset 20→0 (draws left to right)
+                 In AVD: trimPathEnd 0→1 -->
+
+            <!-- cls-7: stroke #E46523, width 0.8491, linecap round -->
+            <path
+                android:name="lineOrange"
+                android:strokeColor="#FFE46523"
+                android:strokeWidth="0.8491"
+                android:strokeLineCap="round"
+                android:trimPathEnd="0"
+                android:pathData="M2.8,123.1 L17,123.1" />
+
+            <!-- cls-8: stroke #D11C23, width 0.8491, linecap round -->
+            <path
+                android:name="lineRed"
+                android:strokeColor="#FFD11C23"
+                android:strokeWidth="0.8491"
+                android:strokeLineCap="round"
+                android:trimPathEnd="0"
+                android:pathData="M133.1,123.1 L147.2,123.1" />
+
+        </vector>
+    </aapt:attr>
+
+    <!-- ==================== -->
+    <!-- ANIMATION TARGETS    -->
+    <!-- ==================== -->
+
+    <!-- Shards: popIn 0.7s, staggered 0.1s-0.6s, shard-7 at 0.3s -->
+    <target android:name="shard1Group" android:animation="@animator/shard_1" />
+    <target android:name="shard2Group" android:animation="@animator/shard_2" />
+    <target android:name="shard3Group" android:animation="@animator/shard_3" />
+    <target android:name="shard4Group" android:animation="@animator/shard_4" />
+    <target android:name="shard5Group" android:animation="@animator/shard_5" />
+    <target android:name="shard6Group" android:animation="@animator/shard_6" />
+    <target android:name="shard7Group" android:animation="@animator/shard_7" />
+
+    <!-- Logo floating: 4s ease-in-out infinite, delay 0.7s -->
+    <target android:name="logoMark" android:animation="@animator/logo_float" />
+
+    <!-- Shadow: fadeIn 0.8s (delay 0.7s) + pulse 4s (delay 0.7s) -->
+    <target android:name="shadowGroup" android:animation="@animator/shadow_pulse" />
+    <target android:name="shadow" android:animation="@animator/shadow_fade" />
+
+    <!-- Letters: bounceUp 0.6s, staggered 0.50s-0.95s
+         Each letter needs translate (group) + alpha (path) -->
+    <target android:name="letter1Group" android:animation="@animator/letter_1_translate" />
+    <target android:name="letter1" android:animation="@animator/letter_1_alpha" />
+    <target android:name="letter2Group" android:animation="@animator/letter_2_translate" />
+    <target android:name="letter2" android:animation="@animator/letter_2_alpha" />
+    <target android:name="letter3Group" android:animation="@animator/letter_3_translate" />
+    <target android:name="letter3" android:animation="@animator/letter_3_alpha" />
+    <target android:name="letter4Group" android:animation="@animator/letter_4_translate" />
+    <target android:name="letter4" android:animation="@animator/letter_4_alpha" />
+    <target android:name="letter5Group" android:animation="@animator/letter_5_translate" />
+    <target android:name="letter5" android:animation="@animator/letter_5_alpha" />
+    <target android:name="letter6Group" android:animation="@animator/letter_6_translate" />
+    <target android:name="letter6" android:animation="@animator/letter_6_alpha" />
+    <target android:name="letter7Group" android:animation="@animator/letter_7_translate" />
+    <target android:name="letter7" android:animation="@animator/letter_7_alpha" />
+    <target android:name="letter8Group" android:animation="@animator/letter_8_translate" />
+    <target android:name="letter8" android:animation="@animator/letter_8_alpha" />
+    <target android:name="letter9Group" android:animation="@animator/letter_9_translate" />
+    <target android:name="letter9" android:animation="@animator/letter_9_alpha" />
+    <target android:name="letter10Group" android:animation="@animator/letter_10_translate" />
+    <target android:name="letter10" android:animation="@animator/letter_10_alpha" />
+
+    <!-- Tagline: fadeIn 1.2s, delay 1.2s -->
+    <target android:name="smallText" android:animation="@animator/small_text_fade" />
+
+    <!-- Accent lines: drawLine 0.7s, delay 1.5s -->
+    <target android:name="lineOrange" android:animation="@animator/line_draw" />
+    <target android:name="lineRed" android:animation="@animator/line_draw" />
+
+</animated-vector>

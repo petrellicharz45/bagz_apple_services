@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="together"
+    android:startOffset="500">
+    <set android:ordering="sequentially">
+        <objectAnimator
+            android:propertyName="translateY"
+            android:valueFrom="10"
+            android:valueTo="-2"
+            android:duration="360"
+            android:interpolator="@android:anim/decelerate_interpolator" />
+        <objectAnimator
+            android:propertyName="translateY"
+            android:valueFrom="-2"
+            android:valueTo="0"
+            android:duration="240"
+            android:interpolator="@android:anim/accelerate_interpolator" />
+    </set>
+</set>

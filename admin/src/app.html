@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" type="image/png" />
+		<link rel="apple-touch-icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="description" content="Fancy Deals Uganda admin — manage products, orders, staff, and your online store." />
+		<meta name="robots" content="noindex, nofollow" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet" />
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.getRegistrations().then(function (registrations) {
+					registrations.forEach(function (registration) {
+						registration.unregister();
+					});
+				});
+			}
+			if (window.caches) {
+				caches.keys().then(function (keys) {
+					keys.forEach(function (key) {
+						caches.delete(key);
+					});
+				});
+			}
+		</script>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div id="admin-root">%sveltekit.body%</div>
+		<noscript>Enable JavaScript to use the Luxiva admin dashboard.</noscript>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+/* Shared styles for {@html} help content inside InfoPage */
+:global(.info-body .lead) {
+  font-size: 1.05rem;
+  color: var(--text-primary, #1a1a1a);
+  margin-bottom: 1.25rem;
+}
+:global(.info-body h2) {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--text-primary, #1a1a1a);
+}
+:global(.info-body ul),
+:global(.info-body ol) {
+  margin: 0.5rem 0 1rem;
+  padding-left: 1.35rem;
+}
+:global(.info-body li) {
+  margin-bottom: 0.35rem;
+}
+:global(.info-body a) {
+  color: #c2410c;
+  text-decoration: underline;
+}
+:global(.info-body .contact-card) {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 1rem;
+}
+:global(.info-body details) {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: #fafafa;
+}
+:global(.info-body summary) {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+}
+:global(.info-body details p) {
+  margin: 0.75rem 0 0;
+}

@@ -1,0 +1,41 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Luxiva" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/accent_primary</item>
+        <item name="colorPrimaryVariant">#EA580C</item>
+        <item name="colorOnPrimary">@color/semi_black</item>
+        <item name="colorSecondary">@color/accent_secondary</item>
+        <item name="colorSecondaryVariant">#FB923C</item>
+        <item name="colorOnSecondary">@color/semi_black</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:statusBarColor">@color/color_system_bar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:navigationBarColor">@color/color_system_bar</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:fontFamily">@font/sf_pro_display</item>
+    </style>
+
+    <style name="Theme.Luxiva.Intro" parent="Theme.Luxiva">
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/color_system_bar</item>
+    </style>
+
+    <style name="Theme.Luxiva.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/anim_splash_logo</item>
+        <item name="windowSplashScreenBackground">#1A1A1A</item>
+        <item name="postSplashScreenTheme">@style/Theme.Luxiva.Intro</item>
+    </style>
+
+    <style name="Theme.Luxiva.Splash" parent="Theme.Luxiva">
+        <item name="android:windowBackground">#C2410C</item>
+        <item name="android:statusBarColor">#C2410C</item>
+        <item name="android:navigationBarColor">#C2410C</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+    </style>
+</resources>

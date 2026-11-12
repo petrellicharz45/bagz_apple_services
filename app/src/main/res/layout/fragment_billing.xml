@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Root FrameLayout so the PIN wait overlay can cover the visible screen and center correctly. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollBilling"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarBilling"
+            android:layout_width="0dp"
+            android:layout_height="?actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageCloseBilling"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/icon_background_round"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_arrow_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/semi_black"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvBilling"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="Place your order"
+                    android:textColor="@color/semi_black"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageCloseBilling"
+                    app:layout_constraintStart_toEndOf="@id/imageCloseBilling"
+                    app:layout_constraintTop_toTopOf="@+id/imageCloseBilling" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressbarBilling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarBilling" />
+
+        <TextView
+            android:id="@+id/tvPaymentMethods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/poppins_thin"
+            android:text="@string/payment_methods"
+            android:textColor="@color/semi_black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarBilling" />
+
+        <TextView
+            android:id="@+id/tvPaymentExplanation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:fontFamily="@font/sf_pro_display"
+            android:text="@string/no_virtual_payment"
+            android:textColor="@color/semi_black"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentMethods" />
+
+        <RadioGroup
+            android:id="@+id/rgPaymentMethods"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentExplanation">
+
+            <RadioButton
+                android:id="@+id/rbMtnPayment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:buttonTint="@color/g_light_blue"
+                android:fontFamily="@font/poppins_light"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp"
+                android:text="@string/payment_method_mtn"
+                android:textColor="@color/semi_black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvMtnPaymentDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/sf_pro_display"
+                android:text="@string/payment_method_mtn_desc"
+                android:textColor="@color/g_gray700"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/rbAirtelPayment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/g_light_blue"
+                android:fontFamily="@font/poppins_light"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp"
+                android:text="@string/payment_method_airtel"
+                android:textColor="@color/semi_black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAirtelPaymentDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/sf_pro_display"
+                android:text="@string/payment_method_airtel_desc"
+                android:textColor="@color/g_gray700"
+                android:textSize="12sp" />
+
+            <!-- Legacy id kept gone so older binding references do not break layouts -->
+            <RadioButton
+                android:id="@+id/rbInstantPayment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
+
+        </RadioGroup>
+
+        <View
+            android:id="@+id/topLine"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/white_background"
+            android:backgroundTint="@color/g_line"
+            app:layout_constraintEnd_toEndOf="@id/rgPaymentMethods"
+            app:layout_constraintStart_toStartOf="@id/rgPaymentMethods"
+            app:layout_constraintTop_toBottomOf="@id/rgPaymentMethods" />
+
+        <ImageView
+            android:id="@+id/imageLocation"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_location"
+            app:layout_constraintStart_toStartOf="@id/tvPaymentExplanation"
+            app:layout_constraintTop_toBottomOf="@id/topLine"
+            app:tint="@color/semi_black"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvShippingAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:fontFamily="@font/poppins_thin"
+            android:text="Choose a delivery address"
+            android:textColor="@color/semi_black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/imageLocation"
+            app:layout_constraintStart_toEndOf="@id/imageLocation"
+            app:layout_constraintTop_toTopOf="@id/imageLocation" />
+
+        <ImageView
+            android:id="@+id/imageAddAddress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="@id/tvShippingAddress"
+            app:layout_constraintEnd_toEndOf="@id/tvPaymentExplanation"
+            app:layout_constraintTop_toTopOf="@id/tvShippingAddress"
+            app:tint="@color/semi_black"
+            tools:ignore="ContentDescription" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="1000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvShippingAddress">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="15dp">
+
+                <View
+                    android:layout_width="280dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/shimmer_placeholder" />
+
+                <View
+                    android:layout_width="280dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/shimmer_placeholder" />
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:nestedScrollingEnabled="false"
+            android:paddingHorizontal="15dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvShippingAddress"
+            tools:listitem="@layout/rv_item_address" />
+
+        <TextView
+            android:id="@+id/tvDeliveryEstimate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/semi_black"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/tvPaymentExplanation"
+            app:layout_constraintStart_toStartOf="@id/tvPaymentExplanation"
+            app:layout_constraintTop_toBottomOf="@id/rvAddress" />
+
+        <View
+            android:id="@+id/middleLine"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/white_background"
+            android:backgroundTint="@color/g_line"
+            app:layout_constraintEnd_toEndOf="@id/tvPaymentExplanation"
+            app:layout_constraintStart_toStartOf="@id/tvPaymentExplanation"
+            app:layout_constraintTop_toBottomOf="@id/tvDeliveryEstimate" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProducts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:nestedScrollingEnabled="false"
+            android:paddingHorizontal="15dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/middleLine"
+            tools:listitem="@layout/rv_item_billing_product" />
+
+        <View
+            android:id="@+id/bottomLine"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/white_background"
+            android:backgroundTint="@color/g_line"
+            app:layout_constraintEnd_toEndOf="@id/tvPaymentExplanation"
+            app:layout_constraintStart_toStartOf="@id/tvPaymentExplanation"
+            app:layout_constraintTop_toBottomOf="@id/rvProducts" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/totalBoxContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/total_box_background"
+            app:layout_constraintEnd_toEndOf="@id/tvPaymentExplanation"
+            app:layout_constraintStart_toStartOf="@id/tvPaymentExplanation"
+            app:layout_constraintTop_toBottomOf="@id/bottomLine">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/sf_pro_display"
+                android:text="@string/total"
+                android:textColor="@color/semi_black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTotalPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/sf_pro_display"
+                android:textColor="@color/semi_black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layoutInstantPaymentDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/totalBoxContainer"
+            app:layout_constraintStart_toStartOf="@id/totalBoxContainer"
+            app:layout_constraintTop_toBottomOf="@id/totalBoxContainer">
+
+            <EditText
+                android:id="@+id/edInstantPaymentPhone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/white_background"
+                android:fontFamily="@font/poppins_light"
+                android:hint="Phone number for payment (e.g. 077...)"
+                android:inputType="phone"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:singleLine="true"
+                android:textColor="@color/semi_black"
+                android:textColorHint="@color/g_gray500"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/buttonPlaceOrder"
+            style="@style/orangeButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/medium_button_height"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/place_order"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/totalBoxContainer"
+            app:layout_constraintStart_toStartOf="@id/totalBoxContainer"
+            app:layout_constraintTop_toBottomOf="@id/layoutInstantPaymentDetails"
+            app:layout_constraintVertical_bias="1"
+            app:spinning_bar_color="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Full-screen layer: centers the PIN wait card in the visible viewport (not inside scroll content). -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC0F172A"
+        android:clickable="true"
+        android:elevation="24dp"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/white_background"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="28dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="24dp">
+
+            <ProgressBar
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:indeterminate="true"
+                android:indeterminateTint="#EA580C" />
+
+            <TextView
+                android:id="@+id/tvPinWaitTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_thin"
+                android:gravity="center"
+                android:text="Waiting for your PIN"
+                android:textColor="@color/semi_black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPinWaitSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/sf_pro_display"
+                android:gravity="center"
+                android:lineSpacingExtra="3dp"
+                android:text="Enter your mobile money PIN on your phone to finish payment."
+                android:textColor="@color/g_gray700"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btnDismissPinWait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="?attr/selectableItemBackground"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:text="Close"
+                android:textColor="#EA580C"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

@@ -1,0 +1,10 @@
+---
+description: This PC already has Android Studio; do not treat setup as missing.
+alwaysApply: true
+---
+
+# Local Android Studio
+
+Android Studio is already installed on this Windows PC. Do not instruct the user to install Android Studio, the Android SDK, or a new emulator as a prerequisite.
+
+Open and build the app from `D:\projects\luxiva\Luxiva`. Prefer their existing Android Studio install for Run/Debug. Gradle debug APK path is `app/build/outputs/apk/debug/app-debug.apk`. Splash version must match `app/build.gradle.kts` `versionName`.

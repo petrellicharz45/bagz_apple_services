@@ -1,0 +1,174 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function isValidRatingData(data) {
+      return data.rating is number
+        && data.rating >= 1
+        && data.rating <= 5
+        && (!('text' in data) || (data.text is string && data.text.size() <= 2000));
+    }
+
+    function isWebReviewerId(id) {
+      return id.matches('^fd_[a-fA-F0-9]{32}$');
+    }
+
+    function webShopRatingWrite(ratingId) {
+      return isWebReviewerId(ratingId)
+        && request.resource.data.reviewerId == ratingId
+        && isValidRatingData(request.resource.data);
+    }
+
+    function productRatingFieldsOnly() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'reviewsCount']);
+    }
+
+
+    match /admin/{adminId} {
+      allow read: if isAdmin() || isOwner(adminId);
+      allow write: if false;
+    }
+
+    match /staffInvite/{inviteId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /user/{userId} {
+      allow create: if isOwner(userId);
+      allow read: if isOwner(userId) || isAdmin();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+
+      match /cart/{cartId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /wishlist/{wishlistId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /address/{addressId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /order/{orderId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId)
+          && request.resource.data.userId == userId
+          && request.resource.data.orderStatus == 'Pending'
+          && isValidNewOrder(request.resource.data);
+        allow update: if isAdmin();
+        allow delete: if isAdmin();
+      }
+
+      match /notificationTokens/{tokenId} {
+        allow read, write, delete: if isOwner(userId);
+      }
+    }
+
+    match /adminNotification/{notificationId} {
+      allow read, create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /adminAuditLog/{logId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /settings/payment_config {
+      allow read, write: if isAdmin();
+    }
+
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /product/{productId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'rating', 'reviewsCount'])
+      ) || productRatingFieldsOnly();
+
+      match /userRatings/{ratingId} {
+        allow read: if true;
+        allow create: if (signedIn()
+          && request.auth.uid == ratingId
+          && isValidRatingData(request.resource.data))
+          || webShopRatingWrite(ratingId);
+        allow update: if (signedIn()
+          && request.auth.uid == ratingId
+          && isValidRatingData(request.resource.data))
+          || webShopRatingWrite(ratingId);
+        allow delete: if isAdmin();
+      }
+    }
+
+    match /order/{orderId} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.orderStatus == 'Pending'
+        && isValidNewOrder(request.resource.data);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /tickets/{ticketId} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin();
+
+      match /messages/{messageId} {
+        allow read: if signedIn() && (
+          get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid
+          || isAdmin()
+        );
+        allow create: if signedIn() && (
+          get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid
+          || isAdmin()
+        );
+      }
+    }
+
+    match /productReport/{reportId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Helper: validates payment fields on a new order written by the Android app.
+    //
+    // Security requirements (docs/UGANDA_MOBILE_MONEY.md):
+    //   • paymentStatus MUST be "pending_payment". The app must never set "paid"
+    //     or any other provider-confirmed value directly.
+    //   • providerReference, amountPaid, isPaid, and paymentId must be absent or
+    //     hold their safe defaults (empty string / 0 / false). Only the backend
+    //     Cloud Functions (paymentWebhook / verifyPaymentStatus) running with
+    //     Firebase Admin SDK may write these fields.
+    // ---------------------------------------------------------------------------
+    function isValidNewOrder(data) {
+      return (data.paymentStatus == 'pending_payment' || data.paymentStatus == 'Awaiting Confirmation')
+        && (!('providerReference' in data) || data.providerReference == '')
+        && (!('amountPaid'        in data) || data.amountPaid        == 0)
+        && (!('isPaid'            in data) || data.isPaid            == false)
+        && (!('paymentId'         in data) || data.paymentId         == '');
+    }
+  }
+}

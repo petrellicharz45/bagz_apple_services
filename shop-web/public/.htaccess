@@ -1,0 +1,30 @@
+# FancyDeals shop (Vite SPA) — upload with the rest of shop-web/dist to Hostinger public_html
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# Service worker: always revalidate
+<Files "pesapal-config.php">
+  Require all denied
+</Files>
+<Files "firestore-config.php">
+  Require all denied
+</Files>
+
+<Files "sw.js">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </IfModule>
+</Files>

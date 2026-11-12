@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Required for compile; replace when you re-download google-services.json after enabling Google Sign-In in Firebase Auth. -->
+    <string name="default_web_client_id" translatable="false">615133390570-placeholder.apps.googleusercontent.com</string>
+</resources>
