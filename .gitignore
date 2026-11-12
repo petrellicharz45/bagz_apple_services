@@ -63,3 +63,6 @@ brand-assets/raw/
 # Real env files (any folder). Templates (*.example) stay tracked.
 .env.*
 !*.example
+# Firebase Admin private keys (never commit)
+firebase-service-account.json
+firebase-adminsdk.json

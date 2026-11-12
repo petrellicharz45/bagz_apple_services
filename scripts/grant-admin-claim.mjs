@@ -24,7 +24,7 @@ const keyPath = join(root, "firebase-service-account.json");
 
 if (!existsSync(keyPath)) {
   console.error(`Missing ${keyPath}`);
-  console.error("Download it from Firebase Console → fancydeals-ug → Service accounts → Generate new private key.");
+  console.error("Download it from Firebase Console → bagz-5aec7 → Project settings → Service accounts → Generate new private key.");
   process.exit(1);
 }
 
