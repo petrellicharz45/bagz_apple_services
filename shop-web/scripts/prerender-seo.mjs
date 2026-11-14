@@ -217,13 +217,9 @@ const today = new Date().toISOString().slice(0, 10);
 const urls = [
   { loc: "/", lastmod: today, changefreq: "daily", priority: "1.0" },
   ...categories.map((c) => ({ loc: categoryPath(c), lastmod: today, changefreq: "daily", priority: "0.9" })),
-  ...products.map((p) => ({ loc: productPath(p), lastmod: lastmod(p), changefreq: "weekly", priority: "0.8" })),
-  ...["support", "about", "shipping", "protection", "seller", "privacy", "terms"].map((t) => ({
-    loc: `/help/${t}`,
-    lastmod: today,
-    changefreq: "monthly",
-    priority: "0.4"
-  }))
+  ...products.map((p) => ({ loc: productPath(p), lastmod: lastmod(p), changefreq: "weekly", priority: "0.8" }))
+  // Help pages are left out until they get their own prerendered title/canonical
+  // (today they share the home page's, which Search Console reports as a conflict).
 ];
 writeFileSync(
   join(dist, "sitemap.xml"),

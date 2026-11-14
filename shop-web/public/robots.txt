@@ -2,6 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-# Update Sitemap URL after you deploy the shop (set VITE_PUBLIC_SITE_URL in .env)
-# Set VITE_PUBLIC_SITE_URL in shop-web/.env to your live domain, then update this line:
 Sitemap: https://bagzappleservices.com/sitemap.xml

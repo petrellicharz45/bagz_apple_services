@@ -5,6 +5,13 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # One address for Google: www → bagzappleservices.com, and always https
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteCond %{HTTP_HOST} !^localhost [NC]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   # LEGACY-REDIRECTS (old WordPress links → new pages; filled in by scripts/prerender-seo.mjs)
   # Prerendered SEO pages: /p/<slug> and /c/<slug> are served from p/<slug>.html and c/<slug>.html
   RewriteCond %{REQUEST_URI} ^/(p|c)/[^/]+/?$
