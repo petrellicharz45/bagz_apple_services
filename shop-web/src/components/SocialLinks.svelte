@@ -38,7 +38,14 @@
         aria-label={`Bagz on ${s.name || s.label}`}
       >
         <span class="logo" class:outlined={s.key === "x" || s.key === "tiktok"} style="background:{BG[s.key] || '#1673c4'};color:{FG[s.key] || '#fff'}">
-          {#if SOCIAL_ICON_PATHS[s.key]}
+          {#if s.key === "tiktok"}
+            <!-- TikTok's own look: white note with cyan and red offset edges. -->
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="tiktok">
+              <path fill="#25f4ee" transform="translate(-0.7 -0.6)" d={SOCIAL_ICON_PATHS.tiktok} />
+              <path fill="#fe2c55" transform="translate(0.7 0.6)" d={SOCIAL_ICON_PATHS.tiktok} />
+              <path fill="#fff" d={SOCIAL_ICON_PATHS.tiktok} />
+            </svg>
+          {:else if SOCIAL_ICON_PATHS[s.key]}
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={SOCIAL_ICON_PATHS[s.key]} /></svg>
           {:else}
             <i class="fa fa-link" aria-hidden="true"></i>
