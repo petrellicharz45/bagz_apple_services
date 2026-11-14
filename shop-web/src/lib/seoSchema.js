@@ -8,6 +8,12 @@ import { categoryPath, productPath, productBrand } from "./seoPaths.js";
 
 const clean = (obj) => JSON.parse(JSON.stringify(obj)); // drop undefined
 
+/** Google Maps link for an address (opens the place / directions on any phone). */
+export const mapsSearchUrl = (query) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${BRAND.name}, ${query}`)}`;
+export const mapsDirectionsUrl = (query) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
+
 /** Organization + WebSite + one ElectronicsStore per branch (local SEO / Google Maps). */
 export function siteGraph(base) {
   const org = `${base}/#organization`;
@@ -72,10 +78,13 @@ export function siteGraph(base) {
           addressRegion: "Central Region",
           addressCountry: "UG"
         },
-        // Only Sunday hours are confirmed by the client; weekday hours are left out until known.
-        openingHoursSpecification: [
-          { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "11:00", closes: "17:00" }
-        ]
+        openingHoursSpecification: (BRAND.openingHours || []).map((h) => ({
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: h.days,
+          opens: h.opens,
+          closes: h.closes
+        })),
+        hasMap: b.mapsQuery ? mapsSearchUrl(b.mapsQuery) : undefined
       }))
     ]
   });

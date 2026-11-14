@@ -1,6 +1,7 @@
 <script>
   import { onMount, onDestroy, tick } from "svelte";
   import { BRAND } from "./lib/brand.js";
+  import { mapsDirectionsUrl } from "./lib/seoSchema.js";
   import { liveContact } from "./lib/shopContact.js";
   import TemuHeader from "./components/TemuHeader.svelte";
   import TemuIcon from "./components/TemuIcon.svelte";
@@ -950,8 +951,16 @@
           </a>
         {/if}
         {#each BRAND.branches as b}
-          <p class="foot-note"><strong>{b.name}:</strong> {b.address}</p>
+          <p class="foot-note">
+            <strong>{b.name}:</strong> {b.address}
+            {#if b.mapsQuery}
+              <a class="directions-link" href={mapsDirectionsUrl(b.mapsQuery)} target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-map-marker" aria-hidden="true"></i> Directions
+              </a>
+            {/if}
+          </p>
         {/each}
+        <p class="foot-note"><strong>Open:</strong> {BRAND.contact.hours}</p>
       </div>
       <div>
         <strong>Customer service</strong>
@@ -1255,6 +1264,16 @@
   }
   a.foot-link {
     text-decoration: none;
+  }
+  .directions-link {
+    display: inline-block;
+    margin-left: 6px;
+    color: #2ba8e0;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .directions-link:hover {
+    text-decoration: underline;
   }
   .review-link span {
     color: #fbbc04;

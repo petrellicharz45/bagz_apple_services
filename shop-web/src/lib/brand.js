@@ -32,19 +32,26 @@ export const BRAND = {
     phoneTel: "+256754558186",
     whatsappE164: "256754558186",
     /** Weekday hours not yet confirmed by the client — only Sunday hours are published. */
-    hours: "Sundays 11:00 AM – 5:00 PM · call for weekday hours"
+    hours: "Mon–Sat 8:30 AM – 8:00 PM · Sunday closed"
   },
+
+  /** Opening hours for Google (structured data). Same as the Google Business Profile. */
+  openingHours: [
+    { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "08:30", closes: "20:00" }
+  ],
 
   branches: [
     {
       id: "ntinda",
       name: "Ntinda Branch",
-      address: "Emessa Complex, Shop S10 (Level 3), Kiwatule Road, opp. Independent Hospital, Ntinda, Kampala"
+      address: "Emessa Complex, Shop S10 (Level 3), Kiwatule Road, opp. Independent Hospital, Ntinda, Kampala",
+      mapsQuery: "Emessa Complex, Kiwatule Road, Ntinda, Kampala"
     },
     {
       id: "kampala",
       name: "Kampala Branch",
-      address: "Zainab Plaza, Wilson Street, Level 3 – Shop 13, Kampala"
+      address: "Zainab Plaza, Wilson Street, Level 3 – Shop 13, Kampala",
+      mapsQuery: "Zainab Plaza, Wilson Street, Kampala"
     }
   ],
 
@@ -54,10 +61,11 @@ export const BRAND = {
    * Empty values are hidden in the shop.
    */
   social: {
+    // Also used as "sameAs" in Google structured data (website ↔ social profiles are one business).
     instagram: "",
     facebook: "",
-    x: "",
-    tiktok: "",
+    x: "https://twitter.com/bagzapplestore",
+    tiktok: "https://www.tiktok.com/@bagzappleservices",
     snapchat: "",
     youtube: ""
   },
