@@ -57,14 +57,18 @@
   let orderId = newOrderId();
   /** Online payment (Pesapal) needs the hosted PHP endpoint; until then only cash on delivery. */
   const ONLINE_PAYMENTS = import.meta.env.VITE_ONLINE_PAYMENTS === "true";
-  let payMethod = "cod"; // "cod" | "online"
+  /** Online methods all go through the Pesapal page; they show as "Coming soon" until enabled. */
+  const PAY_METHODS = [
+    { id: "cod", title: "Cash on delivery", sub: "Pay cash or Mobile Money when your order arrives", online: false },
+    { id: "mtn", title: "MTN Mobile Money", sub: "Pay now with MTN MoMo", online: true },
+    { id: "airtel", title: "Airtel Money", sub: "Pay now with Airtel Money", online: true },
+    { id: "card", title: "Visa / Mastercard", sub: "Pay now by debit or credit card", online: true }
+  ];
+  let payMethod = "cod"; // "cod" | "mtn" | "airtel" | "card"
   let orderNote = "";
-  let useWallet = ONLINE_PAYMENTS;
-  let payChannel = "momo";
-  let cardName = "";
-  let cardNumber = "";
-  let cardExpiry = "";
-  let cardCvv = "";
+  // The wallet balance lives only in the shopper's browser, so it must not pay for orders.
+  let useWallet = false;
+  $: payChannel = payMethod === "card" ? "card" : "momo";
   let topUpAmount = 1000;
   let topUpBusy = false;
   let topUpPinOpen = false;
@@ -550,36 +554,45 @@
 
       <p class="field-label">How would you like to pay?</p>
       <div class="pay-methods" role="radiogroup" aria-label="Payment method">
-        <button
-          type="button"
-          role="radio"
-          aria-checked={cod}
-          class="pay-method"
-          class:sel={cod}
-          on:click={() => { payMethod = "cod"; payMessage = ""; }}
-        >
-          <i class="fa fa-money" aria-hidden="true"></i>
-          <span>
-            <strong>Cash on delivery</strong>
-            <small>Pay cash or Mobile Money when your order arrives</small>
-          </span>
-        </button>
-        {#if ONLINE_PAYMENTS}
+        {#each PAY_METHODS as m (m.id)}
+          {@const off = m.online && !ONLINE_PAYMENTS}
           <button
             type="button"
             role="radio"
-            aria-checked={!cod}
+            aria-checked={payMethod === m.id}
+            aria-disabled={off}
             class="pay-method"
-            class:sel={!cod}
-            on:click={() => { payMethod = "online"; payMessage = ""; }}
+            class:sel={payMethod === m.id}
+            class:off
+            on:click={() => {
+              if (off) {
+                payMessage = `${m.title} is coming soon. Choose Cash on delivery for now.`;
+                return;
+              }
+              payMethod = m.id;
+              payMessage = "";
+            }}
           >
-            <i class="fa fa-credit-card" aria-hidden="true"></i>
-            <span>
-              <strong>Pay now</strong>
-              <small>MTN / Airtel Money or card</small>
+            <span class="pm-logo">
+              {#if m.id === "mtn" || m.id === "airtel"}
+                <MomoNetworkIcon network={m.id} size={40} />
+              {:else if m.id === "card"}
+                <span class="card-logos"><i class="fa fa-cc-visa" aria-hidden="true"></i><i class="fa fa-cc-mastercard" aria-hidden="true"></i></span>
+              {:else}
+                <i class="fa fa-money" aria-hidden="true"></i>
+              {/if}
             </span>
+            <span class="pm-text">
+              <strong>{m.title}</strong>
+              <small>{m.sub}</small>
+            </span>
+            {#if off}
+              <span class="soon">Coming soon</span>
+            {:else}
+              <span class="pm-radio" aria-hidden="true"></span>
+            {/if}
           </button>
-        {/if}
+        {/each}
       </div>
 
       {#if cod}
@@ -597,85 +610,23 @@
           Note for us (optional)
           <textarea bind:value={orderNote} rows="2" maxlength="500" placeholder="Best time to deliver, colour preference, swap / top-up details…"></textarea>
         </label>
-      {:else}
-      <div class="wallet-box">
-        <label class="wallet-row">
-          <input type="checkbox" bind:checked={useWallet} disabled={walletBalance <= 0} />
-          <TemuIcon name="wallet" size={22} color="#1673c4" />
-          <span>
-            <strong>My Wallet</strong>
-            <span class="wallet-bal">{formatUgx(walletBalance)} available</span>
-          </span>
-        </label>
-        {#if useWallet && walletApplied > 0}
-          <p class="wallet-applied">− {formatUgx(walletApplied)} applied</p>
-        {/if}
-        {#if useWallet && amountDue > 0}
-          <p class="hint">Pay remaining <strong>{formatUgx(amountDue)}</strong> below or top up your wallet.</p>
-          <div class="topup-inline">
-            <input type="number" min="1000" step="500" bind:value={topUpAmount} aria-label="Top-up amount" />
-            <button type="button" class="ghost small" disabled={topUpBusy} on:click={quickTopUp}>
-              Top up wallet
-            </button>
-            <button type="button" class="link-btn" on:click={onOpenWallet}>Manage wallet</button>
-          </div>
-        {/if}
-      </div>
-
-      {#if amountDue > 0}
-        <p class="field-label">Mobile number for this payment</p>
+      {:else if payChannel === "momo"}
         <label class="phone-label">
+          {payMethod === "mtn" ? "MTN" : "Airtel"} number to pay from
           <div class="phone-wrap">
-            <input bind:value={phone} type="tel" placeholder="e.g. 0772123456 or 0751141576" />
-            {#if payChannel === "momo"}
-              <MomoNetworkIcon network={momoNetwork} size={32} />
-            {/if}
+            <input bind:value={phone} type="tel" placeholder={payMethod === "mtn" ? "e.g. 0772 123456" : "e.g. 0752 123456"} />
+            <MomoNetworkIcon network={payMethod} size={32} />
           </div>
         </label>
-        <p class="hint">You confirm MTN, Airtel, or your card on the secure Pesapal page.</p>
-        <div class="pay-chips">
-          <button type="button" class:sel={payChannel === "momo"} on:click={() => { payChannel = "momo"; payMessage = ""; }}>
-            MTN / Airtel Money
-          </button>
-          <button type="button" class:sel={payChannel === "card"} on:click={() => { payChannel = "card"; payMessage = ""; }}>
-            Credit / debit card
-          </button>
-        </div>
-        {#if payChannel === "momo"}
-          {#if momoNetwork}
-            <p class="network-hint">
-              <MomoNetworkIcon network={momoNetwork} size={22} />
-              Detected: <strong>{momoLabel}</strong>
-            </p>
-          {:else if phone.replace(/\D/g, "").length >= 9}
-            <p class="msg">Could not detect network — check the number.</p>
-          {/if}
-        {:else}
-          <div class="card-fields">
-            <label>
-              Name on card
-              <input bind:value={cardName} autocomplete="off" placeholder="As printed on the card" />
-            </label>
-            <label>
-              Card number
-              <input bind:value={cardNumber} inputmode="numeric" autocomplete="off" placeholder="1234 5678 9012 3456" maxlength="23" />
-            </label>
-            <div class="card-row">
-              <label>
-                Expiry
-                <input bind:value={cardExpiry} inputmode="numeric" autocomplete="off" placeholder="MM/YY" maxlength="5" />
-              </label>
-              <label>
-                Security code
-                <input bind:value={cardCvv} inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4" />
-              </label>
-            </div>
-          </div>
-          <p class="hint">Pay securely with your debit or credit card.</p>
+        {#if momoNetwork && momoNetwork !== payMethod}
+          <p class="msg">This looks like a{momoNetwork === "airtel" ? "n Airtel" : "n MTN"} number. Check the number or choose {momoLabel}.</p>
         {/if}
-      {:else if walletCoversAll}
-        <p class="hint">Your wallet covers this order — no mobile money payment needed.</p>
-      {/if}
+        <p class="hint">You'll approve <strong>{formatUgx(total)}</strong> on your phone through Pesapal's secure page.</p>
+      {:else}
+        <p class="hint">
+          <i class="fa fa-lock" aria-hidden="true"></i>
+          You'll enter your card details on Pesapal's secure page. Bagz never sees or stores your card number.
+        </p>
       {/if}
 
       {#if payMessage}
@@ -683,7 +634,7 @@
       {/if}
       <button type="button" class="pay" disabled={paying} on:click={openCheckoutPreview}>
         <TemuIcon name="wallet" size={20} color="#fff" strokeWidth={2} />
-        {paying ? "Sending…" : cod ? "Place order" : walletCoversAll ? "Pay with wallet" : "Confirm payment"}
+        {paying ? "Sending…" : cod ? "Place order" : `Pay ${formatUgx(total)}`}
       </button>
       <button type="button" class="back-step" on:click={() => (step = 1)}>Back</button>
     {:else}
@@ -765,8 +716,9 @@
       {#if cod}
         <div><dt>Phone</dt><dd>{phone}</dd></div>
         <div><dt>Payment</dt><dd>Cash on delivery</dd></div>
-      {:else if amountDue > 0 && phone.trim()}
-        <div><dt>Mobile money</dt><dd>{phone}</dd></div>
+      {:else}
+        <div><dt>Payment</dt><dd>{PAY_METHODS.find((m) => m.id === payMethod)?.title}</dd></div>
+        {#if payChannel === "momo"}<div><dt>Pay from</dt><dd>{phone}</dd></div>{/if}
       {/if}
     </dl>
 
@@ -813,7 +765,7 @@
     <div class="pay-actions">
       <button type="button" class="ghost-btn" disabled={paying} on:click={closeCheckoutPreview}>Back</button>
       <button type="button" class="pay confirm-pay" disabled={paying} on:click={executePay}>
-        {paying ? "Sending…" : cod ? "Place order" : "Confirm payment"}
+        {paying ? "Sending…" : cod ? "Place order" : `Pay ${formatUgx(total)}`}
       </button>
     </div>
   </div>
@@ -926,24 +878,69 @@
     font: inherit;
     cursor: pointer;
   }
-  .pay-method .fa {
-    font-size: 22px;
-    color: #13344f;
-    width: 26px;
-    text-align: center;
+  .pm-logo {
+    width: 48px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
   }
-  .pay-method span {
+  .pm-logo > .fa {
+    font-size: 26px;
+    color: #13344f;
+  }
+  .card-logos {
+    display: flex;
+    gap: 3px;
+    font-size: 22px;
+  }
+  .card-logos .fa-cc-visa {
+    color: #1a1f71;
+  }
+  .card-logos .fa-cc-mastercard {
+    color: #eb001b;
+  }
+  .pm-text {
     display: grid;
     gap: 2px;
+    flex: 1;
+    min-width: 0;
   }
   .pay-method small {
     color: #5b6670;
     font-size: var(--text-xs);
   }
+  .pm-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #b9c4ce;
+    flex-shrink: 0;
+  }
   .pay-method.sel {
     border-color: #1673c4;
     background: #eef6fd;
     box-shadow: 0 0 0 1px #1673c4 inset;
+  }
+  .pay-method.sel .pm-radio {
+    border-color: #1673c4;
+    background: radial-gradient(circle, #1673c4 0 45%, #fff 50%);
+  }
+  .pay-method.off {
+    cursor: default;
+    background: #fafbfc;
+  }
+  .pay-method.off .pm-logo,
+  .pay-method.off .pm-text {
+    opacity: 0.6;
+  }
+  .soon {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8a5a00;
+    background: #fff4d6;
+    border-radius: 999px;
+    padding: 3px 8px;
+    white-space: nowrap;
   }
   .cod-box {
     background: #f4f8fb;
