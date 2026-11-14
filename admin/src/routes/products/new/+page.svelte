@@ -3,7 +3,8 @@
   import { goto } from "$app/navigation";
   import { doc, setDoc, getDoc } from "firebase/firestore";
   import { httpsCallable } from "firebase/functions";
-  import { db } from "$lib/firebase";
+  import { db, app } from "$lib/firebase";
+  import { getAuth } from "firebase/auth";
   import { invalidateProductCatalog, loadProductCatalog } from "$lib/stores/catalog";
   import { showSuccessToast } from "$lib/stores/toast";
   import { formatCallableError, getAdminFunctions } from "$lib/functionsClient";
@@ -121,9 +122,11 @@
     const url =
       (import.meta.env.VITE_ANALYZE_PRODUCT_URL as string | undefined)?.trim() ||
       "/analyze-product.php";
+    // The PHP endpoint spends OpenRouter credit, so it only serves signed-in admins.
+    const idToken = app ? await getAuth(app).currentUser?.getIdToken() : "";
     const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken || ""}` },
       body: JSON.stringify({
         imageBase64,
         productName: form.name,

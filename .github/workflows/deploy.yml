@@ -1,0 +1,122 @@
+# Builds the Bagz shop and admin on every push to main and uploads them to cPanel by FTP.
+#
+# GitHub → Settings → Secrets and variables → Actions
+#   Secrets:
+#     SHOP_ENV            whole contents of shop-web/.env.production
+#     ADMIN_ENV           whole contents of admin/.env (includes OPENROUTER_API_KEY for AI auto-fill)
+#     FTP_SERVER          e.g. ftp.bagzappleservices.com
+#     FTP_SHOP_USERNAME / FTP_SHOP_PASSWORD     FTP account whose folder is the shop's document root
+#     FTP_ADMIN_USERNAME / FTP_ADMIN_PASSWORD   FTP account whose folder is the admin's document root
+#   Variables:
+#     SHOP_URL            https://new.bagzappleservices.com  (later https://bagzappleservices.com)
+#     ADMIN_URL           https://admin.bagzappleservices.com
+#     SHOP_NOINDEX        true while the shop is on the test subdomain (keeps it out of Google)
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "shop-web/**"
+      - "admin/**"
+      - "shared/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-cpanel
+  cancel-in-progress: false
+
+jobs:
+  shop:
+    name: Shop → ${{ vars.SHOP_URL }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: shop-web/package-lock.json
+
+      - name: Write shop settings
+        env:
+          SHOP_ENV: ${{ secrets.SHOP_ENV }}
+        run: |
+          test -n "$SHOP_ENV" || { echo "::error::Secret SHOP_ENV is missing"; exit 1; }
+          printf '%s\n' "$SHOP_ENV" > shop-web/.env.production
+
+      - name: Install and build
+        working-directory: shop-web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Keep the test site out of Google
+        if: vars.SHOP_NOINDEX == 'true'
+        working-directory: shop-web/dist
+        run: |
+          printf '\n<IfModule mod_headers.c>\n  Header set X-Robots-Tag "noindex, nofollow"\n</IfModule>\n' >> .htaccess
+          printf 'User-agent: *\nDisallow: /\n' > robots.txt
+
+      - name: Upload to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_SHOP_USERNAME }}
+          password: ${{ secrets.FTP_SHOP_PASSWORD }}
+          protocol: ftps
+          local-dir: shop-web/dist/
+          server-dir: ./
+          # Server-only secrets are created by hand in cPanel and never overwritten or deleted.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/pesapal-config.php
+            **/firestore-config.php
+
+  admin:
+    name: Admin → ${{ vars.ADMIN_URL }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+
+      - name: Write admin settings
+        env:
+          ADMIN_ENV: ${{ secrets.ADMIN_ENV }}
+          SHOP_URL: ${{ vars.SHOP_URL }}
+          ADMIN_URL: ${{ vars.ADMIN_URL }}
+        run: |
+          test -n "$ADMIN_ENV" || { echo "::error::Secret ADMIN_ENV is missing"; exit 1; }
+          # Live addresses replace the localhost ones from the local .env
+          printf '%s\n' "$ADMIN_ENV" | grep -vE '^(PUBLIC_SHOP_URL|PUBLIC_ADMIN_APP_URL)=' > admin/.env
+          echo "PUBLIC_SHOP_URL=${SHOP_URL}" >> admin/.env
+          echo "PUBLIC_ADMIN_APP_URL=${ADMIN_URL}" >> admin/.env
+
+      - name: Install and build
+        working-directory: admin
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_ADMIN_USERNAME }}
+          password: ${{ secrets.FTP_ADMIN_PASSWORD }}
+          protocol: ftps
+          local-dir: admin/build/
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**

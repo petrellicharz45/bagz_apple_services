@@ -28,6 +28,36 @@ if (!is_readable($configPath)) {
 }
 
 $config = require $configPath;
+
+// Only signed-in Bagz admins may use this (it spends OpenRouter credit). The admin sends its
+// Firebase ID token; Google's accounts:lookup confirms it and returns the user's custom claims.
+$firebaseKey = trim((string) ($config['FIREBASE_WEB_API_KEY'] ?? ''));
+$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
+$idToken = preg_match('/^Bearer\s+(\S+)$/', $authHeader, $m) ? $m[1] : '';
+if ($firebaseKey === '' || $idToken === '') {
+  http_response_code(401);
+  echo json_encode(['error' => 'Sign in to the admin to use AI auto-fill.']);
+  exit;
+}
+$lookup = curl_init('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=' . urlencode($firebaseKey));
+curl_setopt_array($lookup, [
+  CURLOPT_POST => true,
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+  CURLOPT_POSTFIELDS => json_encode(['idToken' => $idToken]),
+  CURLOPT_TIMEOUT => 15,
+]);
+$lookupRaw = curl_exec($lookup);
+$lookupCode = curl_getinfo($lookup, CURLINFO_HTTP_CODE);
+curl_close($lookup);
+$lookupData = json_decode((string) $lookupRaw, true);
+$claims = json_decode((string) ($lookupData['users'][0]['customAttributes'] ?? '{}'), true);
+if ($lookupCode !== 200 || empty($claims['admin'])) {
+  http_response_code(403);
+  echo json_encode(['error' => 'Only Bagz admins can use AI auto-fill. Sign out and in again if you were just made an admin.']);
+  exit;
+}
+
 $key = trim((string) ($config['OPENROUTER_API_KEY'] ?? ''));
 $model = trim((string) ($config['OPENROUTER_VISION_MODEL'] ?? ''));
 if ($model === '') {

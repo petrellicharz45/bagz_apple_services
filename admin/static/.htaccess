@@ -1,7 +1,10 @@
-# Bagz admin (SvelteKit static SPA) — included in admin/build when you run npm run build
+# Bagz admin (SvelteKit static SPA): included in admin/build by npm run build
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # Pass the admin's sign-in token through to analyze-product.php (Apache drops it otherwise)
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]
@@ -9,4 +12,18 @@
 
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
+  # The admin console should never appear in search results
+  Header set X-Robots-Tag "noindex, nofollow"
 </IfModule>
+
+# Secrets for the AI endpoint: never served directly
+<Files "analyze-config.php">
+  Require all denied
+</Files>
+<Files "analyze-config.sample.php">
+  Require all denied
+</Files>
+# Upload bookkeeping from the GitHub deploy
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>

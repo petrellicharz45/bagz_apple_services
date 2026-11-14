@@ -26,6 +26,10 @@
 <Files "firestore-config.php">
   Require all denied
 </Files>
+# Upload bookkeeping from the GitHub deploy
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
 
 <Files "sw.js">
   <IfModule mod_headers.c>

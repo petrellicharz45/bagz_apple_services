@@ -67,16 +67,21 @@ for (const name of ["analyze-product.php", "analyze-config.sample.php"]) {
 const envFile = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env");
 if (fs.existsSync(envFile)) {
   const env = fs.readFileSync(envFile, "utf8");
-  const line = env.split(/\r?\n/).find((row) => row.startsWith("OPENROUTER_API_KEY="));
-  if (line) {
-    let key = line.slice("OPENROUTER_API_KEY=".length).trim();
-    if ((key.startsWith('"') && key.endsWith('"')) || (key.startsWith("'") && key.endsWith("'"))) {
-      key = key.slice(1, -1);
-    }
-    if (key && !key.includes("PASTE")) {
-      const php = `<?php\nreturn [\n  'OPENROUTER_API_KEY' => '${key.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}',\n];\n`;
-      fs.writeFileSync(path.join(root, "analyze-config.php"), php);
-    }
+  const read = (name) => {
+    const line = env.split(/\r?\n/).find((row) => row.startsWith(`${name}=`));
+    let v = line ? line.slice(name.length + 1).trim() : "";
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+    return v.includes("PASTE") ? "" : v;
+  };
+  const php = (v) => v.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  const key = read("OPENROUTER_API_KEY");
+  // analyze-product.php checks the admin's Firebase sign-in with the (public) web API key.
+  const firebaseKey = read("PUBLIC_FIREBASE_API_KEY");
+  if (key) {
+    fs.writeFileSync(
+      path.join(root, "analyze-config.php"),
+      `<?php\nreturn [\n  'OPENROUTER_API_KEY' => '${php(key)}',\n  'FIREBASE_WEB_API_KEY' => '${php(firebaseKey)}',\n];\n`
+    );
   }
 }
 
