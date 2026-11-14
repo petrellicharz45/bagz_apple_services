@@ -449,12 +449,17 @@
             <span class="ref">#{order.orderId}</span>
             <span class="muted">{formatOrderDate(order.createdAt)}</span>
           </div>
-          <p class="status-tag">{isOrderFullyPaid(order) ? "Paid" : "Awaiting payment"}</p>
-          <p class="status-tag">
-            {track(order).label}
-            {#if track(order).when}· {track(order).when}{/if}
-          </p>
-          {#if track(order).window}<p class="muted">{track(order).window}</p>{/if}
+          {#if order.paymentMethod === "cod"}
+            <p class="status-tag">Cash on delivery · pay when it arrives</p>
+            <p class="muted">Order received: we'll call {order.phone || "you"} to confirm the delivery time.</p>
+          {:else}
+            <p class="status-tag">{isOrderFullyPaid(order) ? "Paid" : "Awaiting payment"}</p>
+            <p class="status-tag">
+              {track(order).label}
+              {#if track(order).when}· {track(order).when}{/if}
+            </p>
+            {#if track(order).window}<p class="muted">{track(order).window}</p>{/if}
+          {/if}
           <p class="total">{formatUgx(order.total || 0)}</p>
           {#if !isOrderFullyPaid(order) && orderAmountDue(order) > 0 && orderAmountDue(order) < Number(order.total || 0)}
             <p class="muted due-hint">Due: {formatUgx(orderAmountDue(order))}</p>

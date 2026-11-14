@@ -293,11 +293,12 @@
             "We could not send your order. Check your internet and try again, or call / WhatsApp us."
           );
         }
-        saveOrder({ ...payload, sentToAdmin: saved, sendAttempts: saved ? 0 : 1 });
+        const stored = { ...payload, sentToAdmin: saved };
+        saveOrder(stored);
         saveProfile({ name: payload.name, phone: payload.phone });
         persistCurrentAddress();
         removeSelectedLines();
-        onSuccess(payload);
+        onSuccess(stored);
         payMessage = "";
         step = 3;
         return;

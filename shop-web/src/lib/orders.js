@@ -113,10 +113,12 @@ export async function syncOrdersToAdmin() {
     for (const order of readOrders()) {
       if (order.sentToAdmin) continue;
       if (order.paymentMethod === "cod") {
-        // Create-only rule: a retry of an order that already arrived is refused, so stop after a few.
-        if ((order.sendAttempts || 0) >= 3) continue;
+        // Retried on each visit (e.g. offline, or before the database rule existed). The rule is
+        // create-only, so a copy that already arrived is simply refused; stop after 20 visits.
+        const tries = order.adminTries || 0;
+        if (tries >= 20) continue;
         const ok = await submitCodOrder(order);
-        updateOrder(order.orderId, ok ? { sentToAdmin: true } : { sendAttempts: (order.sendAttempts || 0) + 1 });
+        updateOrder(order.orderId, ok ? { sentToAdmin: true } : { adminTries: tries + 1 });
         continue;
       }
       if (await submitWebOrder(order)) {
@@ -182,6 +184,7 @@ export function orderAmountDue(order) {
 /** Pay now stays until status is truly paid (failed or pending attempts do not remove it). */
 export function isOrderPayable(order) {
   if (!order || isOrderFullyPaid(order)) return false;
+  if (order.paymentMethod === "cod") return false; // paid to the rider on delivery
   const due = orderAmountDue(order);
   const total = Number(order.total || 0);
   return due > 0 || total > 0;
