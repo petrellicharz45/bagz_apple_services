@@ -1,4 +1,5 @@
 <script>
+  import SocialLinks from "./SocialLinks.svelte";
   import { formatUgx, priceParts, coverUrl } from "../lib/catalog.js";
   import { read as readHistory } from "../lib/browsingHistory.js";
   import { readMyReviewsIndex } from "../lib/productReviews.js";
@@ -419,9 +420,9 @@
       {#if $liveContact.call}
         <a href={"tel:" + $liveContact.call}>Call {$liveContact.call}</a>
       {/if}
-      {#each $liveContact.socials as social}
-        <a href={social.url} target="_blank" rel="noopener noreferrer"><i class="fa fa-{social.icon} fa-fw" aria-hidden="true"></i> {social.label}</a>
-      {/each}
+      {#if $liveContact.socials.length}
+        <SocialLinks links={$liveContact.socials} size={30} />
+      {/if}
     </div>
     <button type="button" class="hub-card wallet-hub" on:click={() => onNavigateSection("wallet")}>
       <span class="hub-ico"><TemuIcon name="wallet" size={20} color="#1673c4" /></span>

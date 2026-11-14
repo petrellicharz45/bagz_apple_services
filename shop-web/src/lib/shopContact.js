@@ -49,7 +49,7 @@ const isHttps = (u) => /^https:\/\/\S+$/i.test(String(u || "").trim());
 
 function toLink(platform, url, label) {
   const info = SOCIAL_PLATFORMS[platform] || SOCIAL_PLATFORMS.other;
-  return { key: platform, label: label || info.label, icon: info.icon, url: String(url).trim() };
+  return { key: platform, name: info.label, label: label || info.label, icon: info.icon, url: String(url).trim() };
 }
 
 /**

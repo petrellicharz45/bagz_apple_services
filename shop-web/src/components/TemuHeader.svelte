@@ -9,6 +9,8 @@
   import { profileInitials } from "../lib/avatarImage.js";
   import { selectionFromSub } from "../lib/categoryMenu.js";
   import AppInstallBanner from "./AppInstallBanner.svelte";
+  import SocialLinks from "./SocialLinks.svelte";
+  import { liveContact } from "../lib/shopContact.js";
   import { displaySettings, resolvedLogoUrl } from "../lib/storeDisplay.js";
 
   $: shopLogoSrc = resolvedLogoUrl($displaySettings);
@@ -128,6 +130,12 @@
       <span class="u-strong">100% authentic · warranty</span>
     </button>
     <span class="grow" />
+    {#if $liveContact.socials.length}
+      <span class="u-follow">
+        <span class="u-muted">Follow us</span>
+        <SocialLinks links={$liveContact.socials} size={24} />
+      </span>
+    {/if}
     <button type="button" class="seller" on:click={() => onSupportAction("seller")}>
       Swap &amp; top-up ›
     </button>
@@ -405,6 +413,12 @@
   }
   .grow {
     flex: 1;
+  }
+  .u-follow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
   }
   .seller {
     border: none;

@@ -59,6 +59,7 @@
   import { productMatchesQuery as matchQ, matchedPhotoIndex } from "./lib/search.js";
   import { productAsPhoto } from "./lib/productPhotos.js";
   import AppDownloadActions from "./components/AppDownloadActions.svelte";
+  import SocialLinks from "./components/SocialLinks.svelte";
   import { pushBrowse } from "./lib/browsingHistory.js";
   import {
     cartCount,
@@ -940,6 +941,13 @@
     </main>
   {/if}
 
+  {#if tab === "shop" && !selected && $liveContact.socials.length}
+    <div class="mobile-follow">
+      <strong>Follow Bagz</strong>
+      <SocialLinks links={$liveContact.socials} size={42} />
+    </div>
+  {/if}
+
   <footer class="site-footer">
     <div class="footer-cols">
       <div>
@@ -984,9 +992,13 @@
         <AppDownloadActions layout="footer" />
       </div>
     </div>
-    <p class="copy">© {new Date().getFullYear()} {BRAND.legalName} · Prices in UGX {#each $liveContact.socials as s}
-        · <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}><i class="fa fa-{s.icon}" aria-hidden="true"></i> {s.label}</a>
-      {/each}</p>
+    {#if $liveContact.socials.length}
+      <div class="follow">
+        <strong>Follow us</strong>
+        <SocialLinks links={$liveContact.socials} size={38} showLabels />
+      </div>
+    {/if}
+    <p class="copy">© {new Date().getFullYear()} {BRAND.legalName} · Prices in UGX</p>
   </footer>
 
   <PromoPopup suppressed={tab === "checkout" || tab === "cart"} />
@@ -1078,6 +1090,25 @@
     .site-footer {
       display: none;
     }
+  }
+  @media (min-width: 901px) {
+    .mobile-follow {
+      display: none !important;
+    }
+  }
+  .mobile-follow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 12px 12px;
+    padding: 18px 12px;
+    border-radius: 14px;
+    background: #13344f;
+    color: #fff;
+  }
+  .mobile-follow strong {
+    font-size: 15px;
   }
   .search-hint {
     font-size: var(--text-sm);
@@ -1283,8 +1314,20 @@
   button.foot-link:hover {
     color: #2ba8e0;
   }
-  .copy a {
-    color: #999;
+  .follow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 20px;
+    margin: 26px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid #2a2a2a;
+    color: #e5e5e5;
+  }
+  .follow strong {
+    font-size: 15px;
+    color: #fff;
   }
   .foot-note {
     margin-top: 4px !important;

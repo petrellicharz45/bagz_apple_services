@@ -62,7 +62,7 @@ export const BRAND = {
    */
   social: {
     // Also used as "sameAs" in Google structured data (website ↔ social profiles are one business).
-    instagram: "",
+    instagram: "https://www.instagram.com/bagz_apple_services_/",
     facebook: "",
     x: "https://twitter.com/bagzapplestore",
     tiktok: "https://www.tiktok.com/@bagzappleservices",
