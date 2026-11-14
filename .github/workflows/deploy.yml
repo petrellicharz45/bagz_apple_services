@@ -21,6 +21,11 @@ on:
       - "admin/**"
       - "shared/**"
       - ".github/workflows/deploy.yml"
+  # Nightly rebuild so products added / edited in the admin get their Google-readable pages and
+  # sitemap entries without a code push (02:00 UTC = 05:00 Kampala). Only changed files upload.
+  schedule:
+    - cron: "0 2 * * *"
+  # "Run workflow" button on GitHub → Actions → Deploy to cPanel, to publish right away.
   workflow_dispatch:
 
 concurrency:
@@ -104,8 +109,9 @@ jobs:
 
   admin:
     name: Admin → ${{ vars.ADMIN_URL }}
-    # Skipped until the ADMIN_URL variable (and admin FTP secrets) are added.
-    if: vars.ADMIN_URL != ''
+    # Skipped until the ADMIN_URL variable (and admin FTP secrets) are added, and on the nightly
+    # rebuild (the admin has no product pages to refresh).
+    if: vars.ADMIN_URL != '' && github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
