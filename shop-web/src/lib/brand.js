@@ -72,6 +72,8 @@ export const BRAND = {
 
   /** Android app (update once the Play Store listing exists). */
   androidPackage: "com.bagzappleservices.app",
+  /** Google Business Profile: "write a review" link (Business Profile → Ask for reviews). */
+  googleReviewUrl: "https://g.page/r/CUu9l9fAOZMsEBM/review",
   userAgentTag: "BagzApp",
 
   /** Prefix for browser localStorage keys. */

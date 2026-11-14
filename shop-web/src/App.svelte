@@ -944,6 +944,11 @@
       <div>
         <strong>Get to know us</strong>
         <button type="button" class="foot-link" on:click={() => handleSupportAction("about")}>About Bagz</button>
+        {#if BRAND.googleReviewUrl}
+          <a class="foot-link review-link" href={BRAND.googleReviewUrl} target="_blank" rel="noopener noreferrer">
+            Review us on Google <span aria-hidden="true">★★★★★</span>
+          </a>
+        {/if}
         {#each BRAND.branches as b}
           <p class="foot-note"><strong>{b.name}:</strong> {b.address}</p>
         {/each}
@@ -1250,6 +1255,10 @@
   }
   a.foot-link {
     text-decoration: none;
+  }
+  .review-link span {
+    color: #fbbc04;
+    letter-spacing: 1px;
   }
   a.foot-link:hover,
   button.foot-link:hover {

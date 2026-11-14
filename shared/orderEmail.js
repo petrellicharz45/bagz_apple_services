@@ -46,7 +46,8 @@ const STATUS = {
     label: "Delivered",
     color: "#1a8a4a",
     heading: (o) => `Delivered: enjoy your new gadget, ${firstName(o.name)}!`,
-    intro: () => "Thank you for shopping with Bagz. Your warranty starts today; keep this email as your receipt."
+    intro: () =>
+      "Thank you for shopping with Bagz. Your warranty starts today; keep this email as your receipt. Happy with your order? A quick Google review helps other customers find us."
   },
   Canceled: {
     label: "Cancelled",
@@ -73,7 +74,7 @@ function firstName(name) {
  * Template parameters for one email. `kind` = a STATUS key.
  * @param {string} kind
  * @param {any} order
- * @param {{ toEmail: string, toName?: string, replyTo?: string, brand: { name: string, phone: string, whatsapp: string, email: string } }} opts
+ * @param {{ toEmail: string, toName?: string, replyTo?: string, brand: { name: string, phone: string, whatsapp: string, email: string, reviewUrl?: string } }} opts
  * @returns {Record<string, string>}
  */
 export function orderEmailParams(kind, order, { toEmail, toName, replyTo, brand }) {
@@ -99,6 +100,9 @@ export function orderEmailParams(kind, order, { toEmail, toName, replyTo, brand 
     address: order.address || "",
     note: order.note ? `Note: ${order.note}` : "",
     more_items: items.length > MAX_ITEMS ? `+ ${items.length - MAX_ITEMS} more item(s)` : "",
+    // "Leave a Google review" button: only on the Delivered email, when there is a review link.
+    review_url: brand.reviewUrl || "",
+    review_display: kind === "Delivered" && brand.reviewUrl ? "inline-block" : "none",
     shop_name: brand.name,
     shop_phone: brand.phone,
     shop_whatsapp: `https://wa.me/${brand.whatsapp}`,

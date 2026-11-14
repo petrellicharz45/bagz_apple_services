@@ -13,7 +13,9 @@ const BRAND_INFO = {
   name: BRAND.name,
   phone: "+256 754 558 186",
   whatsapp: "256754558186",
-  email: "info@bagzappleservices.com"
+  email: "info@bagzappleservices.com",
+  // Google Business Profile review link (also in shop-web/src/lib/brand.js)
+  reviewUrl: "https://g.page/r/CUu9l9fAOZMsEBM/review"
 };
 
 export const customerEmailEnabled = emailJsConfigured(EMAILJS);
