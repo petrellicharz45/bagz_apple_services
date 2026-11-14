@@ -232,5 +232,51 @@ writeFileSync(
     `\n</urlset>\n`
 );
 
-console.log(`prerender-seo: ${written.products} product pages, ${written.categories} category pages, sitemap with ${urls.length} URLs (${SITE})`);
+// ---------- old WordPress links → new pages (301) ----------
+// Keeps Google rankings and shared links working after the WordPress site is replaced.
+const rx = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const visible = new Set(products.map((p) => p.id));
+const redirects = [];
+const seenOld = new Set();
+for (const d of prodSnap.docs) {
+  const p = { id: d.id, ...d.data() };
+  let oldPath = "";
+  try {
+    oldPath = new URL(p.wpUrl).pathname.replace(/^\/+|\/+$/g, "");
+  } catch {
+    continue;
+  }
+  if (!/^product\/[^/]+$/.test(oldPath) || seenOld.has(oldPath)) continue;
+  seenOld.add(oldPath);
+  // Visible product → its page; product still hidden (needs photo / price check) → its category.
+  const target = visible.has(p.id) ? productPath(p) : p.category ? categoryPath(p.category) : "/";
+  redirects.push(`  RewriteRule ^${rx(oldPath)}/?$ ${target} [R=301,L]`);
+}
+// Old category pages: match on keywords against today's categories.
+const CATEGORY_KEYWORDS = [
+  ["iphone", "iphone"], ["samsung", "samsung"], ["galaxy", "samsung"], ["pixel", "pixel"], ["google", "pixel"],
+  ["watch", "watch"], ["macbook", "macbook"], ["ipad", "ipad"], ["airpod", "airpod"], ["audio", "audio"],
+  ["speaker", "audio"], ["headphone", "audio"], ["accessor", "accessor"], ["charger", "accessor"], ["case", "accessor"]
+];
+for (const [word, catWord] of CATEGORY_KEYWORDS) {
+  const cat = categories.find((c) => categorySlug(c).includes(catWord));
+  if (cat) redirects.push(`  RewriteRule ^product-category/(.*)${word} ${categoryPath(cat)} [R=301,L,NC]`);
+}
+redirects.push(
+  "  RewriteRule ^product-category/ / [R=301,L]",
+  "  RewriteRule ^product/ / [R=301,L]",
+  "  RewriteRule ^(shop|cart|checkout|my-account|wishlist|compare)/?$ / [R=301,L,NC]",
+  "  # WordPress login / admin addresses no longer exist",
+  "  RewriteRule ^(wp-admin|wp-login\\.php|xmlrpc\\.php|wp-includes) - [G,L]"
+);
+const htaccessPath = join(dist, ".htaccess");
+if (existsSync(htaccessPath)) {
+  const marker = /^\s*# LEGACY-REDIRECTS.*$/m;
+  const ht = readFileSync(htaccessPath, "utf8");
+  if (marker.test(ht)) {
+    writeFileSync(htaccessPath, ht.replace(marker, (m) => `${m}\n${redirects.join("\n")}`));
+  }
+}
+
+console.log(`prerender-seo: ${written.products} product pages, ${written.categories} category pages, sitemap with ${urls.length} URLs, ${seenOld.size} old WordPress links redirected (${SITE})`);
 process.exit(0);

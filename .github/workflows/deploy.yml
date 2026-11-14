@@ -8,9 +8,9 @@
 #     FTP_SHOP_USERNAME / FTP_SHOP_PASSWORD     FTP account whose folder is the shop's document root
 #     FTP_ADMIN_USERNAME / FTP_ADMIN_PASSWORD   FTP account whose folder is the admin's document root
 #   Variables:
-#     SHOP_URL            https://new.bagzappleservices.com  (later https://bagzappleservices.com)
-#     ADMIN_URL           https://admin.bagzappleservices.com
-#     SHOP_NOINDEX        true while the shop is on the test subdomain (keeps it out of Google)
+#     SHOP_URL            https://bagzappleservices.com
+#     ADMIN_URL           https://admin.bagzappleservices.com  (leave unset to skip the admin job)
+#     SHOP_NOINDEX        true only if the shop is on a test subdomain (keeps it out of Google)
 name: Deploy to cPanel
 
 on:
@@ -79,6 +79,8 @@ jobs:
 
   admin:
     name: Admin → ${{ vars.ADMIN_URL }}
+    # Skipped until the ADMIN_URL variable (and admin FTP secrets) are added.
+    if: vars.ADMIN_URL != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

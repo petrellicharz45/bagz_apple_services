@@ -1,7 +1,11 @@
 # Bagz shop (Vite SPA) — upload with the rest of shop-web/dist to Hostinger public_html
+# The shop's home page (even if an old WordPress index.php is still in this folder)
+DirectoryIndex index.html
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # LEGACY-REDIRECTS (old WordPress links → new pages; filled in by scripts/prerender-seo.mjs)
   # Prerendered SEO pages: /p/<slug> and /c/<slug> are served from p/<slug>.html and c/<slug>.html
   RewriteCond %{REQUEST_URI} ^/(p|c)/[^/]+/?$
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
