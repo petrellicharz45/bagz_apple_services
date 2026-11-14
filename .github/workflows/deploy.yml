@@ -33,9 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -61,16 +61,41 @@ jobs:
           printf '\n<IfModule mod_headers.c>\n  Header set X-Robots-Tag "noindex, nofollow"\n</IfModule>\n' >> .htaccess
           printf 'User-agent: *\nDisallow: /\n' > robots.txt
 
+      # Upload (only changed files). Slow or briefly blocked FTP: wait and try once more.
       - name: Upload to cPanel
+        id: upload
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_SHOP_USERNAME }}
           password: ${{ secrets.FTP_SHOP_PASSWORD }}
           protocol: ftps
+          timeout: 120000
           local-dir: shop-web/dist/
           server-dir: ./
           # Server-only secrets are created by hand in cPanel and never overwritten or deleted.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/pesapal-config.php
+            **/firestore-config.php
+
+      - name: Wait before retrying the upload
+        if: steps.upload.outcome == 'failure'
+        run: sleep 60
+
+      - name: Upload to cPanel (retry)
+        if: steps.upload.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_SHOP_USERNAME }}
+          password: ${{ secrets.FTP_SHOP_PASSWORD }}
+          protocol: ftps
+          timeout: 120000
+          local-dir: shop-web/dist/
+          server-dir: ./
           exclude: |
             **/.git*
             **/.git*/**
@@ -84,9 +109,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -111,12 +136,34 @@ jobs:
           npm run build
 
       - name: Upload to cPanel
+        id: upload
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_ADMIN_USERNAME }}
           password: ${{ secrets.FTP_ADMIN_PASSWORD }}
           protocol: ftps
+          timeout: 120000
+          local-dir: admin/build/
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+
+      - name: Wait before retrying the upload
+        if: steps.upload.outcome == 'failure'
+        run: sleep 60
+
+      - name: Upload to cPanel (retry)
+        if: steps.upload.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_ADMIN_USERNAME }}
+          password: ${{ secrets.FTP_ADMIN_PASSWORD }}
+          protocol: ftps
+          timeout: 120000
           local-dir: admin/build/
           server-dir: ./
           exclude: |
