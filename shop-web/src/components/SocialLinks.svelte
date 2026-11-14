@@ -1,26 +1,16 @@
 <script>
   /** Social profiles as real brand logos in round, brand-coloured badges. */
-  import { SOCIAL_ICON_PATHS } from "../lib/socialIcons.js";
+  import { SOCIAL_ICON_PATHS, SOCIAL_BRAND_BG, SOCIAL_BRAND_FG } from "../../../shared/socialIcons.js";
 
-  /** @type {{ key: string, name?: string, label: string, url: string }[]} */
+  /** @type {{ key: string, name?: string, label: string, url: string, icon?: string }[]} */
   export let links = [];
   /** Badge size in px. */
   export let size = 34;
   /** Show the platform name next to the logo. */
   export let showLabels = false;
 
-  const BG = {
-    instagram: "radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%)",
-    facebook: "#1877f2",
-    x: "#000",
-    tiktok: "#000",
-    whatsapp: "#25d366",
-    snapchat: "#fffc00",
-    youtube: "#ff0000",
-    telegram: "#26a5e4",
-    linkedin: "#0a66c2"
-  };
-  const FG = { snapchat: "#000" };
+  const BG = SOCIAL_BRAND_BG;
+  const FG = SOCIAL_BRAND_FG;
 
   $: shown = links.filter((l) => l && l.url);
 </script>
@@ -37,7 +27,7 @@
         title={`Bagz on ${s.name || s.label}`}
         aria-label={`Bagz on ${s.name || s.label}`}
       >
-        <span class="logo" class:outlined={s.key === "x" || s.key === "tiktok"} style="background:{BG[s.key] || '#1673c4'};color:{FG[s.key] || '#fff'}">
+        <span class="logo" class:outlined={BG[s.key] === "#000"} style="background:{BG[s.key] || '#1673c4'};color:{FG[s.key] || '#fff'}">
           {#if s.key === "tiktok"}
             <!-- TikTok's own look: white note with cyan and red offset edges. -->
             <svg viewBox="0 0 24 24" aria-hidden="true" class="tiktok">
@@ -48,7 +38,7 @@
           {:else if SOCIAL_ICON_PATHS[s.key]}
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={SOCIAL_ICON_PATHS[s.key]} /></svg>
           {:else}
-            <i class="fa fa-link" aria-hidden="true"></i>
+            <i class="fa fa-{/^[a-z0-9-]+$/.test(s.icon || '') ? s.icon : 'link'}" aria-hidden="true"></i>
           {/if}
         </span>
         {#if showLabels}<span class="name">{s.name || s.label}</span>{/if}
@@ -96,6 +86,9 @@
   /* Black logos need a ring to stand out on the dark bars. */
   .logo.outlined {
     box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55), 0 2px 6px rgba(0, 0, 0, 0.35);
+  }
+  .logo .fa {
+    font-size: calc(var(--s) * 0.5);
   }
   .logo svg {
     width: 55%;

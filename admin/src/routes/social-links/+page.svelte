@@ -4,6 +4,8 @@
   import { db } from "$lib/firebase";
   import { showSuccessToast } from "$lib/stores/toast";
   import { SOCIAL_PLATFORMS, platformInfo, type SocialLink } from "$lib/social";
+  import SocialIconPicker from "$lib/components/social/SocialIconPicker.svelte";
+  import SocialLogo from "$lib/components/social/SocialLogo.svelte";
 
   if (!db) throw new Error("Firebase is not configured");
   const firestore = db;
@@ -31,9 +33,8 @@
   let platform = "instagram";
   let url = "";
   let label = "";
+  let icon = "";
   let active = true;
-
-  const platformKeys = Object.keys(SOCIAL_PLATFORMS);
 
   onMount(async () => {
     try {
@@ -86,6 +87,7 @@
     platform = "instagram";
     url = "";
     label = "";
+    icon = "";
     active = true;
     formOpen = true;
   }
@@ -95,6 +97,7 @@
     platform = link.platform in SOCIAL_PLATFORMS ? link.platform : "other";
     url = link.url;
     label = link.label || "";
+    icon = link.icon || "";
     active = link.active !== false;
     formOpen = true;
   }
@@ -116,6 +119,7 @@
     }
     const entry: SocialLink = { id: editingId || crypto.randomUUID(), platform, url: clean, active };
     if (label.trim()) entry.label = label.trim();
+    if (platform === "other" && icon) entry.icon = icon;
     const isEdit = Boolean(editingId);
     const ok = await persist(
       (items) => (isEdit ? items.map((l) => (l.id === entry.id ? entry : l)) : [...items, entry]),
@@ -165,20 +169,16 @@
   {#if formOpen}
     <form class="card form" on:submit|preventDefault={submitForm}>
       <h2>{editingId ? "Edit social link" : "Add social link"}</h2>
-      <label>
-        Platform
-        <select bind:value={platform}>
-          {#each platformKeys as key}
-            <option value={key}>{SOCIAL_PLATFORMS[key].label}</option>
-          {/each}
-        </select>
-      </label>
+      <div class="field">
+        <span>Platform or icon</span>
+        <SocialIconPicker bind:platform bind:icon />
+      </div>
       <label>
         Profile link
         <input type="url" inputmode="url" bind:value={url} placeholder={platformInfo(platform).placeholder} required />
       </label>
       <label>
-        Display name <span class="opt">{platform === "other" ? "required" : "optional"}</span>
+        Display name <span class="opt">{platform === "other" ? "required — shown next to the icon" : "optional"}</span>
         <input type="text" bind:value={label} placeholder={platformInfo(platform).label} />
       </label>
       <label class="check">
@@ -207,8 +207,10 @@
           {#each links as link, index (link.id)}
             <tr class:dim={!link.active}>
               <td class="platform">
-                <i class="fa fa-{platformInfo(link.platform).icon} fa-fw" aria-hidden="true"></i>
-                {link.label || platformInfo(link.platform).label}
+                <span class="plat-cell">
+                  <SocialLogo platform={link.platform in SOCIAL_PLATFORMS ? link.platform : "other"} icon={link.icon || ""} size={28} />
+                  {link.label || platformInfo(link.platform).label}
+                </span>
               </td>
               <td class="url"><a href={link.url} target="_blank" rel="noopener noreferrer">{link.url}</a></td>
               <td>
@@ -270,7 +272,8 @@
     margin: 0;
     font-size: 17px;
   }
-  label {
+  .form > label,
+  .field {
     display: grid;
     gap: 4px;
     font-weight: 600;
@@ -354,9 +357,10 @@
     font-weight: 600;
     white-space: nowrap;
   }
-  .platform .fa {
-    color: #1673c4;
-    margin-right: 4px;
+  .plat-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
   }
   .url {
     max-width: 360px;

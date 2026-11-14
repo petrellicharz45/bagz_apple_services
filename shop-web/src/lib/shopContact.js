@@ -40,6 +40,8 @@ export const SOCIAL_PLATFORMS = {
   whatsapp: { label: "WhatsApp", icon: "whatsapp" },
   snapchat: { label: "Snapchat", icon: "snapchat-ghost" },
   youtube: { label: "YouTube", icon: "youtube-play" },
+  threads: { label: "Threads", icon: "at" },
+  pinterest: { label: "Pinterest", icon: "pinterest" },
   linkedin: { label: "LinkedIn", icon: "linkedin-square" },
   telegram: { label: "Telegram", icon: "telegram" },
   other: { label: "Link", icon: "link" }
@@ -47,9 +49,17 @@ export const SOCIAL_PLATFORMS = {
 
 const isHttps = (u) => /^https:\/\/\S+$/i.test(String(u || "").trim());
 
-function toLink(platform, url, label) {
-  const info = SOCIAL_PLATFORMS[platform] || SOCIAL_PLATFORMS.other;
-  return { key: platform, name: info.label, label: label || info.label, icon: info.icon, url: String(url).trim() };
+function toLink(platform, url, label, icon) {
+  const known = SOCIAL_PLATFORMS[platform];
+  const info = known || SOCIAL_PLATFORMS.other;
+  return {
+    key: known ? platform : "other",
+    // "Other" links show their own name and the icon chosen in the admin.
+    name: known && platform !== "other" ? info.label : label || info.label,
+    label: label || info.label,
+    icon: (!known || platform === "other") && /^[a-z0-9-]+$/.test(icon || "") ? icon : info.icon,
+    url: String(url).trim()
+  };
 }
 
 /**
@@ -58,7 +68,7 @@ function toLink(platform, url, label) {
  */
 function cleanSocial(raw) {
   if (Array.isArray(raw)) {
-    return raw.filter((l) => l && l.active !== false && isHttps(l.url)).map((l) => toLink(l.platform, l.url, l.label));
+    return raw.filter((l) => l && l.active !== false && isHttps(l.url)).map((l) => toLink(l.platform, l.url, l.label, l.icon));
   }
   return Object.entries(raw || {})
     .filter(([, url]) => isHttps(url))
