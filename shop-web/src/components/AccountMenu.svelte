@@ -47,8 +47,10 @@
       <span class="avatar">
         {#if $profileStore.avatarUrl}
           <img src={$profileStore.avatarUrl} alt="" />
-        {:else}
+        {:else if profileInitials($profileStore.name)}
           {profileInitials($profileStore.name)}
+        {:else}
+          <i class="fa fa-user" aria-hidden="true"></i>
         {/if}
       </span>
       {$authUser?.email || $profileStore.name?.trim() || "Guest"}

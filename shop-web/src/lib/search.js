@@ -1,24 +1,35 @@
 import { coverUrl } from "./catalog.js";
 import { productAsPhoto } from "./productPhotos.js";
 
+/** "Popular right now" searches; only the ones that match products in stock are shown. */
 export const POPULAR_QUERIES = [
-  "handbags women",
-  "sneakers men",
-  "aviator sunglasses",
-  "dress women",
-  "watch smart",
-  "jewelry gold",
-  "backpack school",
-  "beauty skincare"
+  "iphone 18 pro max",
+  "iphone duo",
+  "iphone 17",
+  "samsung galaxy",
+  "z fold",
+  "google pixel",
+  "macbook",
+  "airpods",
+  "apple watch",
+  "jbl speaker",
+  "ipad",
+  "charger"
 ];
 
 const SYNONYMS = {
-  shoes: ["shoe", "sneaker", "sneakers", "trainer", "trainers", "footwear", "sandal", "heels"],
-  bag: ["bags", "tote", "handbag", "backpack", "purse"],
+  phone: ["phones", "iphone", "smartphone", "mobile"],
+  samsung: ["galaxy"],
+  fold: ["foldable", "flip"],
+  pixel: ["google"],
+  mac: ["macbook", "laptop", "laptops"],
+  tablet: ["ipad", "tablets"],
   watch: ["watches", "smartwatch"],
-  glass: ["glasses", "sunglasses", "aviator"],
-  lip: ["lipstick", "beauty", "makeup"],
-  jewel: ["jewelry", "jewellery", "earring", "earrings", "necklace"]
+  earbuds: ["airpods", "earphones", "headphones", "buds"],
+  speaker: ["speakers", "jbl", "partybox", "boombox", "soundbar"],
+  charger: ["chargers", "adapter", "charging", "cable", "power bank", "powerbank"],
+  case: ["cases", "cover", "covers"],
+  protector: ["screen protector", "tempered glass", "glass"]
 };
 
 function expandToken(token) {
@@ -143,18 +154,14 @@ export function buildSuggestions(query, products, limit = 10) {
   });
 }
 
+/** Up to 8 popular searches that actually find something, each with a product photo. */
 export function popularChips(products) {
-  const byName = new Map();
-  for (const p of products) {
-    const cat = (p.category || "shop").toLowerCase();
-    const chip = POPULAR_QUERIES.find((q) => q.includes(cat.split(" ")[0])) || POPULAR_QUERIES[0];
-    if (!byName.has(chip)) byName.set(chip, p);
-  }
   const out = [];
   for (const q of POPULAR_QUERIES) {
-    const p = products.find((x) => productMatchesQuery(x, q)) || byName.get(q);
+    // Only suggest searches a product NAME matches (descriptions mention other models),
+    // and use that product's photo.
+    const p = products.find((x) => textMatchesQuery(`${x.name || ""} ${x.category || ""}`, q));
     if (p) out.push({ query: q, product: p, thumb: coverUrl(p) });
-    else out.push({ query: q, product: null, thumb: null });
     if (out.length >= 8) break;
   }
   return out;

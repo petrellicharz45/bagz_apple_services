@@ -4,12 +4,14 @@
   export let onPick = () => {};
 
   const icons = {
-    Clothing: "👗",
-    Shoes: "👟",
-    Accessories: "🕶️",
-    Bags: "👜",
-    Jewelry: "💍",
-    Beauty: "💄",
+    iPhones: "📱",
+    Samsung: "📱",
+    "Google Pixel": "📱",
+    MacBooks: "💻",
+    iPads: "📲",
+    Watches: "⌚",
+    "AirPods & Audio": "🎧",
+    Accessories: "🔌",
     All: "🔥"
   };
 

@@ -13,11 +13,11 @@
   $: trimmed = query.trim();
   $: matchCount = countMatchingProducts(products, trimmed);
   $: suggestions = buildSuggestions(query, products);
-  $: showPopular = open && !trimmed;
+  $: showPopular = open && !trimmed && chips.length > 0;
   $: showMatches = open && trimmed;
 </script>
 
-{#if open}
+{#if showPopular || showMatches}
   <div class="panel" role="listbox" aria-label="Search suggestions">
     {#if showPopular}
       <p class="heading">Popular right now</p>

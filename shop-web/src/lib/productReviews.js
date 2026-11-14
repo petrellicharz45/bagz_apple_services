@@ -117,7 +117,7 @@ export function readMyReviewsIndex() {
 function friendlyReviewError(err) {
   const code = err?.code || "";
   if (code === "permission-denied") {
-    return "Reviews are blocked by Firestore rules. Deploy the latest firestore.rules from the Luxiva/firebase folder.";
+    return "Reviews can't be posted right now. Please try again later.";
   }
   if (code === "auth/admin-restricted-operation" || code === "auth/operation-not-allowed") {
     return "Could not sign in for reviews. Refresh the page and try again — the shop uses a guest id, not admin login.";

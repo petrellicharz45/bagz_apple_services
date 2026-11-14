@@ -36,5 +36,5 @@ export function profileInitials(name) {
   if (parts.length === 1) {
     return parts[0].slice(0, 2).toUpperCase();
   }
-  return "FD";
+  return ""; // no name yet: the header shows a person icon instead
 }
