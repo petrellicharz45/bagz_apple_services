@@ -23,11 +23,23 @@ const mount = document.getElementById("app");
 // Pages are prerendered with plain HTML for search engines (scripts/prerender-seo.mjs);
 // the app replaces that content once it starts.
 if (mount) mount.innerHTML = "";
+/** Fade out the branded loading screen from index.html once the shop has drawn. */
+function hideBootScreen() {
+  const boot = document.getElementById("boot");
+  if (!boot) return;
+  requestAnimationFrame(() => {
+    boot.classList.add("done");
+    setTimeout(() => boot.remove(), 300);
+  });
+}
+
 let app;
 try {
   app = new App({ target: mount });
+  hideBootScreen();
 } catch (e) {
   console.error(e);
+  hideBootScreen();
   if (mount) {
     mount.innerHTML =
       '<p style="padding:24px;font-family:system-ui">Shop failed to start. Hard refresh (Ctrl+Shift+R) or clear site data for this host.</p>';
