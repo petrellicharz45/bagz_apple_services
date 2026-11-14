@@ -71,3 +71,5 @@ firebase-adminsdk.json
 scripts/import-bagz/.cache/
 scripts/import-bagz/out/
 scripts/import-bagz/build.log
+
+/app/google-services.fancydeals-OLD.json

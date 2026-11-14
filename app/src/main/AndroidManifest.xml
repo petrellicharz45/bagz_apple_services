@@ -48,26 +48,15 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.ShoppingActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Luxiva.Intro"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="product"
-                    android:scheme="luxiva" />
-                <data
-                    android:host="orders"
-                    android:scheme="luxiva" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activities.LoginRegisterActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Luxiva"
             android:windowSoftInputMode="adjustResize"

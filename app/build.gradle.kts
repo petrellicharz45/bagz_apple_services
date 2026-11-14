@@ -10,14 +10,17 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+val appPackage = "com.bagzappleservices.app"
 val googleServicesFile = File(projectDir, "google-services.json")
-val firebaseConfigured = googleServicesFile.exists()
+// Only use a google-services.json that was downloaded for THIS app (Bagz Firebase project bagz-5aec7).
+val firebaseConfigured = googleServicesFile.exists() &&
+    Regex("\"package_name\"\\s*:\\s*\"${Regex.escape(appPackage)}\"").containsMatchIn(googleServicesFile.readText())
 
 if (firebaseConfigured) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
 } else {
-    logger.warn("⚠️  Firebase is not configured. Add app/google-services.json after creating the Firebase project.")
+    logger.warn("Firebase push/crash reports are off: put the bagz-5aec7 google-services.json for $appPackage in app/.")
 }
 
 android {
@@ -25,16 +28,19 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.fancydeals.ug"
+        applicationId = appPackage
         minSdk = 24
         targetSdk = 36
-        versionCode = 54
-        versionName = "1.53"
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("boolean", "FIREBASE_CONFIGURED", firebaseConfigured.toString())
         buildConfigField("String", "NOTIFICATION_CHANNEL_NEW_PRODUCTS", "\"new_products\"")
         buildConfigField("String", "NOTIFICATION_CHANNEL_ORDERS", "\"orders\"")
+        // Empty = open the shop bundled inside the APK (works without hosting).
+        // Build with -PshopUrl=https://bagzappleservices.com to open the live website instead.
+        buildConfigField("String", "SHOP_URL", "\"${project.findProperty("shopUrl") ?: ""}\"")
     }
 
     val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -70,6 +76,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    sourceSets {
+        getByName("main").assets.srcDir(layout.buildDirectory.dir("generated/shopAssets"))
     }
     buildFeatures {
         viewBinding = true
@@ -144,4 +153,21 @@ dependencies {
     // Firebase Functions & Chrome Custom Tabs
     implementation("com.google.firebase:firebase-functions")
     implementation("androidx.browser:browser:1.8.0")
+
+    // Serves the bundled shop from https://appassets.androidplatform.net inside the WebView
+    implementation("androidx.webkit:webkit:1.12.1")
 }
+
+// Bundle the built website (shop-web/dist from `npm run build`) into the APK as assets/shop/.
+val shopDist = rootProject.file("shop-web/dist")
+val syncShopAssets by tasks.registering(Sync::class) {
+    // Server-only files stay on the website (PHP endpoints, Apache rules, service worker).
+    from(shopDist) { exclude("**/*.map", "sw.js", ".htaccess", "api/**", "**/*.php") }
+    into(layout.buildDirectory.dir("generated/shopAssets/shop"))
+    doFirst {
+        if (!File(shopDist, "index.html").exists()) {
+            throw GradleException("shop-web/dist is missing: run `npm run build` in shop-web first.")
+        }
+    }
+}
+tasks.named("preBuild") { dependsOn(syncShopAssets) }

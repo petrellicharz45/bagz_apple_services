@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WebView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/webShop"
+<!-- Navy frame fills the status/navigation bar areas; the shop sits between them. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/webShopRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:background="@color/bagz_navy">
+
+    <WebView
+        android:id="@+id/webShop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

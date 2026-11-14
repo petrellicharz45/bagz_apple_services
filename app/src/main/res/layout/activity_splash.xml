@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C2410C">
+    android:background="@color/bagz_navy">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,11 +16,11 @@
         <ImageView
             android:id="@+id/ivSplashLogo"
             android:layout_width="240dp"
-            android:layout_height="58dp"
+            android:layout_height="57dp"
             android:alpha="0"
             android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
-            android:src="@drawable/fancy_deals_logo_white" />
+            android:src="@drawable/bagz_logo_white" />
 
         <View
             android:id="@+id/splashRule"
@@ -39,7 +39,7 @@
             android:fontFamily="@font/sf_pro_display"
             android:gravity="center"
             android:letterSpacing="0.04"
-            android:text="Great products, Fancy prices"
+            android:text="Authentic Genuine Gadget Store"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
     </LinearLayout>

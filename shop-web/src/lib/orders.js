@@ -1,5 +1,6 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "./firebase.js";
+import { apiUrl } from "./appRuntime.js";
 
 const KEY = "bagz_orders_v1";
 const MAX = 40;
@@ -113,7 +114,7 @@ export async function fetchOrderStatuses(orderIds) {
   const ids = (orderIds || []).filter(Boolean).slice(0, 20);
   if (!ids.length) return {};
   try {
-    const res = await fetch("/api/order-status.php", {
+    const res = await fetch(apiUrl("/api/order-status.php"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ids })

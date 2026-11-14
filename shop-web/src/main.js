@@ -5,13 +5,15 @@ import { loadDisplaySettings } from "./lib/storeDisplay.js";
 import { loadDeliveryFeeSettings } from "./lib/deliveryFees.js";
 import { loadLiveContact } from "./lib/shopContact.js";
 import "./lib/shopAuth.js";
+import { IN_BUNDLED_APP } from "./lib/appRuntime.js";
 
 initPwaInstallListeners();
 loadDisplaySettings();
 loadDeliveryFeeSettings();
 loadLiveContact();
 
-if (import.meta.env.PROD && "serviceWorker" in navigator) {
+// No service worker inside the Android app: the shop files are already on the phone.
+if (import.meta.env.PROD && "serviceWorker" in navigator && !IN_BUNDLED_APP) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js").catch(() => {});
   });

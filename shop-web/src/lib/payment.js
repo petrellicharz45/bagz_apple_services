@@ -1,9 +1,11 @@
+import { apiUrl } from "./appRuntime.js";
+
 /**
  * Web checkout — wire your MoMo/payment API via VITE_PAYMENT_API_URL in .env.
  */
 export async function startPesapalCheckout(orderOrId) {
   const order = typeof orderOrId === "string" ? { orderId: orderOrId } : orderOrId;
-  const endpoint = import.meta.env.DEV ? "/api/local-pesapal" : "/api/pesapal-start.php";
+  const endpoint = import.meta.env.DEV ? "/api/local-pesapal" : apiUrl("/api/pesapal-start.php");
   const res = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

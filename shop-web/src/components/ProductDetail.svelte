@@ -32,6 +32,7 @@
   import TemuIcon from "./TemuIcon.svelte";
   import PhotoViewer from "./PhotoViewer.svelte";
   import OptionPicker from "./OptionPicker.svelte";
+  import { apiUrl } from "../lib/appRuntime.js";
   import {
     loadProductReviews,
     getMyRatingForProduct,
@@ -121,7 +122,7 @@
     reportSending = true;
     reportMsg = "";
     try {
-      const res = await fetch(import.meta.env.DEV ? "/api/product-report" : "/api/product-report.php", {
+      const res = await fetch(import.meta.env.DEV ? "/api/product-report" : apiUrl("/api/product-report.php"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
