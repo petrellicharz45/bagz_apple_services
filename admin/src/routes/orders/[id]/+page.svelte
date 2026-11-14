@@ -67,7 +67,7 @@
       try {
         await adminUpdateOrderStatus({ orderId: order.id, status: newStatus });
       } catch (fnError: any) {
-        errorMsg = "Saved on the order. Stock was not adjusted: " + fnError.message;
+        errorMsg = "Status saved. Stock was not changed automatically: update the product's stock if needed.";
       }
       await writeStatus(newStatus);
       order.orderStatus = newStatus;
@@ -110,6 +110,27 @@
     }
   }
 
+  /** Cash on delivery: the rider collected the money. */
+  async function markCashReceived() {
+    if (!confirm(`Mark ${order.totalPrice} ${order.currency || "UGX"} as received for this order?`)) return;
+    updating = true;
+    errorMsg = "";
+    try {
+      const patch: Record<string, any> = {
+        paymentStatus: "paid",
+        amountPaid: Number(order.totalPrice) || 0,
+        paidAt: serverTimestamp()
+      };
+      await updateDoc(doc(db, "order", order.id), patch);
+      order = { ...order, paymentStatus: "paid", amountPaid: patch.amountPaid };
+      await logAdminAudit("order.cash_received", "order", "Cash on delivery received", order.id);
+    } catch (e: any) {
+      errorMsg = "Could not save: " + e.message;
+    } finally {
+      updating = false;
+    }
+  }
+
   async function handleDelete() {
     if (!confirm("Are you sure you want to delete this order completely? This cannot be undone.")) return;
     updating = true;
@@ -140,8 +161,18 @@
     <div class="card">
       <h3>Shipping Info</h3>
       <!-- Address schema: label, address, street, city, state, phone, latitude, longitude -->
+      {#if order.customerName}
+        <p><strong>Customer:</strong> {order.customerName}</p>
+      {/if}
       <p><strong>Name/Label:</strong> {order.address?.label}</p>
-      <p><strong>Phone:</strong> {order.address?.phone || order.customerPhone}</p>
+      <p><strong>Phone:</strong>
+        {#if order.address?.phone || order.customerPhone}
+          <a href="tel:{order.address?.phone || order.customerPhone}">{order.address?.phone || order.customerPhone}</a>
+        {/if}
+      </p>
+      {#if order.note}
+        <p><strong>Customer note:</strong> {order.note}</p>
+      {/if}
       <p><strong>Address:</strong> {order.address?.address}</p>
       <p><strong>Street:</strong> {order.address?.street}</p>
       <p><strong>City/State:</strong> {order.address?.city}, {order.address?.state}</p>
@@ -163,7 +194,19 @@
     
     <div class="card">
       <h3>Payment Info</h3>
-      <p><strong>Status:</strong> {order.paymentStatus}</p>
+      {#if order.paymentMethod}
+        <p><strong>Method:</strong> {order.paymentMethod}</p>
+      {/if}
+      <p><strong>Status:</strong> {String(order.paymentStatus || "").replaceAll("_", " ")}</p>
+      {#if order.paymentStatus === "cash_on_delivery"}
+        <p class="cod-note">Collect cash or Mobile Money on delivery, then mark it received.</p>
+        <button class="btn btn-success" type="button" on:click={markCashReceived} disabled={updating}>
+          {updating ? "Saving..." : "Cash received"}
+        </button>
+      {/if}
+      {#if order.clientPriced}
+        <p class="cod-note">Prices come from the website checkout: confirm them on the call.</p>
+      {/if}
       <p><strong>Total:</strong> {order.totalPrice} {order.currency || 'UGX'}</p>
       {#if order.mobileMoneyName || order.mobileMoneyNumber}
         <div class="mm-info">
@@ -250,6 +293,11 @@
 {/if}
 
 <style>
+  .cod-note {
+    font-size: 0.85rem;
+    color: #5b6670;
+    margin: 4px 0 8px;
+  }
   .order-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

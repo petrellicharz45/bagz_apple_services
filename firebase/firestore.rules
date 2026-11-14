@@ -124,10 +124,11 @@ service cloud.firestore {
 
     match /order/{orderId} {
       allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if signedIn()
+      allow create: if (signedIn()
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.orderStatus == 'Pending'
-        && isValidNewOrder(request.resource.data);
+        && isValidNewOrder(request.resource.data))
+        || isValidCodWebOrder(orderId, request.resource.data);
       allow update: if isAdmin();
       allow delete: if isAdmin();
     }
@@ -171,6 +172,29 @@ service cloud.firestore {
         && (!('amountPaid'        in data) || data.amountPaid        == 0)
         && (!('isPaid'            in data) || data.isPaid            == false)
         && (!('paymentId'         in data) || data.paymentId         == '');
+    }
+
+    // Website "cash on delivery" order (customer may be a guest). Create-only: the customer
+    // can never read, change or delete orders; staff confirm price and stock in the admin.
+    function isValidCodWebOrder(orderId, data) {
+      return orderId.matches('^FD-[0-9]{10,15}-[a-z0-9]{3,10}$')
+        && data.keys().hasOnly([
+          'orderId', 'orderStatus', 'paymentStatus', 'paymentMethod', 'totalPrice', 'itemsSubtotal',
+          'products', 'address', 'customerName', 'customerPhone', 'customerEmail', 'currency',
+          'userId', 'source', 'stockDeducted', 'clientPriced', 'note', 'date', 'timestamp'
+        ])
+        && data.source == 'shop-web'
+        && data.orderStatus == 'Pending'
+        && data.paymentStatus == 'cash_on_delivery'
+        && data.stockDeducted == false
+        && data.clientPriced == true
+        && (data.userId == '' || (signedIn() && data.userId == request.auth.uid))
+        && data.products is list && data.products.size() > 0 && data.products.size() <= 50
+        && data.totalPrice is number && data.totalPrice >= 0 && data.totalPrice < 1000000000
+        && data.customerName is string && data.customerName.size() > 0 && data.customerName.size() <= 100
+        && data.customerPhone is string && data.customerPhone.size() >= 9 && data.customerPhone.size() <= 20
+        && data.address is map
+        && data.timestamp == request.time;
     }
   }
 }

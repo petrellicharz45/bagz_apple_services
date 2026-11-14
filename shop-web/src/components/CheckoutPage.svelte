@@ -6,7 +6,9 @@
   import { cartItems, removeSelectedLines, addToCart } from "../lib/stores/cart.js";
   import { formatUgx, priceParts, coverUrl } from "../lib/catalog.js";
   import { newOrderId, startPesapalCheckout } from "../lib/payment.js";
-  import { saveOrder, submitWebOrder } from "../lib/orders.js";
+  import { saveOrder, submitWebOrder, submitCodOrder } from "../lib/orders.js";
+  import { emailNewOrder } from "../lib/orderEmail.js";
+  import { BRAND } from "../lib/brand.js";
   import { deductStockForWebOrder } from "../lib/stockDeduct.js";
   import {
     readProfile,
@@ -53,7 +55,11 @@
   let showPinModal = false;
   let payMessage = "";
   let orderId = newOrderId();
-  let useWallet = true;
+  /** Online payment (Pesapal) needs the hosted PHP endpoint; until then only cash on delivery. */
+  const ONLINE_PAYMENTS = import.meta.env.VITE_ONLINE_PAYMENTS === "true";
+  let payMethod = "cod"; // "cod" | "online"
+  let orderNote = "";
+  let useWallet = ONLINE_PAYMENTS;
   let payChannel = "momo";
   let cardName = "";
   let cardNumber = "";
@@ -132,7 +138,8 @@
   $: momoNetwork = detectMobileNetwork(phone);
   $: momoLabel = networkLabel(momoNetwork);
   $: walletBalance = $walletBalanceStore;
-  $: walletApplied = useWallet ? Math.min(walletBalance, total) : 0;
+  $: cod = payMethod === "cod";
+  $: walletApplied = useWallet && !cod ? Math.min(walletBalance, total) : 0;
   $: amountDue = Math.max(0, total - walletApplied);
   $: walletCoversAll = amountDue === 0 && walletApplied > 0;
 
@@ -145,6 +152,10 @@
     address = composeAddress();
     if (!name.trim()) {
       payMessage = "Enter your full name.";
+      return;
+    }
+    if (phone.replace(/\D/g, "").length < 9) {
+      payMessage = "Enter your phone number so we can confirm your order.";
       return;
     }
     if (!areaLine.trim() || !cityLine.trim()) {
@@ -213,10 +224,12 @@
       payMessage = "Select at least one item in your cart.";
       return false;
     }
-    if (amountDue > 0) {
+    if (cod || amountDue > 0) {
       const digits = phone.replace(/\D/g, "");
       if (digits.length < 9) {
-        payMessage = "Enter the mobile number to use for this payment.";
+        payMessage = cod
+          ? "Enter your phone number so we can confirm your order."
+          : "Enter the mobile number to use for this payment.";
         return false;
       }
     }
@@ -242,6 +255,50 @@
     paying = true;
 
     try {
+      if (cod) {
+        const payload = {
+          orderId,
+          total,
+          walletApplied: 0,
+          amountPaid: 0,
+          amountDue: total,
+          paymentMethod: "cod",
+          name: name.trim(),
+          phone: phone.trim(),
+          address: address.trim(),
+          note: orderNote.trim(),
+          location: locationCoords,
+          items: items.map((l) => ({
+            id: l.productId,
+            name: l.product.name,
+            category: l.product.category || "",
+            qty: l.qty,
+            price: priceParts(l.product).current,
+            delivery: deliveryEstimateText(l.product),
+            imageUrl: coverUrl(l.product) || "",
+            size: l.size,
+            color: l.color
+          })),
+          status: "cash_on_delivery",
+          createdAt: Date.now()
+        };
+        // Admin (Firestore) and email are independent: either one is enough for staff to see it.
+        const [saved, emailed] = await Promise.all([submitCodOrder(payload), emailNewOrder(payload)]);
+        if (!saved && !emailed) {
+          throw new Error(
+            "We could not send your order. Check your internet and try again, or call / WhatsApp us."
+          );
+        }
+        saveOrder({ ...payload, sentToAdmin: saved, sendAttempts: saved ? 0 : 1 });
+        saveProfile({ name: payload.name, phone: payload.phone });
+        persistCurrentAddress();
+        removeSelectedLines();
+        onSuccess(payload);
+        payMessage = "";
+        step = 3;
+        return;
+      }
+
       if (amountDue > 0) {
         const payload = {
           orderId,
@@ -358,8 +415,13 @@
     {#if step === 1}
       <label>
         Full name
-        <input bind:value={name} placeholder="e.g. Ssempijja Dickson" />
+        <input bind:value={name} placeholder="e.g. Ssempijja Dickson" autocomplete="name" />
       </label>
+      <label>
+        Phone number
+        <input bind:value={phone} type="tel" placeholder="e.g. 0772 123456" autocomplete="tel" />
+      </label>
+      <p class="hint phone-hint">We call this number to confirm your order and delivery time.</p>
 
       {#if savedAddresses.length > 0}
         <p class="field-label">Saved addresses — tap to use</p>
@@ -486,6 +548,56 @@
       </div>
       <p class="sum">Order total: <strong>{formatUgx(total)}</strong></p>
 
+      <p class="field-label">How would you like to pay?</p>
+      <div class="pay-methods" role="radiogroup" aria-label="Payment method">
+        <button
+          type="button"
+          role="radio"
+          aria-checked={cod}
+          class="pay-method"
+          class:sel={cod}
+          on:click={() => { payMethod = "cod"; payMessage = ""; }}
+        >
+          <i class="fa fa-money" aria-hidden="true"></i>
+          <span>
+            <strong>Cash on delivery</strong>
+            <small>Pay cash or Mobile Money when your order arrives</small>
+          </span>
+        </button>
+        {#if ONLINE_PAYMENTS}
+          <button
+            type="button"
+            role="radio"
+            aria-checked={!cod}
+            class="pay-method"
+            class:sel={!cod}
+            on:click={() => { payMethod = "online"; payMessage = ""; }}
+          >
+            <i class="fa fa-credit-card" aria-hidden="true"></i>
+            <span>
+              <strong>Pay now</strong>
+              <small>MTN / Airtel Money or card</small>
+            </span>
+          </button>
+        {/if}
+      </div>
+
+      {#if cod}
+        <div class="cod-box">
+          <p>
+            <i class="fa fa-phone" aria-hidden="true"></i>
+            <span>We'll call <strong>{phone || "you"}</strong> to confirm the order and delivery time.</span>
+          </p>
+          <p>
+            <i class="fa fa-truck" aria-hidden="true"></i>
+            <span>Same-day delivery in Kampala · upcountry 1–3 days. Check your item, then pay the rider in cash or by Mobile Money.</span>
+          </p>
+        </div>
+        <label>
+          Note for us (optional)
+          <textarea bind:value={orderNote} rows="2" maxlength="500" placeholder="Best time to deliver, colour preference, swap / top-up details…"></textarea>
+        </label>
+      {:else}
       <div class="wallet-box">
         <label class="wallet-row">
           <input type="checkbox" bind:checked={useWallet} disabled={walletBalance <= 0} />
@@ -564,20 +676,28 @@
       {:else if walletCoversAll}
         <p class="hint">Your wallet covers this order — no mobile money payment needed.</p>
       {/if}
+      {/if}
 
       {#if payMessage}
         <p class="msg">{payMessage}</p>
       {/if}
       <button type="button" class="pay" disabled={paying} on:click={openCheckoutPreview}>
         <TemuIcon name="wallet" size={20} color="#fff" strokeWidth={2} />
-        {paying ? "Processing…" : walletCoversAll ? "Pay with wallet" : "Confirm payment"}
+        {paying ? "Sending…" : cod ? "Place order" : walletCoversAll ? "Pay with wallet" : "Confirm payment"}
       </button>
       <button type="button" class="back-step" on:click={() => (step = 1)}>Back</button>
     {:else}
       <div class="done">
         <h2>Order received</h2>
         <p>Reference: <strong>{orderId}</strong></p>
-        {#if payMessage}
+        {#if cod}
+          <p>Thank you, {name.split(" ")[0]}! We'll call <strong>{phone}</strong> shortly to confirm, then deliver to {composeAddress()}.</p>
+          <p>Pay <strong>{formatUgx(total)}</strong> in cash or Mobile Money when it arrives.</p>
+          <p class="hint">
+            Questions? Call or WhatsApp
+            <a href="https://wa.me/{BRAND.contact.whatsappE164}?text={encodeURIComponent(`Hello Bagz, about my order ${orderId}`)}" target="_blank" rel="noopener noreferrer">{BRAND.contact.phoneDisplay}</a>.
+          </p>
+        {:else if payMessage}
           <p>{payMessage}</p>
         {:else}
           <p>Thank you — we will deliver to {composeAddress()}.</p>
@@ -606,7 +726,7 @@
       </div>
     {/if}
     <div class="total-row">
-      <span>{amountDue > 0 ? "Due now" : "Total"}</span>
+      <span>{cod ? "Pay on delivery" : amountDue > 0 ? "Due now" : "Total"}</span>
       <strong>{formatUgx(amountDue > 0 ? amountDue : total)}</strong>
     </div>
     <p class="lock"><i class="fa fa-lock" aria-hidden="true"></i> Secure checkout — Bagz Apple Services</p>
@@ -642,7 +762,10 @@
     <dl class="pay-details">
       <div><dt>Customer</dt><dd>{name}</dd></div>
       <div><dt>Deliver to</dt><dd>{composeAddress()}</dd></div>
-      {#if amountDue > 0 && phone.trim()}
+      {#if cod}
+        <div><dt>Phone</dt><dd>{phone}</dd></div>
+        <div><dt>Payment</dt><dd>Cash on delivery</dd></div>
+      {:else if amountDue > 0 && phone.trim()}
         <div><dt>Mobile money</dt><dd>{phone}</dd></div>
       {/if}
     </dl>
@@ -683,14 +806,14 @@
       <p class="preview-wallet">Wallet applied: − {formatUgx(walletApplied)}</p>
     {/if}
     <div class="pay-total-row">
-      <span>{walletCoversAll ? "Total" : "Due now"}</span>
-      <strong>{formatUgx(walletCoversAll ? total : amountDue)}</strong>
+      <span>{cod ? "Pay on delivery" : walletCoversAll ? "Total" : "Due now"}</span>
+      <strong>{formatUgx(walletCoversAll || cod ? total : amountDue)}</strong>
     </div>
 
     <div class="pay-actions">
       <button type="button" class="ghost-btn" disabled={paying} on:click={closeCheckoutPreview}>Back</button>
       <button type="button" class="pay confirm-pay" disabled={paying} on:click={executePay}>
-        {paying ? "Processing…" : "Confirm payment"}
+        {paying ? "Sending…" : cod ? "Place order" : "Confirm payment"}
       </button>
     </div>
   </div>
@@ -781,6 +904,65 @@
     font-size: var(--text-sm);
     font-weight: 600;
     margin: 0 0 8px;
+  }
+  .phone-hint {
+    margin: -8px 0 14px;
+  }
+  .pay-methods {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .pay-method {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #d6dde4;
+    border-radius: 10px;
+    background: #fff;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+  }
+  .pay-method .fa {
+    font-size: 22px;
+    color: #13344f;
+    width: 26px;
+    text-align: center;
+  }
+  .pay-method span {
+    display: grid;
+    gap: 2px;
+  }
+  .pay-method small {
+    color: #5b6670;
+    font-size: var(--text-xs);
+  }
+  .pay-method.sel {
+    border-color: #1673c4;
+    background: #eef6fd;
+    box-shadow: 0 0 0 1px #1673c4 inset;
+  }
+  .cod-box {
+    background: #f4f8fb;
+    border: 1px solid #dbe6ef;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: var(--text-sm);
+  }
+  .cod-box p {
+    margin: 6px 0;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .cod-box .fa {
+    color: #1673c4;
+    width: 16px;
+    text-align: center;
   }
   .muted {
     color: #888;
