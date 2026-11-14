@@ -82,7 +82,7 @@ export async function submitCodOrder(order) {
       },
       customerName: String(order.name || "").slice(0, 100),
       customerPhone: String(order.phone || "").slice(0, 20),
-      customerEmail: String(user?.email || ""),
+      customerEmail: String(order.email || user?.email || "").slice(0, 120),
       currency: "UGX",
       userId: user?.uid || "",
       source: "shop-web",

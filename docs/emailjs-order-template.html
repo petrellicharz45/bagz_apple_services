@@ -1,0 +1,71 @@
+<!-- Bagz order email: paste into EmailJS → Email Templates → (your template) → Content → Edit in code.
+     Every value is filled in by the shop/admin (shared/orderEmail.js). Use {{double}} braces only. -->
+<div style="margin:0;padding:0;background:#eef2f6;font-family:Arial,Helvetica,sans-serif;color:#1d2731">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef2f6;padding:20px 0">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden">
+          <tr>
+            <td style="background:#13344f;padding:22px 28px">
+              <span style="font-size:30px;font-weight:900;letter-spacing:1px;color:#ffffff;font-family:Georgia,'Times New Roman',serif">BAGZ</span>
+              <span style="display:block;color:#9fc3e0;font-size:12px;margin-top:2px">Authentic Genuine Gadget Store</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:26px 28px 6px">
+              <span style="display:inline-block;background:{{status_color}};color:#ffffff;font-size:12px;font-weight:bold;border-radius:20px;padding:5px 12px">{{status_label}}</span>
+              <h1 style="font-size:21px;line-height:1.35;margin:14px 0 8px;color:#13344f">{{heading}}</h1>
+              <p style="font-size:15px;line-height:1.55;margin:0 0 6px;color:#3b4853">{{intro}}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:12px 28px">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#3b4853;background:#f5f8fb;border-radius:10px">
+                <tr><td style="padding:12px 14px 4px"><b>Order</b> {{order_id}} &nbsp;·&nbsp; {{order_date}}</td></tr>
+                <tr><td style="padding:4px 14px"><b>Payment</b> {{payment}}</td></tr>
+                <tr><td style="padding:4px 14px"><b>Customer</b> {{customer}}</td></tr>
+                <tr><td style="padding:4px 14px 12px"><b>Deliver to</b> {{address}}<br /><span style="color:#5b6670">{{note}}</span></td></tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 28px">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px">
+                <tr style="display:{{item1_display}}">
+                  <td width="76" style="padding:10px 0;border-bottom:1px solid #edf0f3"><img src="{{item1_image}}" width="64" height="64" alt="" style="display:block;width:64px;height:64px;object-fit:cover;border-radius:8px;background:#f1f3f5" /></td>
+                  <td style="padding:10px 0 10px 10px;border-bottom:1px solid #edf0f3"><b style="color:#13344f">{{item1_name}}</b><br /><span style="color:#5b6670">{{item1_meta}}</span></td>
+                </tr>
+                <tr style="display:{{item2_display}}">
+                  <td width="76" style="padding:10px 0;border-bottom:1px solid #edf0f3"><img src="{{item2_image}}" width="64" height="64" alt="" style="display:block;width:64px;height:64px;object-fit:cover;border-radius:8px;background:#f1f3f5" /></td>
+                  <td style="padding:10px 0 10px 10px;border-bottom:1px solid #edf0f3"><b style="color:#13344f">{{item2_name}}</b><br /><span style="color:#5b6670">{{item2_meta}}</span></td>
+                </tr>
+                <tr style="display:{{item3_display}}">
+                  <td width="76" style="padding:10px 0;border-bottom:1px solid #edf0f3"><img src="{{item3_image}}" width="64" height="64" alt="" style="display:block;width:64px;height:64px;object-fit:cover;border-radius:8px;background:#f1f3f5" /></td>
+                  <td style="padding:10px 0 10px 10px;border-bottom:1px solid #edf0f3"><b style="color:#13344f">{{item3_name}}</b><br /><span style="color:#5b6670">{{item3_meta}}</span></td>
+                </tr>
+                <tr style="display:{{item4_display}}">
+                  <td width="76" style="padding:10px 0;border-bottom:1px solid #edf0f3"><img src="{{item4_image}}" width="64" height="64" alt="" style="display:block;width:64px;height:64px;object-fit:cover;border-radius:8px;background:#f1f3f5" /></td>
+                  <td style="padding:10px 0 10px 10px;border-bottom:1px solid #edf0f3"><b style="color:#13344f">{{item4_name}}</b><br /><span style="color:#5b6670">{{item4_meta}}</span></td>
+                </tr>
+              </table>
+              <p style="font-size:13px;color:#5b6670;margin:8px 0 0">{{more_items}}</p>
+              <p style="font-size:18px;margin:14px 0 4px;text-align:right"><b>Total: {{total}}</b></p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 28px 26px">
+              <a href="{{shop_whatsapp}}" style="display:inline-block;background:#25d366;color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;border-radius:24px;padding:11px 20px">WhatsApp us</a>
+              <span style="display:inline-block;margin-left:10px;font-size:14px;color:#3b4853">or call {{shop_phone}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#f5f8fb;padding:16px 28px;font-size:12px;color:#6b7782;line-height:1.5">
+              {{shop_name}} · Ntinda (Emessa Complex) &amp; Wilson Street (Zainab Plaza), Kampala<br />
+              {{shop_email}} · {{shop_phone}}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -8,6 +8,8 @@
   import { newOrderId, startPesapalCheckout } from "../lib/payment.js";
   import { saveOrder, submitWebOrder, submitCodOrder } from "../lib/orders.js";
   import { emailNewOrder } from "../lib/orderEmail.js";
+  import { getAuth } from "firebase/auth";
+  import { app } from "../lib/firebase.js";
   import { BRAND } from "../lib/brand.js";
   import { deductStockForWebOrder } from "../lib/stockDeduct.js";
   import {
@@ -43,6 +45,9 @@
 
   let step = 1;
   let phone = "";
+  let email = "";
+  let customerEmailed = false;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   let name = "";
   let areaLine = "";
   let cityLine = "";
@@ -125,6 +130,16 @@
     const p = readProfile();
     if (p.name) name = p.name;
     if (p.phone) phone = p.phone;
+    if (p.email) email = p.email;
+    else {
+      // Signed-in shoppers: start from their account email.
+      try {
+        const u = getAuth(app).currentUser;
+        if (u?.email) email = u.email;
+      } catch {
+        /* not signed in */
+      }
+    }
     const addr = defaultAddress();
     if (addr) applySavedAddress(addr);
     if (!cityLine) cityLine = "";
@@ -160,6 +175,10 @@
     }
     if (phone.replace(/\D/g, "").length < 9) {
       payMessage = "Enter your phone number so we can confirm your order.";
+      return;
+    }
+    if (!EMAIL_RE.test(email.trim())) {
+      payMessage = "Enter your email address: we send your order confirmation and updates there.";
       return;
     }
     if (!areaLine.trim() || !cityLine.trim()) {
@@ -268,6 +287,7 @@
           amountDue: total,
           paymentMethod: "cod",
           name: name.trim(),
+          email: email.trim().toLowerCase(),
           phone: phone.trim(),
           address: address.trim(),
           note: orderNote.trim(),
@@ -288,16 +308,17 @@
         };
         // Admin (Firestore) and email are independent: either one is enough for staff to see it.
         const [saved, emailed] = await Promise.all([submitCodOrder(payload), emailNewOrder(payload)]);
-        if (!saved && !emailed) {
+        if (!saved && !emailed.shop) {
           throw new Error(
             "We could not send your order. Check your internet and try again, or call / WhatsApp us."
           );
         }
         const stored = { ...payload, sentToAdmin: saved };
         saveOrder(stored);
-        saveProfile({ name: payload.name, phone: payload.phone });
+        saveProfile({ name: payload.name, phone: payload.phone, email: payload.email });
         persistCurrentAddress();
         removeSelectedLines();
+        customerEmailed = emailed.customer;
         onSuccess(stored);
         payMessage = "";
         step = 3;
@@ -427,6 +448,11 @@
         <input bind:value={phone} type="tel" placeholder="e.g. 0772 123456" autocomplete="tel" />
       </label>
       <p class="hint phone-hint">We call this number to confirm your order and delivery time.</p>
+      <label>
+        Email address
+        <input bind:value={email} type="email" placeholder="e.g. you@gmail.com" autocomplete="email" inputmode="email" />
+      </label>
+      <p class="hint phone-hint">Your order confirmation and delivery updates are sent here.</p>
 
       {#if savedAddresses.length > 0}
         <p class="field-label">Saved addresses — tap to use</p>
@@ -645,6 +671,9 @@
         {#if cod}
           <p>Thank you, {name.split(" ")[0]}! We'll call <strong>{phone}</strong> shortly to confirm, then deliver to {composeAddress()}.</p>
           <p>Pay <strong>{formatUgx(total)}</strong> in cash or Mobile Money when it arrives.</p>
+          {#if customerEmailed}
+            <p>We've emailed your order confirmation to <strong>{email}</strong>; updates will come there too.</p>
+          {/if}
           <p class="hint">
             Questions? Call or WhatsApp
             <a href="https://wa.me/{BRAND.contact.whatsappE164}?text={encodeURIComponent(`Hello Bagz, about my order ${orderId}`)}" target="_blank" rel="noopener noreferrer">{BRAND.contact.phoneDisplay}</a>.

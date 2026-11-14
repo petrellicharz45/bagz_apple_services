@@ -9,6 +9,26 @@
   import { app } from "$lib/firebase";
   import { goto } from "$app/navigation";
   import { logAdminAudit } from "$lib/data/auditLog";
+  import { emailCustomerUpdate, customerEmailEnabled } from "$lib/email/orderEmail";
+
+  /** Email the customer when their order changes (needs an email on the order + EmailJS keys). */
+  let notifyCustomer = true;
+  let emailNote = "";
+  const EMAIL_STATUSES = ["Confirmed", "Shipped", "Delivered", "Canceled"];
+
+  async function tellCustomer(kind: string) {
+    emailNote = "";
+    if (!notifyCustomer) return;
+    const r = await emailCustomerUpdate(order, kind);
+    emailNote =
+      r === "sent"
+        ? `Customer emailed at ${order.customerEmail}.`
+        : r === "no-email"
+          ? "No email on this order, so the customer was not emailed. Call them instead."
+          : r === "off"
+            ? "Customer emails are not set up yet (EmailJS keys in admin/.env)."
+            : "The update was saved, but the customer email could not be sent.";
+  }
 
   const orderId = $page.params.id;
 
@@ -69,11 +89,13 @@
       } catch (fnError: any) {
         errorMsg = "Status saved. Stock was not changed automatically: update the product's stock if needed.";
       }
+      const previous = order.orderStatus;
       await writeStatus(newStatus);
       order.orderStatus = newStatus;
       order = { ...order }; // Trigger Svelte UI update
       await logAdminAudit("order.status", "order", `Status set to ${newStatus}`, order.id);
-      if (!errorMsg) alert("Order status updated successfully!");
+      if (newStatus !== previous && EMAIL_STATUSES.includes(newStatus)) await tellCustomer(newStatus);
+      if (!errorMsg) alert(`Order status updated to ${newStatus}.${emailNote ? "\n" + emailNote : ""}`);
     } catch (e: any) {
       errorMsg = "Error updating order: " + e.message;
     } finally {
@@ -124,6 +146,7 @@
       await updateDoc(doc(db, "order", order.id), patch);
       order = { ...order, paymentStatus: "paid", amountPaid: patch.amountPaid };
       await logAdminAudit("order.cash_received", "order", "Cash on delivery received", order.id);
+      await tellCustomer("paid");
     } catch (e: any) {
       errorMsg = "Could not save: " + e.message;
     } finally {
@@ -170,6 +193,9 @@
           <a href="tel:{order.address?.phone || order.customerPhone}">{order.address?.phone || order.customerPhone}</a>
         {/if}
       </p>
+      {#if order.customerEmail}
+        <p><strong>Email:</strong> <a href="mailto:{order.customerEmail}">{order.customerEmail}</a></p>
+      {/if}
       {#if order.note}
         <p><strong>Customer note:</strong> {order.note}</p>
       {/if}
@@ -248,6 +274,13 @@
           Delete Order
         </button>
       </div>
+      <label class="notify-row">
+        <input type="checkbox" bind:checked={notifyCustomer} />
+        Email the customer about this update
+        {#if !order.customerEmail}<span class="cod-note">(no email on this order)</span>
+        {:else if !customerEmailEnabled}<span class="cod-note">(customer emails not set up yet)</span>{/if}
+      </label>
+      {#if emailNote}<p class="cod-note">{emailNote}</p>{/if}
     </div>
 
     <div class="card full-width">
@@ -266,7 +299,16 @@
           {#if order.products && order.products.length > 0}
             {#each order.products as product}
               <tr>
-                <td>{product.product?.name || 'Unknown'}</td>
+                <td>
+                  <div class="prod-cell">
+                    {#if product.product?.images?.[0]}
+                      <img class="prod-thumb" src={product.product.images[0]} alt="" loading="lazy" />
+                    {:else}
+                      <span class="prod-thumb empty" aria-hidden="true"><i class="fa fa-picture-o"></i></span>
+                    {/if}
+                    <span>{product.product?.name || 'Unknown'}</span>
+                  </div>
+                </td>
                 <td>
                   {#if product.selectedColor}
                     <div class="color-swatch" style="background-color: #{product.selectedColor.toString(16).padStart(8, '0').substring(2)}"></div>
@@ -293,6 +335,32 @@
 {/if}
 
 <style>
+  .prod-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .prod-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f1f3f5;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #9aa5b1;
+    font-size: 22px;
+  }
+  .notify-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 0.92rem;
+    flex-wrap: wrap;
+  }
   .cod-note {
     font-size: 0.85rem;
     color: #5b6670;
