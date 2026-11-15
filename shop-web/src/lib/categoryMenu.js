@@ -126,6 +126,31 @@ export function subQueryFromName(name) {
   return words.join(" ") || String(name || "");
 }
 
+/**
+ * Does a product name match a subcategory's search words?
+ * - every word must be a whole word in the name, or the start of one ("airpod" → "AirPods",
+ *   "flip" → "Flip6"); one- and two-letter words only match before a number ("s" → "S24",
+ *   "se" → "SE" but not "Series"); numbers never run into more digits ("12" ≠ "128GB");
+ * - "|" separates alternatives ("case|cover"); "-word" excludes ("galaxy a -tab").
+ */
+export function nameMatchesSubQuery(name, query) {
+  const words = String(name || "").toLowerCase().split(/[^a-z0-9+]+/).filter(Boolean);
+  const hit = (tok) =>
+    words.some((w) => {
+      if (w === tok) return true;
+      if (!w.startsWith(tok)) return false;
+      const next = w[tok.length];
+      if (/^\d+$/.test(tok)) return !/\d/.test(next); // "16" → "16E", not "128GB"
+      return tok.length >= 3 || /\d/.test(next); // "s" → "S24"; "se" ≠ "Series"
+    });
+  return String(query || "")
+    .toLowerCase()
+    .split("|")
+    .map((alt) => alt.trim().split(/\s+/).filter(Boolean))
+    .filter((toks) => toks.length)
+    .some((toks) => toks.every((t) => (t.startsWith("-") ? !hit(t.slice(1)) : hit(t))));
+}
+
 function subFromFirestore(mainCategory, item, categoryImages) {
   const name = item?.name || item?.label || "Shop";
   const imageUrl =
@@ -142,7 +167,8 @@ function subFromFirestore(mainCategory, item, categoryImages) {
   return {
     label: name,
     filterCategory: mainCategory,
-    query: subQueryFromName(name),
+    // Admin can store exact search words (settings/subcategories[cat][i].query); else from the name.
+    query: String(item?.query || "").trim() || subQueryFromName(name),
     imageUrl
   };
 }
@@ -253,8 +279,9 @@ export function thumbForSub(sub, products, categoryImages = {}) {
   if (fromCat) return fromCat;
 
   if (sub.query && `${sub.query}`.trim()) {
-    const q = sub.query.toLowerCase().trim();
-    const p = products.find((x) => `${x.name} ${x.category}`.toLowerCase().includes(q.split(" ")[0]));
+    const p = products.find(
+      (x) => (!cat || x.category === cat) && coverUrl(x) && nameMatchesSubQuery(x.name, sub.query)
+    );
     const fromProduct = p ? menuThumbUrl(coverUrl(p)) : "";
     if (fromProduct) return fromProduct;
   }
@@ -339,7 +366,7 @@ export function productsForBrowseChip(products, chip, { group = null, browseMode
 
   const q = `${chip?.query || ""}`.trim().toLowerCase();
   if (q && chip?.id !== "all") {
-    out = out.filter((p) => `${p?.name || ""} ${p?.category || ""}`.toLowerCase().includes(q));
+    out = out.filter((p) => nameMatchesSubQuery(p?.name, q));
   }
 
   return sortProductsNewestFirst(out);

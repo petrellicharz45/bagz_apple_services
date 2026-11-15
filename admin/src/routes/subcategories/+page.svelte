@@ -29,6 +29,8 @@
   let editingIndex = -1;
   let editingName = "";
   let editingCategory = "";
+  /** Shop search words for this tile ("galaxy s -tab", "case|cover"); empty = taken from the name. */
+  let editingQuery = "";
   let updatingImage = false;
 
   onMount(async () => {
@@ -193,6 +195,7 @@
     editingIndex = index;
     editingName = subcategoriesMap[selectedCategory][index].name;
     editingCategory = selectedCategory;
+    editingQuery = subcategoriesMap[selectedCategory][index].query || "";
   }
 
   async function saveEdit() {
@@ -200,6 +203,9 @@
     
     const subcat = subcategoriesMap[selectedCategory][editingIndex];
     subcat.name = editingName.trim();
+    const q = editingQuery.trim().replace(/\s+/g, " ");
+    if (q) subcat.query = q;
+    else delete subcat.query;
     
     if (editingCategory !== selectedCategory) {
       subcategoriesMap[selectedCategory].splice(editingIndex, 1);
@@ -316,12 +322,20 @@
               <option value={cat}>{cat}</option>
             {/each}
           </select>
+          <label class="query-field">
+            Search words <span>(optional)</span>
+            <input type="text" bind:value={editingQuery} placeholder="e.g. galaxy s -tab" />
+            <small>Products whose name has these words. Use | for “or” (case|cover) and - to leave out (-tab). Empty = use the name.</small>
+          </label>
           <div style="display: flex; gap: 5px; justify-content: center;">
             <button class="btn btn-primary" style="padding: 5px; font-size: 12px;" on:click={saveEdit}>Save</button>
             <button class="btn" style="padding: 5px; font-size: 12px; background: #6c757d;" on:click={() => editingIndex = -1}>Cancel</button>
           </div>
         {:else}
           <p>{subcat.name}</p>
+          {#if subcat.query}
+            <small class="query-note" title="Shop shows products whose name has these words">Shows: {subcat.query}</small>
+          {/if}
           <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
             <label class="btn" style="padding: 5px; font-size: 12px; margin: 0; cursor: pointer; background: #28a745;">
               {updatingImage ? 'Wait...' : subcat.imageUrl ? 'Change Image' : 'Add photo'}
@@ -342,6 +356,11 @@
 {/if}
 
 <style>
+  .query-field { display: grid; gap: 3px; width: 90%; margin: 0 auto 6px; font-size: 12px; font-weight: 600; text-align: left; }
+  .query-field span { font-weight: 400; color: #6b7280; }
+  .query-field input { padding: 5px; }
+  .query-field small { font-weight: 400; color: #6b7280; line-height: 1.3; }
+  .query-note { display: block; margin-top: -4px; font-size: 11px; color: #6b7280; overflow-wrap: anywhere; }
   .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
   .card { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #ddd; }
   .form-row { display: flex; gap: 10px; margin-top: 10px; }
