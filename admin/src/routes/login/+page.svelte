@@ -3,7 +3,7 @@
   import { signInWithEmailAndPassword, signOut } from "firebase/auth";
   import { auth } from "$lib/firebase";
   import { goto } from "$app/navigation";
-  import { deriveAdminFlag } from "$lib/stores/auth";
+  import { resolveAccess, accessStore, adminStore } from "$lib/stores/auth";
 
   let email = "";
   let password = "";
@@ -19,14 +19,17 @@
         throw new Error("Firebase Auth is not available. Check admin/.env and restart the dev server.");
       }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const token = await userCredential.user.getIdTokenResult(true);
-      const signedInEmail = userCredential.user.email ?? email;
-      const isAdmin = deriveAdminFlag(token.claims, signedInEmail);
+      const { access, reason } = await resolveAccess(userCredential.user, true);
 
-      if (!isAdmin) {
+      if (!access) {
         await signOut(auth);
-        errorMsg = "This account is not an admin. Ask an existing admin to grant you access.";
+        errorMsg =
+          reason === "disabled"
+            ? "This account has been switched off. Ask an admin to turn it back on."
+            : "This account has no admin access. Ask an admin to add you in Users & Roles.";
       } else {
+        accessStore.set(access);
+        adminStore.set(true);
         goto(to("/"));
       }
     } catch (e: any) {

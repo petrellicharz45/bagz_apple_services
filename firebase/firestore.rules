@@ -10,8 +10,48 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == userId;
     }
 
+    // Owner account: Firebase custom claim admin:true (set with scripts/grant-admin-claim.mjs).
     function isAdmin() {
-      return signedIn() && request.auth.token.admin == true;
+      return signedIn() && request.auth.token.get('admin', false) == true;
+    }
+
+    // ---- Staff (admin Users & Roles page) --------------------------------------------------
+    // staff/{uid} = { name, email, role, perms: { module: "none" | "view" | "edit" }, active }.
+    // Modules: products, catalog, orders, sales, tickets, marketing, settings.
+    // Role "admin" can do everything the owner can, including managing staff.
+    function staffPath() {
+      return /databases/$(database)/documents/staff/$(request.auth.uid);
+    }
+
+    function isStaff() {
+      return signedIn() && exists(staffPath()) && get(staffPath()).data.get('active', true) == true;
+    }
+
+    function isFullAdmin() {
+      return isAdmin() || (isStaff() && get(staffPath()).data.role == 'admin');
+    }
+
+    function isTeam() {
+      return isAdmin() || isStaff();
+    }
+
+    function staffLevel(module) {
+      return get(staffPath()).data.get('perms', {}).get(module, 'none');
+    }
+
+    function canView(module) {
+      return isFullAdmin() || (isStaff() && staffLevel(module) in ['view', 'edit']);
+    }
+
+    function canEdit(module) {
+      return isFullAdmin() || (isStaff() && staffLevel(module) == 'edit');
+    }
+
+    // Which permission a settings document needs to be changed.
+    function settingsModule(document) {
+      return document in ['categories', 'subcategories', 'groups', 'categoryOrder'] ? 'catalog'
+        : document in ['banners', 'popups', 'seo', 'social'] ? 'marketing'
+        : 'settings';
     }
 
     function isValidRatingData(data) {
@@ -36,21 +76,32 @@ service cloud.firestore {
     }
 
 
+    // Admin profiles (photo, email). Each team member edits only their own.
     match /admin/{adminId} {
-      allow read: if isAdmin() || isOwner(adminId);
-      allow write: if false;
+      allow read: if isTeam() || isOwner(adminId);
+      allow write: if isOwner(adminId) && isTeam();
     }
 
     match /staffInvite/{inviteId} {
-      allow read: if isAdmin();
+      allow read: if isFullAdmin();
       allow write: if false;
+    }
+
+    // Roles and permissions: everyone reads their own; only full admins add, change or remove.
+    match /staff/{staffId} {
+      allow read: if isOwner(staffId) || isFullAdmin();
+      allow create, update: if isFullAdmin()
+        && request.resource.data.role in ['admin', 'manager', 'finance', 'sales', 'custom']
+        && request.resource.data.perms is map
+        && request.resource.data.active is bool;
+      allow delete: if isFullAdmin();
     }
 
     match /user/{userId} {
       allow create: if isOwner(userId);
-      allow read: if isOwner(userId) || isAdmin();
-      allow update: if isOwner(userId) || isAdmin();
-      allow delete: if isAdmin();
+      allow read: if isOwner(userId) || canView('orders') || canView('tickets');
+      allow update: if isOwner(userId) || canEdit('orders');
+      allow delete: if isFullAdmin();
 
       match /cart/{cartId} {
         allow read, write: if isOwner(userId);
@@ -65,13 +116,13 @@ service cloud.firestore {
       }
 
       match /order/{orderId} {
-        allow read: if isOwner(userId) || isAdmin();
+        allow read: if isOwner(userId) || canView('orders');
         allow create: if isOwner(userId)
           && request.resource.data.userId == userId
           && request.resource.data.orderStatus == 'Pending'
           && isValidNewOrder(request.resource.data);
-        allow update: if isAdmin();
-        allow delete: if isAdmin();
+        allow update: if canEdit('orders');
+        allow delete: if canEdit('orders');
       }
 
       match /notificationTokens/{tokenId} {
@@ -80,30 +131,31 @@ service cloud.firestore {
     }
 
     match /adminNotification/{notificationId} {
-      allow read, create, update: if isAdmin();
-      allow delete: if isAdmin();
+      allow read, create, update: if isTeam();
+      allow delete: if isFullAdmin();
     }
 
     match /adminAuditLog/{logId} {
-      allow read, create: if isAdmin();
+      allow read: if canView('settings');
+      allow create: if isTeam();
       allow update, delete: if false;
     }
 
     match /settings/payment_config {
-      allow read, write: if isAdmin();
+      allow read, write: if isFullAdmin();
     }
 
     // Rules are OR-ed: this wildcard also matches payment_config, so exclude it
     // explicitly or the MTN/Airtel credentials become publicly readable.
     match /settings/{document} {
-      allow read: if document != 'payment_config' || isAdmin();
-      allow write: if isAdmin();
+      allow read: if document != 'payment_config' || isFullAdmin();
+      allow write: if document != 'payment_config' && canEdit(settingsModule(document));
     }
 
     match /product/{productId} {
       allow read: if true;
-      allow create, delete: if isAdmin();
-      allow update: if isAdmin() || (
+      allow create, delete: if canEdit('products');
+      allow update: if canEdit('products') || (
         signedIn()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'rating', 'reviewsCount'])
       ) || productRatingFieldsOnly();
@@ -118,40 +170,40 @@ service cloud.firestore {
           && request.auth.uid == ratingId
           && isValidRatingData(request.resource.data))
           || webShopRatingWrite(ratingId);
-        allow delete: if isAdmin();
+        allow delete: if canEdit('products');
       }
     }
 
     match /order/{orderId} {
-      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || canView('orders') || canView('sales'));
       allow create: if (signedIn()
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.orderStatus == 'Pending'
         && isValidNewOrder(request.resource.data))
         || isValidCodWebOrder(orderId, request.resource.data);
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      allow update: if canEdit('orders');
+      allow delete: if canEdit('orders');
     }
 
     match /tickets/{ticketId} {
-      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || canView('tickets'));
       allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
-      allow update: if isAdmin();
+      allow update: if canEdit('tickets');
 
       match /messages/{messageId} {
         allow read: if signedIn() && (
           get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid
-          || isAdmin()
+          || canView('tickets')
         );
         allow create: if signedIn() && (
           get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid
-          || isAdmin()
+          || canEdit('tickets')
         );
       }
     }
 
     match /productReport/{reportId} {
-      allow read: if isAdmin();
+      allow read: if canView('products');
       allow create, update, delete: if false;
     }
 

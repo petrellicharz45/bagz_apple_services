@@ -1,4 +1,6 @@
 @echo off
+REM firebase-tools misreads VS Code terminals as its VS Code extension; clear the marker.
+set VSCODE_CWD=
 REM Run from D:\projects\luxiva\Luxiva  (double-click or: cmd /c deploy-firebase-backend.cmd)
 cd /d "%~dp0"
 

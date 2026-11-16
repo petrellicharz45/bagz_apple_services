@@ -5,7 +5,8 @@
   import { goto } from "$app/navigation";
   import { signOut } from "firebase/auth";
   import { auth } from "$lib/firebase";
-  import { userStore } from "$lib/stores/auth";
+  import { userStore, accessStore } from "$lib/stores/auth";
+  import { pageLevel, levelFor, moduleForPath, roleLabel, isFullAdmin } from "$lib/auth/permissions";
   import { productMatchesSearch } from "$lib/data/products";
   import { loadProductCatalog, productCatalog } from "$lib/stores/catalog";
   import AdminToast from "$lib/components/AdminToast.svelte";
@@ -34,7 +35,7 @@
     { href: "/notifications", label: "Notifications", icon: "bell" },
     { href: "/system-insights", label: "System insights", icon: "pulse" },
     { href: "/push-notifications", label: "Push broadcasts", icon: "send" },
-    { href: "/admin", label: "Admin Management", icon: "users" },
+    { href: "/admin", label: "Users & Roles", icon: "users" },
     { href: "/seo", label: "SEO", icon: "chart" },
     { href: "/settings", label: "Settings", icon: "gear" }
   ];
@@ -67,6 +68,12 @@
   $: activeNavHref = pickActiveNav(path);
   $: isDashboard = activeNavHref === "/";
   $: title = links.find((link) => link.href === activeNavHref)?.label ?? "Dashboard";
+  // Only the pages this person may open (Firestore rules enforce the same permissions).
+  $: visibleLinks = links.filter((link) => pageLevel($accessStore, link.href) !== "none");
+  $: level = pageLevel($accessStore, path, $page.url.search);
+  $: canSearchProducts = levelFor($accessStore, "products") !== "none";
+  $: roleName = $accessStore?.kind === "owner" ? "Owner" : roleLabel($accessStore?.role || "");
+  $: whoName = $accessStore?.name && $accessStore.name !== $userStore?.email ? $accessStore.name : "";
 
   function normalizePath(pathname: string) {
     const base = pathname.split("?")[0].split("#")[0];
@@ -170,7 +177,7 @@
       <span class="console-label">Admin Console</span>
     </div>
     <nav>
-      {#each links as link}
+      {#each visibleLinks as link}
         <a
           href={to(link.href)}
           class:nav-active={link.href === activeNavHref}
@@ -195,7 +202,7 @@
     <AdminToast />
     <header>
       <button class="menu" on:click={() => (open = !open)} aria-label="Open menu"><i class="fa fa-bars" aria-hidden="true"></i></button>
-      <form class="search" on:submit|preventDefault={search}>
+      <form class="search" class:hidden-search={!canSearchProducts} on:submit|preventDefault={search}>
         <span><i class="fa fa-search" aria-hidden="true"></i></span>
         <input
           bind:value={query}
@@ -248,8 +255,8 @@
             <div class="avatar">{initials}</div>
           {/if}
           <div class="who">
-            <strong>Admin</strong>
-            <small>{$userStore?.email}</small>
+            <strong>{whoName || $userStore?.email}</strong>
+            <small>{roleName}{whoName ? ` · ${$userStore?.email}` : ""}</small>
           </div>
         </a>
         <button class="logout" on:click={handleLogout}>Log out</button>
@@ -257,13 +264,72 @@
     </header>
     <section class="content">
       {#key path}
-        <slot />
+        {#if level === "none"}
+          <div class="no-access" role="alert">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+            <h2>You don't have access to this page</h2>
+            <p>
+              Your role ({roleName}) doesn't include {moduleForPath(path) === "staff" ? "managing users" : "this part of the admin"}.
+              Ask an admin to change your permissions in Users &amp; Roles.
+            </p>
+            <a href={to("/")}>Back to Dashboard</a>
+          </div>
+        {:else}
+          {#if level === "view" && !isFullAdmin($accessStore)}
+            <div class="view-only" role="note">
+              <i class="fa fa-eye" aria-hidden="true"></i>
+              <span><strong>View only.</strong> You can look around here, but changes you try to save will be refused.</span>
+            </div>
+          {/if}
+          <slot />
+        {/if}
       {/key}
     </section>
   </div>
 </div>
 
 <style>
+  .hidden-search {
+    visibility: hidden;
+  }
+  .no-access {
+    max-width: 520px;
+    margin: 48px auto;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 32px 24px;
+    color: #13344f;
+  }
+  .no-access .fa {
+    font-size: 34px;
+    color: #1673c4;
+  }
+  .no-access h2 {
+    margin: 12px 0 8px;
+    font-size: 20px;
+  }
+  .no-access p {
+    color: #4b5563;
+    margin: 0 0 18px;
+  }
+  .no-access a {
+    font-weight: 600;
+    color: #1673c4;
+  }
+  .view-only {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff8e6;
+    border: 1px solid #f5d48a;
+    color: #7a5200;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
   .shell {
     min-height: 100vh;
     display: grid;

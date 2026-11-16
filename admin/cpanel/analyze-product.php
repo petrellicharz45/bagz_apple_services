@@ -52,7 +52,32 @@ $lookupCode = curl_getinfo($lookup, CURLINFO_HTTP_CODE);
 curl_close($lookup);
 $lookupData = json_decode((string) $lookupRaw, true);
 $claims = json_decode((string) ($lookupData['users'][0]['customAttributes'] ?? '{}'), true);
-if ($lookupCode !== 200 || empty($claims['admin'])) {
+$allowed = $lookupCode === 200 && !empty($claims['admin']);
+if ($lookupCode === 200 && !$allowed) {
+  // Staff (admin → Users & Roles): read their own staff/{uid} record with their own token
+  // (Firestore rules let each person read only their own) and require "edit" on products.
+  $uid = (string) ($lookupData['users'][0]['localId'] ?? '');
+  $payload = json_decode((string) base64_decode(strtr(explode('.', $idToken . '..')[1], '-_', '+/')), true);
+  $projectId = (string) ($payload['aud'] ?? '');
+  if ($uid !== '' && preg_match('/^[a-z0-9-]{4,40}$/', $projectId)) {
+    $staffReq = curl_init('https://firestore.googleapis.com/v1/projects/' . $projectId
+      . '/databases/(default)/documents/staff/' . rawurlencode($uid));
+    curl_setopt_array($staffReq, [
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $idToken],
+      CURLOPT_TIMEOUT => 15,
+    ]);
+    $staffRaw = curl_exec($staffReq);
+    $staffCode = curl_getinfo($staffReq, CURLINFO_HTTP_CODE);
+    curl_close($staffReq);
+    $f = $staffCode === 200 ? (json_decode((string) $staffRaw, true)['fields'] ?? []) : [];
+    $active = ($f['active']['booleanValue'] ?? true) !== false;
+    $role = (string) ($f['role']['stringValue'] ?? '');
+    $productsLevel = (string) ($f['perms']['mapValue']['fields']['products']['stringValue'] ?? 'none');
+    $allowed = $f && $active && ($role === 'admin' || $productsLevel === 'edit');
+  }
+}
+if (!$allowed) {
   http_response_code(403);
   echo json_encode(['error' => 'Only Bagz admins can use AI auto-fill. Sign out and in again if you were just made an admin.']);
   exit;

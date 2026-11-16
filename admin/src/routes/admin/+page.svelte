@@ -1,376 +1,446 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { httpsCallable } from "firebase/functions";
-  import { PUBLIC_ADMIN_APP_URL } from "$env/static/public";
-  import { base } from "$app/paths";
-  import { getAdminFunctions, formatCallableError } from "$lib/functionsClient";
   import { doc, updateDoc } from "firebase/firestore";
   import { db } from "$lib/firebase";
+  import { userStore, accessStore } from "$lib/stores/auth";
   import { fetchAllUsersAndAdmins, type AppUser } from "$lib/data/users";
+  import { logAdminAudit } from "$lib/data/auditLog";
   import {
-    ADMIN_MODULES,
-    ADMIN_ROLES,
-    modulesForRole,
-    formatModulesSummary
-  } from "$lib/auth/adminModules";
+    createStaff,
+    listStaff,
+    removeStaff,
+    sendStaffPasswordReset,
+    updateStaff,
+    type StaffMember
+  } from "$lib/data/staff";
+  import {
+    LEVELS,
+    MODULES,
+    ROLES,
+    isCustomised,
+    permsSummary,
+    presetPerms,
+    roleLabel,
+    type Perms
+  } from "$lib/auth/permissions";
 
-  type StaffInvite = {
-    id: string;
-    email: string;
-    role: string;
-    modules?: string[];
-    status: string;
-    createdAt: number;
-  };
-
-  let users: AppUser[] = [];
-  let filteredUsers: AppUser[] = [];
-  let invites: StaffInvite[] = [];
-  let searchQuery = "";
+  let staff: StaffMember[] = [];
   let loading = true;
   let errorMsg = "";
   let infoMsg = "";
-  let processingUid = "";
-  let inviteOpen = false;
-  let inviteEmail = "";
-  let inviteName = "";
-  let inviteRole = "catalog_manager";
-  let inviteModules: string[] = modulesForRole("catalog_manager");
-  let inviting = false;
-  let lastInviteLink = "";
-  let lastRolePicked = inviteRole;
+  let busyUid = "";
 
-  const adminRoot = (PUBLIC_ADMIN_APP_URL || "http://localhost:5174").replace(/\/$/, "");
-  const adminAppUrl = base && !adminRoot.endsWith(base) ? `${adminRoot}${base}` : adminRoot;
+  // ---- add / edit form ----
+  let formOpen = false;
+  let editing: StaffMember | null = null;
+  let fName = "";
+  let fEmail = "";
+  let fPhone = "";
+  let fPassword = "";
+  let showPassword = false;
+  let fRole = "sales";
+  let fPerms: Perms = presetPerms("sales");
+  let saving = false;
+  let formError = "";
 
-  $: pendingInvites = invites.filter((i) => i.status === "pending");
-  $: if (inviteRole !== lastRolePicked) {
-    lastRolePicked = inviteRole;
-    inviteModules = modulesForRole(inviteRole);
-  }
+  // ---- customers (wallet) ----
+  let customers: AppUser[] = [];
+  let customerQuery = "";
+  let customersLoaded = false;
+  let customersOpen = false;
 
-  function roleLabel(id: string) {
-    return ADMIN_ROLES.find((r) => r.id === id)?.label || id;
-  }
-
-  onMount(async () => {
-    await refresh();
+  $: me = $userStore?.uid || "";
+  $: activeCount = staff.filter((s) => s.active).length;
+  $: customised = fRole !== "admin" && isCustomised(fRole, fPerms);
+  $: filteredCustomers = customers.filter((u) => {
+    const q = customerQuery.trim().toLowerCase();
+    return !q || `${u.firstName} ${u.lastName} ${u.email}`.toLowerCase().includes(q);
   });
+
+  onMount(refresh);
 
   async function refresh() {
     loading = true;
     errorMsg = "";
     try {
-      users = await fetchAllUsersAndAdmins();
-      filteredUsers = users;
-    } catch (e: unknown) {
-      errorMsg = "Failed to load users: " + formatCallableError(e);
-    }
-    try {
-      const functions = getAdminFunctions();
-      const list = httpsCallable(functions, "adminListStaffInvites");
-      const res: any = await list({});
-      invites = res.data?.invites || [];
-    } catch {
-      infoMsg = "Staff invites stay off until Cloud Functions are deployed. The user list still works.";
+      staff = await listStaff();
+    } catch (e: any) {
+      errorMsg =
+        e?.code === "permission-denied"
+          ? "The database refused to list users. Publish the new Firestore rules (deploy-firestore-rules.cmd) and reload."
+          : `Could not load users: ${e?.message || e}`;
     } finally {
       loading = false;
     }
   }
 
-  function handleSearch() {
-    const q = searchQuery.toLowerCase();
-    filteredUsers = users.filter(
-      (u) =>
-        u.firstName.toLowerCase().includes(q) ||
-        u.lastName.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q)
-    );
+  function openAdd() {
+    editing = null;
+    fName = "";
+    fEmail = "";
+    fPhone = "";
+    fPassword = "";
+    showPassword = false;
+    fRole = "sales";
+    fPerms = presetPerms("sales");
+    formError = "";
+    formOpen = true;
   }
 
-  function toggleModule(id: string) {
-    if (inviteRole === "super_admin") return;
-    if (inviteModules.includes(id)) {
-      inviteModules = inviteModules.filter((m) => m !== id);
-    } else {
-      inviteModules = [...inviteModules, id];
-    }
+  function openEdit(s: StaffMember) {
+    editing = s;
+    fName = s.name;
+    fEmail = s.email;
+    fPhone = s.phone;
+    fPassword = "";
+    fRole = ROLES.some((r) => r.id === s.role) ? s.role : "sales";
+    fPerms = { ...s.perms };
+    formError = "";
+    formOpen = true;
+    setTimeout(() => document.getElementById("user-form")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   }
 
-  async function sendInvite() {
-    errorMsg = "";
-    infoMsg = "";
-    lastInviteLink = "";
-    const email = inviteEmail.trim().toLowerCase();
-    if (!email.includes("@")) {
-      errorMsg = "Enter a valid email address.";
-      return;
+  function pickRole(id: string) {
+    fRole = id;
+    fPerms = presetPerms(id);
+  }
+
+  function setLevel(moduleId: string, level: string) {
+    fPerms = { ...fPerms, [moduleId]: level as Perms[string] };
+  }
+
+  function generatePassword() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+    const bytes = new Uint32Array(12);
+    crypto.getRandomValues(bytes);
+    fPassword = Array.from(bytes, (b) => chars[b % chars.length]).join("") + "!7";
+    showPassword = true;
+  }
+
+  async function save() {
+    formError = "";
+    const name = fName.trim();
+    const email = fEmail.trim().toLowerCase();
+    if (!name) return (formError = "Enter the person's name.");
+    if (!editing) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return (formError = "Enter a valid email address.");
+      if (fPassword.length < 8) return (formError = "The password needs at least 8 characters.");
+      if (staff.some((s) => s.email === email)) return (formError = "This email is already in the team list. Edit it there instead.");
     }
-    inviting = true;
+    saving = true;
     try {
-      const functions = getAdminFunctions();
-      const fn = httpsCallable(functions, "adminInviteStaff");
-      const res: any = await fn({
-        email,
-        displayName: inviteName.trim(),
-        role: inviteRole,
-        modules: inviteModules
-      });
-      lastInviteLink = res.data?.inviteLink || "";
-      if (res.data?.emailSent) {
-        infoMsg = `Invitation email sent to ${email}.`;
-        inviteOpen = false;
-        inviteEmail = "";
-        inviteName = "";
+      if (editing) {
+        await updateStaff(editing.uid, { name, phone: fPhone.trim(), role: fRole, perms: fPerms });
+        await logAdminAudit("staff.update", "staff", `${email}: role ${roleLabel(fRole)}`, editing.uid).catch(() => {});
+        infoMsg = `Saved ${name}. The change applies the next time they open or reload the admin.`;
       } else {
-        infoMsg = res.data?.message || "Copy the invite link below.";
+        const res = await createStaff({ name, email, phone: fPhone, password: fPassword, role: fRole, perms: fPerms });
+        await logAdminAudit("staff.create", "staff", `Added ${email} as ${roleLabel(fRole)}`, res.uid).catch(() => {});
+        infoMsg = res.existingAccount
+          ? `${email} already had a login, so it was given ${roleLabel(fRole)} access. They sign in with their existing password (use "Reset password" if they don't know it).`
+          : `Added ${name} as ${roleLabel(fRole)}. They sign in at this admin with ${email} and the password you set.`;
       }
-      await refresh();
-    } catch (e: unknown) {
-      errorMsg = formatCallableError(e);
-    } finally {
-      inviting = false;
-    }
-  }
-
-  async function copyLink(link: string) {
-    try {
-      await navigator.clipboard.writeText(link);
-      infoMsg = "Invite link copied.";
-    } catch {
-      errorMsg = "Could not copy — select the link manually.";
-    }
-  }
-
-  async function resendInvite(inv: StaffInvite) {
-    try {
-      const functions = getAdminFunctions();
-      const fn = httpsCallable(functions, "adminResendStaffInvite");
-      const res: any = await fn({ inviteId: inv.id });
-      if (res.data?.emailSent) {
-        infoMsg = `Email resent to ${inv.email}.`;
-      } else if (res.data?.inviteLink) {
-        lastInviteLink = res.data.inviteLink;
-        infoMsg = "Email could not be sent (check SMTP). Copy the invite link below.";
-      }
-    } catch (e: unknown) {
-      errorMsg = formatCallableError(e);
-    }
-  }
-
-  async function revokeInvite(inv: StaffInvite) {
-    if (!confirm(`Revoke invitation for ${inv.email}?`)) return;
-    try {
-      const functions = getAdminFunctions();
-      await httpsCallable(functions, "adminRevokeStaffInvite")({ inviteId: inv.id });
+      formOpen = false;
       await refresh();
     } catch (e: any) {
-      errorMsg = e.message;
+      formError = e?.message || String(e);
+    } finally {
+      saving = false;
+    }
+  }
+
+  async function toggleActive(s: StaffMember) {
+    const turningOff = s.active;
+    if (turningOff && !confirm(`Switch off ${s.name || s.email}? They will not be able to use the admin until you switch them back on.`)) return;
+    busyUid = s.uid;
+    errorMsg = "";
+    try {
+      await updateStaff(s.uid, { active: !s.active });
+      await logAdminAudit(turningOff ? "staff.disable" : "staff.enable", "staff", s.email, s.uid).catch(() => {});
+      infoMsg = `${s.name || s.email} is now ${turningOff ? "switched off" : "active"}.`;
+      await refresh();
+    } catch (e: any) {
+      errorMsg = e?.message || String(e);
+    } finally {
+      busyUid = "";
+    }
+  }
+
+  async function remove(s: StaffMember) {
+    if (!confirm(`Remove ${s.name || s.email} from the team? Their admin access ends immediately. (Their login stays, so you can add the same email again later.)`)) return;
+    busyUid = s.uid;
+    errorMsg = "";
+    try {
+      await removeStaff(s.uid);
+      await logAdminAudit("staff.remove", "staff", s.email, s.uid).catch(() => {});
+      infoMsg = `Removed ${s.name || s.email}.`;
+      if (editing?.uid === s.uid) formOpen = false;
+      await refresh();
+    } catch (e: any) {
+      errorMsg = e?.message || String(e);
+    } finally {
+      busyUid = "";
+    }
+  }
+
+  async function resetPassword(s: StaffMember) {
+    if (!confirm(`Email ${s.email} a link to choose a new password?`)) return;
+    busyUid = s.uid;
+    errorMsg = "";
+    try {
+      await sendStaffPasswordReset(s.email);
+      infoMsg = `Password reset email sent to ${s.email}. Ask them to check spam too.`;
+    } catch (e: any) {
+      errorMsg = e?.message || String(e);
+    } finally {
+      busyUid = "";
+    }
+  }
+
+  async function loadCustomers() {
+    customersOpen = !customersOpen;
+    if (!customersOpen || customersLoaded) return;
+    try {
+      customers = await fetchAllUsersAndAdmins();
+      customersLoaded = true;
+    } catch (e: any) {
+      errorMsg = `Could not load customers: ${e?.message || e}`;
     }
   }
 
   async function saveWallet(user: AppUser) {
-    processingUid = user.id;
+    busyUid = user.id;
     try {
       const amount = Number(user.walletBalance) || 0;
-      await updateDoc(doc(db, "user", user.id), { walletBalance: amount });
+      await updateDoc(doc(db!, "user", user.id), { walletBalance: amount });
+      await logAdminAudit("customer.wallet", "user", `${user.email}: wallet UGX ${amount}`, user.id).catch(() => {});
       infoMsg = `Wallet updated for ${user.email}.`;
     } catch (e: any) {
-      errorMsg = e.message;
+      errorMsg = e?.message || String(e);
     } finally {
-      processingUid = "";
-    }
-  }
-
-  async function toggleAdmin(user: AppUser, grantAdmin: boolean) {
-    if (!confirm(`${grantAdmin ? "Grant" : "Revoke"} admin access for ${user.email}?`)) return;
-    processingUid = user.id;
-    try {
-      const functions = getAdminFunctions();
-      await httpsCallable(functions, "adminSetClaim")({ uid: user.id, admin: grantAdmin });
-      user.isAdmin = grantAdmin;
-      users = [...users];
-      handleSearch();
-      infoMsg = `Updated ${user.email}.`;
-    } catch (e: any) {
-      errorMsg = e.message;
-    } finally {
-      processingUid = "";
+      busyUid = "";
     }
   }
 </script>
 
+<svelte:head>
+  <title>Users & Roles — Bagz Admin</title>
+</svelte:head>
+
 <section class="hero">
   <div>
-    <h1>User Management</h1>
-    <p>Invite staff, assign modules per person, and manage roles.</p>
+    <h1>Users &amp; Roles</h1>
+    <p>Add the people who run the shop, give each one a role, and choose exactly what they can see and change.</p>
   </div>
-  <button type="button" class="btn-invite" on:click={() => (inviteOpen = true)}><i class="fa fa-envelope-o" aria-hidden="true"></i> Invite User</button>
+  <button type="button" class="btn-add" on:click={openAdd}>
+    <i class="fa fa-user-plus" aria-hidden="true"></i> Add user
+  </button>
 </section>
 
-{#if errorMsg}
-  <div class="alert err">{errorMsg}</div>
-{/if}
-{#if infoMsg}
-  <div class="alert ok">{infoMsg}</div>
-{/if}
-{#if lastInviteLink}
-  <div class="link-box">
-    <p><strong>Invite link</strong> (share if email did not arrive):</p>
-    <code>{lastInviteLink}</code>
-    <button type="button" class="btn-copy" on:click={() => copyLink(lastInviteLink)}>Copy link</button>
-  </div>
-{/if}
+{#if errorMsg}<p class="msg error" role="alert">{errorMsg}</p>{/if}
+{#if infoMsg}<p class="msg info" role="status">{infoMsg} <button type="button" class="x" on:click={() => (infoMsg = "")} aria-label="Dismiss">×</button></p>{/if}
 
-{#if inviteOpen}
-  <div class="modal-backdrop" role="presentation" on:click={() => (inviteOpen = false)} />
-  <div class="modal" role="dialog" aria-labelledby="invite-title">
-    <h2 id="invite-title">Invite team member</h2>
-    <p class="modal-sub">
-      They will receive an email with a link to set their password. Invite links use
-      <strong>{adminAppUrl}/invite/…</strong>
-    </p>
-    <label>
-      Email
-      <input type="email" bind:value={inviteEmail} placeholder="colleague@example.com" />
-    </label>
-    <label>
-      Display name (optional)
-      <input type="text" bind:value={inviteName} placeholder="Jane Doe" />
-    </label>
-    <label>
-      Role
-      <select bind:value={inviteRole}>
-        {#each ADMIN_ROLES as r}
-          <option value={r.id}>{r.label}</option>
-        {/each}
-      </select>
-    </label>
-    <fieldset class="modules">
-      <legend>Module access</legend>
-      {#if inviteRole === "super_admin"}
-        <p class="hint">Super Admin has access to all modules.</p>
+{#if formOpen}
+  <form id="user-form" class="panel" on:submit|preventDefault={save}>
+    <h2>{editing ? `Edit ${editing.name || editing.email}` : "Add a user"}</h2>
+
+    <div class="grid">
+      <label>
+        Full name
+        <input bind:value={fName} required maxlength="80" autocomplete="off" placeholder="e.g. Sarah Namuli" />
+      </label>
+      <label>
+        Email (used to sign in)
+        <input
+          type="email"
+          bind:value={fEmail}
+          required
+          readonly={Boolean(editing)}
+          autocomplete="off"
+          placeholder="name@example.com"
+        />
+      </label>
+      <label>
+        <span>Phone <span class="opt">(optional)</span></span>
+        <input bind:value={fPhone} maxlength="20" autocomplete="off" placeholder="07…" />
+      </label>
+      {#if !editing}
+        <label>
+          <span>Password <span class="opt">(8+ characters)</span></span>
+          <div class="pw">
+            {#if showPassword}
+              <input type="text" bind:value={fPassword} required minlength="8" autocomplete="new-password" />
+            {:else}
+              <input type="password" bind:value={fPassword} required minlength="8" autocomplete="new-password" />
+            {/if}
+            <button type="button" class="ghost" on:click={() => (showPassword = !showPassword)}>{showPassword ? "Hide" : "Show"}</button>
+            <button type="button" class="ghost" on:click={generatePassword}>Generate</button>
+          </div>
+        </label>
       {:else}
-        <p class="hint">
-          {formatModulesSummary(inviteModules)} — change role for presets, or check/uncheck below.
-        </p>
-        <div class="module-grid">
-          {#each ADMIN_MODULES as mod}
-            <label class="mod-chip">
-              <input
-                type="checkbox"
-                checked={inviteModules.includes(mod.id)}
-                on:change={() => toggleModule(mod.id)}
-              />
-              {mod.label}
-            </label>
-          {/each}
+        <div class="note">
+          To change {editing.name || "their"} password, use <strong>Reset password</strong> in the team list: Firebase emails them a link.
         </div>
       {/if}
-    </fieldset>
-    <div class="modal-actions">
-      <button type="button" class="btn-ghost" on:click={() => (inviteOpen = false)}>Cancel</button>
-      <button type="button" class="btn-primary" disabled={inviting} on:click={sendInvite}>
-        {inviting ? "Sending…" : "Send invitation"}
-      </button>
     </div>
-  </div>
+
+    <h3>Role</h3>
+    <div class="roles">
+      {#each ROLES as r}
+        <button type="button" class="role" class:sel={fRole === r.id} on:click={() => pickRole(r.id)} aria-pressed={fRole === r.id}>
+          <strong>{r.label}</strong>
+          <span>{r.description}</span>
+        </button>
+      {/each}
+    </div>
+
+    <h3>
+      Permissions
+      {#if customised}<span class="tag">customised</span>
+        <button type="button" class="link" on:click={() => (fPerms = presetPerms(fRole))}>Back to {roleLabel(fRole)} defaults</button>{/if}
+    </h3>
+    {#if fRole === "admin"}
+      <p class="note">Admins can see and change everything, including this Users &amp; Roles page.</p>
+    {:else}
+      <div class="table-wrap">
+        <table class="perm">
+          <thead>
+            <tr>
+              <th>Part of the admin</th>
+              {#each LEVELS as l}<th class="c">{l.label}</th>{/each}
+            </tr>
+          </thead>
+          <tbody>
+            {#each MODULES as m}
+              <tr>
+                <td><strong>{m.label}</strong><small>{m.pages}</small></td>
+                {#each LEVELS as l}
+                  <td class="c">
+                    <input
+                      type="radio"
+                      name="perm-{m.id}"
+                      value={l.id}
+                      checked={(fPerms[m.id] || "none") === l.id}
+                      on:change={() => setLevel(m.id, l.id)}
+                      aria-label="{m.label}: {l.label}"
+                    />
+                  </td>
+                {/each}
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Everyone can open the Dashboard, Notifications and their own account. Only Admins manage users.</p>
+    {/if}
+
+    {#if formError}<p class="msg error" role="alert">{formError}</p>{/if}
+    <div class="actions">
+      <button type="submit" class="btn-primary" disabled={saving}>
+        {saving ? "Saving…" : editing ? "Save changes" : "Add user"}
+      </button>
+      <button type="button" class="ghost" on:click={() => (formOpen = false)} disabled={saving}>Cancel</button>
+    </div>
+  </form>
 {/if}
 
-<h2 class="section-title">Pending invitations</h2>
-<div class="table-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Modules</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#if pendingInvites.length === 0}
-        <tr><td colspan="5" class="empty">No pending invitations.</td></tr>
-      {:else}
-        {#each pendingInvites as inv}
-          <tr>
-            <td>{inv.email}</td>
-            <td><span class="pill role">{roleLabel(inv.role)}</span></td>
-            <td>{formatModulesSummary(inv.modules || [])}</td>
-            <td><span class="pill pending">Pending</span></td>
-            <td class="actions">
-              <button type="button" class="icon-btn" title="Resend email" on:click={() => resendInvite(inv)}><i class="fa fa-envelope-o" aria-hidden="true"></i></button>
-              <button type="button" class="icon-btn danger" title="Revoke" on:click={() => revokeInvite(inv)}><i class="fa fa-times" aria-hidden="true"></i></button>
-            </td>
-          </tr>
-        {/each}
-      {/if}
-    </tbody>
-  </table>
-</div>
-
-<h2 class="section-title">All users</h2>
-<div class="search-bar">
-  <input
-    type="search"
-    placeholder="Search by name or email…"
-    bind:value={searchQuery}
-    on:input={handleSearch}
-  />
-</div>
+<h2 class="section-title">Team <span>{activeCount} active</span></h2>
+{#if $accessStore?.kind === "owner"}
+  <p class="owner">
+    <i class="fa fa-star" aria-hidden="true"></i>
+    You are signed in as the <strong>owner</strong> ({$userStore?.email}): full access, always. The owner can't be switched off here.
+  </p>
+{/if}
 
 {#if loading}
   <p>Loading…</p>
+{:else if staff.length === 0}
+  <p class="empty">No users yet. Click <strong>Add user</strong> to give someone access.</p>
 {:else}
   <div class="table-wrap">
-    <table>
+    <table class="team">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Email</th>
           <th>Role</th>
-          <th>Modules</th>
-          <th>Wallet (UGX)</th>
+          <th>Can do</th>
+          <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {#each filteredUsers as user}
-          <tr class:is-admin={user.isAdmin}>
+        {#each staff as s (s.uid)}
+          <tr class:off={!s.active}>
             <td>
-              <div class="user-info">
-                <div class="avatar">{user.firstName.charAt(0)}{user.lastName.charAt(0)}</div>
-                <span>{user.firstName} {user.lastName}</span>
+              <div class="who">
+                <div class="avatar">{(s.name || s.email).charAt(0).toUpperCase()}</div>
+                <div>
+                  <strong>{s.name || "—"}{#if s.uid === me} <span class="you">you</span>{/if}</strong>
+                  <small>{s.email}{s.phone ? ` · ${s.phone}` : ""}</small>
+                </div>
               </div>
             </td>
-            <td>{user.email}</td>
             <td>
-              {#if user.isAdmin}
-                <span class="pill role">{roleLabel(user.adminRole || "super_admin")}</span>
-              {:else}
-                <span class="pill user">User</span>
+              <span class="pill r-{s.role}">{roleLabel(s.role)}</span>
+              {#if s.role !== "admin" && isCustomised(s.role, s.perms)}<span class="tag">customised</span>{/if}
+            </td>
+            <td class="sum">{permsSummary(s)}</td>
+            <td>{#if s.active}<span class="st on">Active</span>{:else}<span class="st">Switched off</span>{/if}</td>
+            <td class="acts">
+              <button type="button" class="mini" on:click={() => openEdit(s)} disabled={busyUid === s.uid}>Edit</button>
+              <button type="button" class="mini" on:click={() => resetPassword(s)} disabled={busyUid === s.uid}>Reset password</button>
+              {#if s.uid !== me}
+                <button type="button" class="mini" on:click={() => toggleActive(s)} disabled={busyUid === s.uid}>
+                  {s.active ? "Switch off" : "Switch on"}
+                </button>
+                <button type="button" class="mini danger" on:click={() => remove(s)} disabled={busyUid === s.uid}>Remove</button>
               {/if}
-            </td>
-            <td>{user.isAdmin ? formatModulesSummary(user.adminModules || []) : "—"}</td>
-            <td>
-              <input type="number" min="0" class="wallet" bind:value={user.walletBalance} />
-              <button class="btn-mini" disabled={processingUid === user.id} on:click={() => saveWallet(user)}>Save</button>
-            </td>
-            <td>
-              <button
-                class="btn-mini {user.isAdmin ? 'danger' : 'primary'}"
-                disabled={processingUid === user.id}
-                on:click={() => toggleAdmin(user, !user.isAdmin)}
-              >
-                {user.isAdmin ? "Revoke admin" : "Make admin"}
-              </button>
             </td>
           </tr>
         {/each}
       </tbody>
     </table>
   </div>
+{/if}
+
+<h2 class="section-title">What each role can do</h2>
+<div class="role-cards">
+  {#each ROLES as r}
+    <div class="role-card">
+      <strong>{r.label}</strong>
+      <p>{r.description}</p>
+      <small>{permsSummary({ role: r.id, perms: r.perms })}</small>
+    </div>
+  {/each}
+</div>
+
+<h2 class="section-title">
+  Customer wallets
+  <button type="button" class="link" on:click={loadCustomers}>{customersOpen ? "Hide" : "Show"}</button>
+</h2>
+{#if customersOpen}
+  {#if !customersLoaded}
+    <p>Loading…</p>
+  {:else}
+    <input class="search" type="search" placeholder="Search customers by name or email…" bind:value={customerQuery} />
+    <div class="table-wrap">
+      <table class="team">
+        <thead><tr><th>Name</th><th>Email</th><th>Wallet (UGX)</th></tr></thead>
+        <tbody>
+          {#each filteredCustomers as u (u.id)}
+            <tr>
+              <td>{u.firstName} {u.lastName}</td>
+              <td>{u.email}</td>
+              <td class="wallet">
+                <input type="number" min="0" bind:value={u.walletBalance} aria-label="Wallet for {u.email}" />
+                <button type="button" class="mini" disabled={busyUid === u.id} on:click={() => saveWallet(u)}>Save</button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  {/if}
 {/if}
 
 <style>
@@ -385,7 +455,6 @@
     padding: 22px 24px;
     border-radius: 14px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 28px rgba(19, 95, 163, 0.25);
   }
   .hero h1 {
     margin: 0 0 6px;
@@ -395,270 +464,372 @@
     margin: 0;
     opacity: 0.95;
     font-size: 14px;
+    max-width: 640px;
   }
-  .btn-invite {
+  .btn-add {
     border: none;
     background: #fff;
     color: #13344f;
     font-weight: 700;
-    padding: 12px 20px;
+    padding: 11px 18px;
     border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    font: inherit;
+    font-weight: 700;
   }
-  .section-title {
-    font-size: 18px;
-    margin: 24px 0 12px;
-  }
-  .alert {
-    padding: 12px 14px;
+  .msg {
+    padding: 10px 14px;
     border-radius: 10px;
-    margin-bottom: 12px;
+    margin: 0 0 14px;
     font-size: 14px;
   }
-  .alert.err {
-    background: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
+  .msg.error {
+    background: #fdecec;
+    color: #9b1c1c;
+    border: 1px solid #f5c2c2;
   }
-  .alert.ok {
-    background: #eef7fc;
-    color: #0c2236;
-    border: 1px solid #cbe8f7;
+  .msg.info {
+    background: #e8f4fc;
+    color: #13344f;
+    border: 1px solid #b9dcf3;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
   }
-  .link-box {
-    background: #eef7fc;
-    border: 1px solid #9fd6f0;
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 16px;
-    font-size: 13px;
-  }
-  .link-box code {
-    display: block;
-    word-break: break-all;
-    margin: 8px 0;
-    font-size: 12px;
-  }
-  .btn-copy {
+  .x {
     border: none;
-    background: #135fa3;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-weight: 600;
+    background: none;
+    font-size: 18px;
     cursor: pointer;
+    color: inherit;
   }
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.45);
-    z-index: 100;
-  }
-  .modal {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 101;
-    width: min(480px, 94vw);
-    max-height: 90vh;
-    overflow: auto;
+  .panel {
     background: #fff;
+    border: 1px solid #e5e7eb;
     border-radius: 14px;
-    padding: 22px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-bottom: 24px;
+    scroll-margin-top: 80px;
   }
-  .modal h2 {
-    margin: 0 0 4px;
+  .panel h2 {
+    margin: 0 0 14px;
     font-size: 20px;
+    color: #13344f;
   }
-  .modal-sub {
-    margin: 0 0 16px;
-    color: #64748b;
-    font-size: 13px;
-  }
-  .modal label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .modal input,
-  .modal select {
-    display: block;
-    width: 100%;
-    margin-top: 4px;
-    padding: 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font: inherit;
-  }
-  .modules {
-    border: 1px solid #cbe8f7;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 16px;
-    background: #fffbeb;
-  }
-  .modules legend {
-    font-weight: 700;
-    font-size: 13px;
-  }
-  .hint {
-    font-size: 13px;
-    color: #78350f;
-    margin: 0;
-  }
-  .mod-list {
-    margin: 8px 0 0;
-    padding-left: 18px;
-    font-size: 13px;
-  }
-  .module-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .mod-chip {
-    font-size: 12px;
-    font-weight: 500;
+  .panel h3 {
+    margin: 20px 0 10px;
+    font-size: 15px;
+    color: #13344f;
     display: flex;
     align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #374151;
+  }
+  .opt {
+    font-weight: 400;
+    color: #6b7280;
+  }
+  input:not([type="radio"]) {
+    padding: 9px 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 400;
+    min-width: 0;
+  }
+  input[readonly] {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  .pw {
+    display: flex;
     gap: 6px;
   }
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
+  .pw input {
+    flex: 1;
+    min-width: 0;
+  }
+  .roles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
   }
-  .btn-ghost {
-    border: 1px solid #e2e8f0;
+  .role {
+    text-align: left;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
     background: #fff;
-    padding: 10px 16px;
-    border-radius: 8px;
+    padding: 12px;
     cursor: pointer;
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #13344f;
   }
-  .btn-primary {
-    border: none;
-    background: linear-gradient(90deg, #135fa3, #1673c4);
-    color: #fff;
-    font-weight: 700;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
+  .role span {
+    font-size: 12.5px;
+    color: #4b5563;
   }
-  .search-bar input {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    margin-bottom: 12px;
+  .role.sel {
+    border-color: #1673c4;
+    background: #eef6fd;
+    box-shadow: inset 0 0 0 1px #1673c4;
   }
   .table-wrap {
     overflow-x: auto;
     background: #fff;
-    border: 1px solid #e9ecef;
+    border: 1px solid #e5e7eb;
     border-radius: 12px;
   }
   table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 14px;
   }
   th,
   td {
-    padding: 12px 14px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f1f3;
     text-align: left;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 14px;
     vertical-align: middle;
   }
   th {
-    background: #fafafa;
-    font-weight: 600;
-    color: #475569;
+    background: #f8fafc;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #4b5563;
   }
-  tr.is-admin {
-    background: #eef7fc;
+  .perm td small {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
   }
-  .empty {
+  .c {
     text-align: center;
-    color: #94a3b8;
-    padding: 24px !important;
   }
-  .user-info {
+  .perm input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #1673c4;
+  }
+  .note {
+    font-size: 13px;
+    color: #4b5563;
+    margin: 8px 0 0;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .btn-primary {
+    background: #1673c4;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+  }
+  .ghost,
+  .mini {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    color: #13344f;
+    white-space: nowrap;
+  }
+  .mini {
+    padding: 5px 9px;
+    font-size: 12.5px;
+  }
+  .mini.danger {
+    color: #b91c1c;
+    border-color: #f1b5b5;
+  }
+  .link {
+    border: none;
+    background: none;
+    color: #1673c4;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    background: #fff4d6;
+    color: #8a5a00;
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-left: 4px;
+  }
+  .section-title {
+    font-size: 18px;
+    color: #13344f;
+    margin: 26px 0 12px;
     display: flex;
     align-items: center;
     gap: 10px;
   }
+  .section-title span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+  }
+  .owner {
+    background: #f0f7fd;
+    border: 1px solid #cfe5f6;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #13344f;
+  }
+  .owner .fa {
+    color: #e0a100;
+  }
+  .empty {
+    color: #4b5563;
+  }
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .who small {
+    display: block;
+    color: #6b7280;
+    font-size: 12.5px;
+  }
   .avatar {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    background: #135fa3;
+    background: #13344f;
     color: #fff;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 700;
-    font-size: 12px;
+    flex: none;
+  }
+  .you {
+    font-size: 11px;
+    background: #e0f1fa;
+    color: #135fa3;
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-weight: 600;
   }
   .pill {
     display: inline-block;
-    padding: 4px 10px;
     border-radius: 999px;
-    font-size: 11px;
+    padding: 3px 10px;
+    font-size: 12px;
     font-weight: 700;
+    background: #eef2f7;
+    color: #13344f;
   }
-  .pill.role {
-    background: #e0f1fa;
-    color: #0c2236;
+  .r-admin {
+    background: #13344f;
+    color: #fff;
   }
-  .pill.user {
-    background: #f1f5f9;
-    color: #64748b;
+  .r-manager {
+    background: #dbeafe;
+    color: #1e40af;
   }
-  .pill.pending {
+  .r-finance {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .r-sales {
     background: #fef3c7;
-    color: #1d4f7a;
+    color: #92400e;
   }
-  .actions {
-    white-space: nowrap;
+  .sum {
+    font-size: 12.5px;
+    color: #4b5563;
+    max-width: 320px;
   }
-  .icon-btn {
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    border-radius: 8px;
-    padding: 6px 10px;
-    cursor: pointer;
-    margin-right: 4px;
-  }
-  .icon-btn.danger {
-    color: #b91c1c;
-    border-color: #fecaca;
-  }
-  .wallet {
-    width: 96px;
-    margin-right: 6px;
-    padding: 6px 8px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-  }
-  .btn-mini {
-    border: none;
-    border-radius: 6px;
-    padding: 6px 10px;
+  .st {
     font-size: 12px;
     font-weight: 600;
-    cursor: pointer;
-    color: #fff;
-    background: #135fa3;
+    color: #6b7280;
   }
-  .btn-mini.danger {
-    background: #dc2626;
+  .st.on {
+    color: #15803d;
   }
-  .btn-mini.primary {
-    background: #16a34a;
+  .acts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  tr.off td {
+    opacity: 0.6;
+  }
+  tr.off td.acts {
+    opacity: 1;
+  }
+  .role-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .role-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+    color: #13344f;
+  }
+  .role-card p {
+    margin: 6px 0;
+    font-size: 13px;
+    color: #374151;
+  }
+  .role-card small {
+    color: #6b7280;
+    font-size: 12px;
+  }
+  .search {
+    width: 100%;
+    max-width: 420px;
+    margin-bottom: 10px;
+  }
+  .wallet {
+    display: flex;
+    gap: 6px;
+  }
+  .wallet input {
+    width: 130px;
   }
 </style>

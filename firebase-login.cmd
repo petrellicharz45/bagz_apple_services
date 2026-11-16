@@ -1,4 +1,6 @@
 @echo off
+REM firebase-tools misreads VS Code terminals as its VS Code extension; clear the marker.
+set VSCODE_CWD=
 cd /d "%~dp0"
 echo Firebase login (manual code — works when localhost fails)
 echo.
