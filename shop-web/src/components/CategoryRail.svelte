@@ -11,6 +11,7 @@
     iPads: "📲",
     Watches: "⌚",
     "AirPods & Audio": "🎧",
+    "Cameras & Gimbals": "📷",
     Accessories: "🔌",
     All: "🔥"
   };

@@ -68,6 +68,7 @@ firebase-service-account.json
 firebase-adminsdk.json
 # Local backups written by scripts/seed-bagz-catalog.mjs
 .seed-backup-*.json
+.products-backup-*.json
 scripts/import-bagz/.cache/
 scripts/import-bagz/out/
 scripts/import-bagz/build.log
