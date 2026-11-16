@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { fetchOrders } from "$lib/data/orders";
   import type { QueryDocumentSnapshot } from "firebase/firestore";
@@ -205,7 +206,7 @@
           <td><span class="pill {kind}">{statusLabel(order.orderStatus || order.status)}</span></td>
           <td><span class="pill {kind}">{statusLabel(order.paymentStatus)}</span></td>
           <td class="money">{money(order.totalPrice)}</td>
-          <td><a class="view" href={`/orders/${order.id}`}>View</a></td>
+          <td><a class="view" href={to(`/orders/${order.id}`)}>View</a></td>
         </tr>
       {/each}
       {#if filteredOrders.length === 0}

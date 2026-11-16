@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { fetchTickets } from "$lib/data/tickets";
   import type { QueryDocumentSnapshot } from "firebase/firestore";
@@ -121,7 +122,7 @@
             {/if}
           </td>
           <td>
-            <a href={`/tickets/${ticket.id}`}>Review</a>
+            <a href={to(`/tickets/${ticket.id}`)}>Review</a>
           </td>
         </tr>
       {/each}

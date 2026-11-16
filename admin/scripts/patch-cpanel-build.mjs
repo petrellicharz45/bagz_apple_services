@@ -37,6 +37,10 @@ function copyDir(from, to) {
 
 if (fs.existsSync(destAssets)) rmrf(destAssets);
 copyDir(srcImmutable, destAssets);
+// env.js (runtime settings) and version.json sit next to immutable/: keep them too.
+for (const ent of fs.readdirSync(path.join(root, "adminstatic"), { withFileTypes: true })) {
+  if (ent.isFile()) fs.copyFileSync(path.join(root, "adminstatic", ent.name), path.join(destAssets, ent.name));
+}
 rmrf(path.join(root, "adminstatic"));
 
 function walkReplace(dir) {
@@ -48,7 +52,8 @@ function walkReplace(dir) {
       const next = text
         .replaceAll("/adminstatic/immutable/", "/assets/")
         .replaceAll("/svelte/immutable/", "/assets/")
-        .replaceAll("/_app/immutable/", "/assets/");
+        .replaceAll("/_app/immutable/", "/assets/")
+        .replaceAll("/adminstatic/", "/assets/");
       if (next !== text) fs.writeFileSync(p, next);
     }
   }

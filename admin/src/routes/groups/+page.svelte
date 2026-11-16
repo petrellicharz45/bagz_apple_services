@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import {
     arrayRemove,
@@ -205,7 +206,7 @@
 
 <div class="header">
   <h1>Manage Groups</h1>
-  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
+  <a href={to("/")} class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>

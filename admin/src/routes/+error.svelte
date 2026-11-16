@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { page } from "$app/stores";
 </script>
 
 <div class="error-page">
   <h1>Something went wrong</h1>
   <p>{$page.error?.message ?? "Unknown error"}</p>
-  <a href="/login">Go to login</a>
+  <a href={to("/login")}>Go to login</a>
 </div>
 
 <style>

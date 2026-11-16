@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import "$lib/styles/opsPages.css";
   import { fetchOrdersForAnalytics } from "$lib/data/orders";
@@ -233,7 +234,7 @@
               <td>{b.name}</td>
               <td>{b.phone || "—"}</td>
               <td>{b.qty}</td>
-              <td><a href="/orders/{b.orderId}">#{String(b.orderId).slice(-8)}</a></td>
+              <td><a href={to(`/orders/${b.orderId}`)}>#{String(b.orderId).slice(-8)}</a></td>
               <td>{b.at ? b.at.toLocaleString("en-GB") : "—"}</td>
             </tr>
           {/each}

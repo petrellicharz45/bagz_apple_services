@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to, appPath } from "$lib/paths";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
@@ -62,7 +63,7 @@
 
   let alertUnread = 0;
 
-  $: path = normalizePath($page.url.pathname);
+  $: path = normalizePath(appPath($page.url.pathname));
   $: activeNavHref = pickActiveNav(path);
   $: isDashboard = activeNavHref === "/";
   $: title = links.find((link) => link.href === activeNavHref)?.label ?? "Dashboard";
@@ -126,7 +127,7 @@
     urlTimer = setTimeout(() => {
       const q = query.trim();
       if (path.startsWith("/products") && !path.includes("/products/")) {
-        goto(q ? `/products?q=${encodeURIComponent(q)}` : "/products", {
+        goto(to(q ? `/products?q=${encodeURIComponent(q)}` : "/products"), {
           keepFocus: true,
           noScroll: true,
           replaceState: true
@@ -138,17 +139,17 @@
   function search() {
     const q = query.trim();
     showHits = false;
-    goto(q ? `/products?q=${encodeURIComponent(q)}` : "/products");
+    goto(to(q ? `/products?q=${encodeURIComponent(q)}` : "/products"));
   }
 
   function openProduct(id: string) {
     showHits = false;
-    goto(`/products/${id}`);
+    goto(to(`/products/${id}`));
   }
 
   async function handleLogout() {
     if (auth) await signOut(auth);
-    goto("/login");
+    goto(to("/login"));
   }
 </script>
 
@@ -161,7 +162,7 @@
     <div class="brand">
       <img
         class="logo-wordmark"
-        src="/brand/bagz-logo-white.png"
+        src={to("/brand/bagz-logo-white.png")}
         alt="Bagz Apple Services"
         width="168"
         height="40"
@@ -171,7 +172,7 @@
     <nav>
       {#each links as link}
         <a
-          href={link.href}
+          href={to(link.href)}
           class:nav-active={link.href === activeNavHref}
           aria-current={link.href === activeNavHref ? "page" : undefined}
           on:click={onNavClick}
@@ -183,7 +184,7 @@
     </nav>
     <div class="promo">
       <div class="promo-icon-wrap" aria-hidden="true">
-        <img class="promo-mark" src="/favicon.png" alt="" width="40" height="40" />
+        <img class="promo-mark" src={to("/favicon.png")} alt="" width="40" height="40" />
       </div>
       <p class="promo-title">Bagz Apple Services — Authentic Genuine Gadget Store</p>
       <button type="button" class="promo-cta" on:click={openShopInBrowser}>View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
@@ -236,11 +237,11 @@
           <i class="fa fa-external-link website-icon" aria-hidden="true"></i>
           <span class="website-label">View shop</span>
         </button>
-        <a class="bell" href="/notifications" aria-label="Notifications" title="Alerts & inbox">
+        <a class="bell" href={to("/notifications")} aria-label="Notifications" title="Alerts & inbox">
           <i class="fa fa-bell-o" aria-hidden="true"></i>
           {#if alertUnread > 0}<span class="bell-badge">{alertUnread > 99 ? "99+" : alertUnread}</span>{/if}
         </a>
-        <a class="profile-link" href="/settings?tab=account" title="My account">
+        <a class="profile-link" href={to("/settings?tab=account")} title="My account">
           {#if avatarUrl}
             <img class="avatar-img" src={avatarUrl} alt="" />
           {:else}

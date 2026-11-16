@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
@@ -57,7 +58,7 @@
       await accept({ token, password, firstName, lastName });
       if (!auth) throw new Error("Auth not ready");
       await signInWithEmailAndPassword(auth, email, password);
-      goto("/");
+      goto(to("/"));
     } catch (e: any) {
       errorMsg = e.message || "Could not activate account.";
     } finally {
@@ -73,7 +74,7 @@
       <p>Loading invitation…</p>
     {:else if errorMsg && !email}
       <p class="err">{errorMsg}</p>
-      <a href="/login">Sign in instead</a>
+      <a href={to("/login")}>Sign in instead</a>
     {:else}
       <div class="avatar">{firstName?.charAt(0) || email.charAt(0).toUpperCase()}</div>
       <h1>Welcome{#if firstName}, {firstName}{/if}</h1>
@@ -102,7 +103,7 @@
         </label>
         <button type="submit" disabled={saving}>{saving ? "Saving…" : "Save password & sign in"}</button>
       </form>
-      <p class="foot"><a href="/login">Already set up? Sign in instead</a></p>
+      <p class="foot"><a href={to("/login")}>Already set up? Sign in instead</a></p>
     {/if}
   </div>
 </div>

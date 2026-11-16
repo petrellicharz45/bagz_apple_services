@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import "$lib/styles/opsPages.css";
@@ -98,7 +99,7 @@
                 {row.band === "out" ? "Out" : row.band === "low" ? "Low" : row.band === "medium" ? "Medium" : "OK"}
               </span>
             </td>
-            <td><a class="ops-btn ghost" href="/products/{row.id}">Edit</a></td>
+            <td><a class="ops-btn ghost" href={to(`/products/${row.id}`)}>Edit</a></td>
           </tr>
         {:else}
           <tr><td colspan="7">No products in this view.</td></tr>

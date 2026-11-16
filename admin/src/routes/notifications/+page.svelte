@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { to } from "$lib/paths";
   import "$lib/styles/opsPages.css";
   import { fetchAllProducts } from "$lib/data/products";
   import { fetchOrdersForAnalytics } from "$lib/data/orders";
@@ -44,7 +45,7 @@
     if (!n.read) await markNotificationRead(n.id);
     n.read = true;
     items = [...items];
-    if (n.href) window.location.href = n.href;
+    if (n.href) window.location.href = to(n.href);
   }
 
   async function readAll() {

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onDestroy, onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -121,7 +122,7 @@
   async function analyzeProductPhp(imageBase64: string) {
     const url =
       (import.meta.env.VITE_ANALYZE_PRODUCT_URL as string | undefined)?.trim() ||
-      "/analyze-product.php";
+      to("/analyze-product.php");
     // The PHP endpoint spends OpenRouter credit, so it only serves signed-in admins.
     const idToken = app ? await getAuth(app).currentUser?.getIdToken() : "";
     const res = await fetch(url, {
@@ -150,7 +151,7 @@
   }
 
   async function analyzeProductLocal(imageBase64: string) {
-    const res = await fetch("/api/analyze-product", {
+    const res = await fetch(to("/api/analyze-product"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -417,7 +418,7 @@
       invalidateProductCatalog();
       await loadProductCatalog(true);
       showSuccessToast("Product and photos saved successfully.");
-      goto("/products");
+      goto(to("/products"));
     } catch (e: any) {
       errorMsg = e.message;
     } finally {
@@ -484,7 +485,7 @@
       <small>Leave both empty for an unlimited offer until you remove the percentage. Set start+end for a timed sale. The shop shows Starts in… before the start.</small>
     </label>
     <fieldset class="full-width groups-box">
-      <legend>Groups (tick all that apply — shows in shop filters like Men, Women, Recommended) · <a href="/groups">Manage groups</a></legend>
+      <legend>Groups (tick all that apply — shows in shop filters like Men, Women, Recommended) · <a href={to("/groups")}>Manage groups</a></legend>
       <div class="groups-grid">
         {#each GROUP_OPTIONS as group}
           <label class="group-chip">

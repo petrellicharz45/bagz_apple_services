@@ -6,11 +6,12 @@
 #     ADMIN_ENV           whole contents of admin/.env (includes OPENROUTER_API_KEY for AI auto-fill)
 #     FTP_SERVER          e.g. ftp.bagzappleservices.com
 #     FTP_SHOP_USERNAME / FTP_SHOP_PASSWORD     FTP account whose folder is the shop's document root
-#     FTP_ADMIN_USERNAME / FTP_ADMIN_PASSWORD   FTP account whose folder is the admin's document root
 #   Variables:
 #     SHOP_URL            https://bagzappleservices.com
-#     ADMIN_URL           https://admin.bagzappleservices.com  (leave unset to skip the admin job)
 #     SHOP_NOINDEX        true only if the shop is on a test subdomain (keeps it out of Google)
+#
+# The admin is built into shop-web/dist/admin and goes up with the shop, so it is served at
+# SHOP_URL/admin (https://bagzappleservices.com/admin). Without ADMIN_ENV only the shop is published.
 name: Deploy to cPanel
 
 on:
@@ -44,7 +45,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: shop-web/package-lock.json
+          cache-dependency-path: |
+            shop-web/package-lock.json
+            admin/package-lock.json
 
       - name: Write shop settings
         env:
@@ -58,6 +61,29 @@ jobs:
         run: |
           npm ci
           npm run build
+
+      - name: Write admin settings
+        env:
+          ADMIN_ENV: ${{ secrets.ADMIN_ENV }}
+          SHOP_URL: ${{ vars.SHOP_URL }}
+        run: |
+          if [ -z "$ADMIN_ENV" ]; then
+            echo "::warning::Secret ADMIN_ENV is missing, so the admin is not published"
+            exit 0
+          fi
+          # Live addresses replace the localhost ones from the local .env
+          printf '%s\n' "$ADMIN_ENV" | grep -vE '^(PUBLIC_SHOP_URL|PUBLIC_ADMIN_APP_URL|ADMIN_BASE_PATH)=' > admin/.env
+          echo "PUBLIC_SHOP_URL=${SHOP_URL}" >> admin/.env
+          echo "PUBLIC_ADMIN_APP_URL=${SHOP_URL%/}/admin" >> admin/.env
+
+      - name: Build the admin into /admin
+        if: hashFiles('admin/.env') != ''
+        working-directory: admin
+        run: |
+          npm ci
+          npm run build
+          rm -rf ../shop-web/dist/admin
+          cp -r build ../shop-web/dist/admin
 
       - name: Keep the test site out of Google
         if: vars.SHOP_NOINDEX == 'true'
@@ -106,72 +132,3 @@ jobs:
             **/.git*/**
             **/pesapal-config.php
             **/firestore-config.php
-
-  admin:
-    name: Admin → ${{ vars.ADMIN_URL }}
-    # Skipped until the ADMIN_URL variable (and admin FTP secrets) are added, and on the nightly
-    # rebuild (the admin has no product pages to refresh).
-    if: vars.ADMIN_URL != '' && github.event_name != 'schedule'
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: admin/package-lock.json
-
-      - name: Write admin settings
-        env:
-          ADMIN_ENV: ${{ secrets.ADMIN_ENV }}
-          SHOP_URL: ${{ vars.SHOP_URL }}
-          ADMIN_URL: ${{ vars.ADMIN_URL }}
-        run: |
-          test -n "$ADMIN_ENV" || { echo "::error::Secret ADMIN_ENV is missing"; exit 1; }
-          # Live addresses replace the localhost ones from the local .env
-          printf '%s\n' "$ADMIN_ENV" | grep -vE '^(PUBLIC_SHOP_URL|PUBLIC_ADMIN_APP_URL)=' > admin/.env
-          echo "PUBLIC_SHOP_URL=${SHOP_URL}" >> admin/.env
-          echo "PUBLIC_ADMIN_APP_URL=${ADMIN_URL}" >> admin/.env
-
-      - name: Install and build
-        working-directory: admin
-        run: |
-          npm ci
-          npm run build
-
-      - name: Upload to cPanel
-        id: upload
-        continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_ADMIN_USERNAME }}
-          password: ${{ secrets.FTP_ADMIN_PASSWORD }}
-          protocol: ftps
-          timeout: 120000
-          local-dir: admin/build/
-          server-dir: ./
-          exclude: |
-            **/.git*
-            **/.git*/**
-
-      - name: Wait before retrying the upload
-        if: steps.upload.outcome == 'failure'
-        run: sleep 60
-
-      - name: Upload to cPanel (retry)
-        if: steps.upload.outcome == 'failure'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_ADMIN_USERNAME }}
-          password: ${{ secrets.FTP_ADMIN_PASSWORD }}
-          protocol: ftps
-          timeout: 120000
-          local-dir: admin/build/
-          server-dir: ./
-          exclude: |
-            **/.git*
-            **/.git*/**

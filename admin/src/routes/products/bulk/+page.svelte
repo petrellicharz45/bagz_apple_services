@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { doc, getDoc } from "firebase/firestore";
@@ -152,7 +153,7 @@
 
     if (saved === active.length) {
       successMsg = `Saved ${saved} product(s).`;
-      setTimeout(() => goto("/products"), 1200);
+      setTimeout(() => goto(to("/products")), 1200);
     } else if (saved > 0) {
       successMsg = `Saved ${saved} of ${active.length}.`;
       errorMsg = errors.join(" · ");
@@ -183,7 +184,7 @@
   <button type="button" class="btn primary" on:click={saveAll} disabled={saving}>
     {saving ? "Saving…" : `Save all (${drafts.length} rows)`}
   </button>
-  <a href="/products/new" class="link">Single product form</a>
+  <a href={to("/products/new")} class="link">Single product form</a>
 </div>
 
 {#each drafts as draft, index (draft.key)}

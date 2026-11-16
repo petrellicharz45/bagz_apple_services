@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import {
     collection,
@@ -250,7 +251,7 @@
 
 <div class="header">
   <h1>Categories</h1>
-  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
+  <a href={to("/")} class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>Main shop categories, in the order customers see them. Use the arrows to reorder; photos appear in the category bubbles.</p>

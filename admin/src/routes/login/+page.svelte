@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { signInWithEmailAndPassword, signOut } from "firebase/auth";
   import { auth } from "$lib/firebase";
   import { goto } from "$app/navigation";
@@ -26,7 +27,7 @@
         await signOut(auth);
         errorMsg = "This account is not an admin. Ask an existing admin to grant you access.";
       } else {
-        goto("/");
+        goto(to("/"));
       }
     } catch (e: any) {
       errorMsg = friendlyAuthError(e);
@@ -69,7 +70,7 @@
         <div class="brand-row">
           <img
             class="brand-logo"
-            src="/brand/bagz-logo-white.png"
+            src={to("/brand/bagz-logo-white.png")}
             alt="Bagz Apple Services"
             width="220"
             height="52"

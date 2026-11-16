@@ -8,6 +8,11 @@ const config = {
 	kit: {
 		// cPanel/Apache often returns 403 for /_app/ — use a public folder name instead.
 		appDir: 'adminstatic',
+		// The admin is served from the shop's domain at /admin (ADMIN_BASE_PATH="" serves it from the root).
+		paths: {
+			base: process.env.ADMIN_BASE_PATH ?? '/admin',
+			relative: false
+		},
 		adapter: adapter({
 			fallback: 'index.html' // SPA mode
 		})

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { fetchAllProducts } from "$lib/data/products";
   import { fetchOrders } from "$lib/data/orders";
@@ -204,7 +205,7 @@
     <section class="panel">
       <header>
         <h3><span class="panel-ico orders-ico"><i class="fa fa-list-alt" aria-hidden="true"></i></span> Recent Orders</h3>
-        <a href="/orders">View all →</a>
+        <a href={to("/orders")}>View all →</a>
       </header>
       <table>
         <thead>
@@ -213,7 +214,7 @@
         <tbody>
           {#each recentOrders as order}
             <tr>
-              <td><a href={`/orders/${order.id}`}>#{String(order.orderId || order.id).slice(-6)}</a></td>
+              <td><a href={to(`/orders/${order.id}`)}>#{String(order.orderId || order.id).slice(-6)}</a></td>
               <td>{order.address?.fullName || order.address?.phone || "Customer"}</td>
               <td>{ugx(Number(order.totalPrice || 0))}</td>
               <td><span class="pill {statusClass(order.orderStatus)}">{order.orderStatus || "Pending"}</span></td>
@@ -230,7 +231,7 @@
     <section class="panel">
       <header>
         <h3>Top Selling Products</h3>
-        <a href="/products">View all</a>
+        <a href={to("/products")}>View all</a>
       </header>
       {#each topSelling as item}
         <div class="row">
@@ -273,7 +274,7 @@
     <section class="panel">
       <header>
         <h3>Low Stock Alerts</h3>
-        <a href="/products">View all</a>
+        <a href={to("/products")}>View all</a>
       </header>
       {#each lowStock.slice(0, 5) as item}
         <div class="row">
@@ -309,9 +310,9 @@
         <p class="empty">No customer orders yet.</p>
       {/each}
       <div class="actions">
-        <a class="btn teal" href="/products/new">+ Add Product</a>
-        <a class="btn navy" href="/orders">View Orders</a>
-        <a class="btn ghost" href="/tickets">Open Tickets</a>
+        <a class="btn teal" href={to("/products/new")}>+ Add Product</a>
+        <a class="btn navy" href={to("/orders")}>View Orders</a>
+        <a class="btn ghost" href={to("/tickets")}>Open Tickets</a>
       </div>
     </section>
   </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to, appPath } from "$lib/paths";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { browser } from "$app/environment";
@@ -8,7 +9,7 @@
 
   $: ready = browser && !$loadingStore && !$firebaseErrorStore;
   $: needsLogin = !$userStore || !$adminStore;
-  $: pathname = $page.url.pathname;
+  $: pathname = appPath($page.url.pathname);
   $: onLoginPage = pathname === "/login";
   $: onInvitePage = pathname.startsWith("/invite/");
 
@@ -16,9 +17,9 @@
     if (onInvitePage) {
       /* public accept-invite flow */
     } else if (needsLogin && !onLoginPage) {
-      void goto("/login");
+      void goto(to("/login"));
     } else if (!needsLogin && onLoginPage) {
-      void goto("/");
+      void goto(to("/"));
     }
   }
 </script>

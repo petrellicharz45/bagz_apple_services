@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
@@ -72,7 +73,7 @@
     } catch {
       /* ignore */
     }
-    goto(url, { keepFocus: true, noScroll: !scrollTop, replaceState: !scrollTop });
+    goto(to(url), { keepFocus: true, noScroll: !scrollTop, replaceState: !scrollTop });
     if (scrollTop) window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -150,8 +151,8 @@
     <button on:click={handleRefresh} class="btn btn-refresh" disabled={loading}>
       {loading ? 'Loading...' : 'Refresh'}
     </button>
-    <a href="/products/bulk" class="btn btn-secondary">Bulk add</a>
-    <a href="/products/new" class="btn btn-primary">Create New Product</a>
+    <a href={to("/products/bulk")} class="btn btn-secondary">Bulk add</a>
+    <a href={to("/products/new")} class="btn btn-primary">Create New Product</a>
   </div>
 </div>
 
@@ -210,7 +211,7 @@
             {/if}
           </td>
           <td class="actions">
-            <a href={`/products/${product.id}`} class="btn btn-edit">Edit</a>
+            <a href={to(`/products/${product.id}`)} class="btn btn-edit">Edit</a>
             <button on:click={() => handleDelete(product.id)} class="btn btn-delete">Delete</button>
           </td>
         </tr>

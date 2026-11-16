@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { doc, getDoc, setDoc } from "firebase/firestore";
   import { getFunctions, httpsCallable } from "firebase/functions";
@@ -261,7 +262,7 @@
 
 <div class="header">
   <h1>Manage Subcategories</h1>
-  <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
+  <a href={to("/")} class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
 </div>
 
 <p>Subcategories appear as round tiles inside each category on the shop. Add them by name now and upload their photos later.</p>

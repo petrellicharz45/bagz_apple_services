@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
@@ -370,7 +371,7 @@
       } catch {
         /* ignore */
       }
-      goto(back.startsWith("/products") ? back : "/products");
+      goto(to(back.startsWith("/products") ? back : "/products"));
     } catch (e: any) {
       errorMsg = e.message;
     } finally {
@@ -506,7 +507,7 @@
         <small>Leave dates empty for an unlimited offer. Set start and end for a timed sale.</small>
       </label>
       <fieldset class="full-width groups-box">
-        <legend>Groups (tick all that apply — shows in shop filters like Men, Women, Recommended) · <a href="/groups">Manage groups</a></legend>
+        <legend>Groups (tick all that apply — shows in shop filters like Men, Women, Recommended) · <a href={to("/groups")}>Manage groups</a></legend>
         <div class="groups-grid">
           {#each GROUP_OPTIONS as group}
             <label class="group-chip">
@@ -687,7 +688,7 @@
     </div>
 
     <div class="button-row">
-      <button type="button" class="btn btn-cancel" on:click={() => goto("/products")}>Cancel</button>
+      <button type="button" class="btn btn-cancel" on:click={() => goto(to("/products"))}>Cancel</button>
       <button type="submit" class="btn btn-save" disabled={saving}>
         {saving ? 'Saving...' : 'Save Changes'}
       </button>

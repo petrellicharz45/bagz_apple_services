@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { httpsCallable } from "firebase/functions";
   import { PUBLIC_ADMIN_APP_URL } from "$env/static/public";
+  import { base } from "$app/paths";
   import { getAdminFunctions, formatCallableError } from "$lib/functionsClient";
   import { doc, updateDoc } from "firebase/firestore";
   import { db } from "$lib/firebase";
@@ -39,7 +40,8 @@
   let lastInviteLink = "";
   let lastRolePicked = inviteRole;
 
-  const adminAppUrl = (PUBLIC_ADMIN_APP_URL || "http://localhost:5174").replace(/\/$/, "");
+  const adminRoot = (PUBLIC_ADMIN_APP_URL || "http://localhost:5174").replace(/\/$/, "");
+  const adminAppUrl = base && !adminRoot.endsWith(base) ? `${adminRoot}${base}` : adminRoot;
 
   $: pendingInvites = invites.filter((i) => i.status === "pending");
   $: if (inviteRole !== lastRolePicked) {

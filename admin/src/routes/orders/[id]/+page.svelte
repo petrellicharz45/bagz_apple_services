@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import { fetchOrder, deleteOrder } from "$lib/data/orders";
@@ -161,7 +162,7 @@
     try {
       await deleteOrder(orderId, order.userId);
       alert("Order deleted.");
-      goto("/orders");
+      goto(to("/orders"));
     } catch (e: any) {
       errorMsg = "Error deleting order: " + e.message;
       updating = false;

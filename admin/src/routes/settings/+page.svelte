@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { to } from "$lib/paths";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
@@ -388,7 +389,7 @@
 
 <div class="page">
   <header>
-    <a href="/" class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
+    <a href={to("/")} class="back-link"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Dashboard</a>
     <h1>Settings</h1>
   </header>
 
@@ -760,7 +761,7 @@
         <p class="section-help">
           Social links have their own page where you can add, edit, hide, reorder and delete them.
         </p>
-        <a class="social-page-link" href="/social-links">Manage social links <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+        <a class="social-page-link" href={to("/social-links")}>Manage social links <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
       </section>
 
       <div class="submit-bar">
