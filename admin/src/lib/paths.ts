@@ -7,7 +7,8 @@ import { base } from "$app/paths";
  */
 export function to(path: string): string {
   if (/^[a-z]+:\/\//i.test(path) || !path.startsWith("/")) return path;
-  if (base && (path === base || path.startsWith(`${base}/`))) return path;
+  // Always prefix: the admin has its own "/admin" page (Users & Roles), so "/admin" is an app path,
+  // not proof that the prefix is already there.
   return path === "/" ? base || "/" : `${base}${path}`;
 }
 
