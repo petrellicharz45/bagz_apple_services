@@ -22,8 +22,8 @@ DirectoryIndex index.html
   RewriteRule ^(refund|returns?|refund[a-z_-]*|return[a-z_-]*|warranty)/?$ /help/protection [R=301,L,NC]
   RewriteRule ^(shipping|delivery|shipping[a-z_-]*|delivery[a-z_-]*)/?$ /help/shipping [R=301,L,NC]
   # LEGACY-REDIRECTS (old WordPress links → new pages; filled in by scripts/prerender-seo.mjs)
-  # Prerendered SEO pages: /p/<slug> and /c/<slug> are served from p/<slug>.html and c/<slug>.html
-  RewriteCond %{REQUEST_URI} ^/(p|c)/[^/]+/?$
+  # Prerendered SEO pages: /p/<slug>, /c/<slug> and /help/<id> are served from p/<slug>.html, c/<slug>.html and help/<id>.html
+  RewriteCond %{REQUEST_URI} ^/(p|c|help)/[^/]+/?$
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.+?)/?$ $1.html [L]
   # The shop's own pages (product, category, help) start the app

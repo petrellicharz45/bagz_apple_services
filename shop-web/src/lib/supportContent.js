@@ -1,6 +1,6 @@
 /** Help / legal pages for the shop (HTML fragments). */
 
-import { CONTACT, SUPPORT_PHONE_TEL, ORDER_WHATSAPP_E164 } from "./shopContact.js";
+import { CONTACT, SUPPORT_PHONE_TEL, ORDER_WHATSAPP_E164 } from "./contactInfo.js";
 import { BRAND } from "./brand.js";
 
 export const SUPPORT_TOPIC_IDS = [

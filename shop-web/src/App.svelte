@@ -105,7 +105,7 @@
     selected = null;
     supportTopic = topic;
     tab = "support";
-    applySupportSeo(getSupportPage(topic));
+    applySupportSeo(getSupportPage(topic), supportPath(topic));
     return true;
   }
 
@@ -532,7 +532,7 @@
     if (window.location.pathname !== path) {
       history.pushState({}, "", path);
     }
-    applySupportSeo(getSupportPage(supportTopic));
+    applySupportSeo(getSupportPage(supportTopic), supportPath(supportTopic));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 

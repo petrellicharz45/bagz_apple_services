@@ -5,10 +5,11 @@
  * so this script writes real HTML for every public page, using the live catalogue:
  *   dist/p/<slug>.html   one per visible product (title, description, price, stock, Product JSON-LD)
  *   dist/c/<slug>.html   one per category (product list + CollectionPage JSON-LD)
+ *   dist/help/<id>.html  one per help page (About, Support, Delivery, Warranty, Privacy, Terms…)
  *   dist/index.html      home: store/branch JSON-LD + crawlable links to categories and products
  *   dist/sitemap.xml     every page above + help pages, with lastmod
  * The app clears this content and takes over as soon as it loads (src/main.js).
- * .htaccess serves /p/<slug> from p/<slug>.html.
+ * .htaccess serves /p/<slug>, /c/<slug> and /help/<id> from those .html files.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -18,6 +19,7 @@ import { getFirestore, collection, getDocs, doc, getDoc } from "firebase/firesto
 import { BRAND } from "../src/lib/brand.js";
 import { categoryPath, categorySlug, productPath, productSeoTitle } from "../src/lib/seoPaths.js";
 import { siteGraph, productGraph, categoryGraph } from "../src/lib/seoSchema.js";
+import { SUPPORT_PAGES, SUPPORT_TOPIC_IDS, supportPath } from "../src/lib/supportContent.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -126,7 +128,7 @@ const contact = () =>
   BRAND.branches.map((b) => `${esc(b.name)}: ${esc(b.address)}.`).join(" ") +
   `</p>`;
 
-const written = { products: 0, categories: 0 };
+const written = { products: 0, categories: 0, help: 0 };
 const byCategory = new Map(categories.map((c) => [c, []]));
 for (const p of products) if (byCategory.has(p.category)) byCategory.get(p.category).push(p);
 
@@ -196,6 +198,30 @@ ${contact()}</main>`;
   written.categories++;
 }
 
+// ---------- help pages ----------
+// Each gets its own title and canonical, so Google indexes them instead of treating them as copies
+// of the home page ("Alternative page with proper canonical tag").
+mkdirSync(join(dist, "help"), { recursive: true });
+for (const id of SUPPORT_TOPIC_IDS) {
+  const help = SUPPORT_PAGES[id];
+  if (!help) continue;
+  const body = `${style}<main class="seo-prerender">${nav()}
+<h1>${esc(help.title)}</h1>
+${help.body}
+</main>`;
+  writeFileSync(
+    join(dist, "help", `${id}.html`),
+    page({
+      title: help.title.includes(BRAND.name) ? help.title : `${help.title} | ${BRAND.name}`,
+      description: help.description || help.title,
+      path: supportPath(id),
+      keywords: `${help.title}, ${BRAND.name}, Kampala, Uganda`,
+      body
+    })
+  );
+  written.help++;
+}
+
 // ---------- home ----------
 {
   const featured = products.slice(0, 40);
@@ -217,9 +243,8 @@ const today = new Date().toISOString().slice(0, 10);
 const urls = [
   { loc: "/", lastmod: today, changefreq: "daily", priority: "1.0" },
   ...categories.map((c) => ({ loc: categoryPath(c), lastmod: today, changefreq: "daily", priority: "0.9" })),
-  ...products.map((p) => ({ loc: productPath(p), lastmod: lastmod(p), changefreq: "weekly", priority: "0.8" }))
-  // Help pages are left out until they get their own prerendered title/canonical
-  // (today they share the home page's, which Search Console reports as a conflict).
+  ...products.map((p) => ({ loc: productPath(p), lastmod: lastmod(p), changefreq: "weekly", priority: "0.8" })),
+  ...SUPPORT_TOPIC_IDS.filter((id) => SUPPORT_PAGES[id]).map((id) => ({ loc: supportPath(id), lastmod: today, changefreq: "monthly", priority: "0.4" }))
 ];
 writeFileSync(
   join(dist, "sitemap.xml"),
@@ -274,5 +299,5 @@ if (existsSync(htaccessPath)) {
   }
 }
 
-console.log(`prerender-seo: ${written.products} product pages, ${written.categories} category pages, sitemap with ${urls.length} URLs, ${seenOld.size} old WordPress links redirected (${SITE})`);
+console.log(`prerender-seo: ${written.products} product pages, ${written.categories} category pages, ${written.help} help pages, sitemap with ${urls.length} URLs, ${seenOld.size} old WordPress links redirected (${SITE})`);
 process.exit(0);

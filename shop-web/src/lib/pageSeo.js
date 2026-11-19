@@ -224,18 +224,20 @@ export function applyDefaultSeo() {
   applyShopPage("home");
 }
 
-export function applySupportSeo(page) {
+/** Help page. `path` is its clean address (/help/<id>), so variants never become their own canonical. */
+export function applySupportSeo(page, path) {
   if (!page) {
     applyDefaultSeo();
     return;
   }
-  const title = `${page.title} | ${BRAND}`;
+  const title = page.title.includes(BRAND) ? page.title : `${page.title} | ${BRAND}`;
   const description = (page.description || page.title).slice(0, 160);
   document.title = title.slice(0, 70);
   setMeta("name", "description", description);
   setMeta("name", "keywords", `${page.title}, ${BRAND}, Uganda online shopping`);
-  setLink("canonical", absUrl(window.location?.pathname || "/"));
-  applySocialMeta({ title, description, url: absUrl(window.location?.pathname || "/") });
+  const url = absUrl(path || window.location?.pathname || "/");
+  setLink("canonical", url);
+  applySocialMeta({ title, description, url });
   applySiteJsonLd();
   setJsonLd("product-jsonld", null);
 }
