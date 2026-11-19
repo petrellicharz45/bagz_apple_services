@@ -68,6 +68,21 @@
       // period, or after 60 s in any case.
       (function () {
         function reveal() {
+          // The shop did not start (an old saved copy of this page pointing to replaced files, or a
+          // download cut off on a slow network): reload once for fresh files before giving up.
+          var app = document.getElementById("app");
+          var notStarted = app && app.querySelector(".seo-prerender");
+          var key = "bagz-boot-retry";
+          var retried = false;
+          try {
+            retried = sessionStorage.getItem(key) === "1";
+            if (notStarted && !retried) {
+              sessionStorage.setItem(key, "1");
+              location.reload();
+              return;
+            }
+            if (!notStarted) sessionStorage.removeItem(key);
+          } catch (e) {}
           var b = document.getElementById("boot");
           if (b) b.remove();
         }
