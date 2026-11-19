@@ -26,6 +26,12 @@ DirectoryIndex index.html
   RewriteCond %{REQUEST_URI} ^/(p|c|help)/[^/]+/?$
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.+?)/?$ $1.html [L]
+  # A product / category / help address with no page (deleted, hidden or mistyped): Google gets a
+  # real 404 instead of a "soft 404", while a person still sees the shop (ErrorDocument below).
+  # Products added since the last build get their page at the nightly rebuild.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(p|c|help)/[^/]+/?$ - [R=404,L]
   # The shop's own pages (product, category, help) start the app
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
