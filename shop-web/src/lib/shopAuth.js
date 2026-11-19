@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore/lite";
 import { writable } from "svelte/store";
 import { app, db } from "./firebase.js";
 import { readProfile, saveProfile } from "./accountStore.js";

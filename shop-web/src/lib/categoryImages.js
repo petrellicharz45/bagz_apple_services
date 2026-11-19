@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 
 const RESERVED_SETTINGS_KEYS = new Set(["recommended"]);

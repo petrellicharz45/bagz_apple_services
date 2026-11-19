@@ -1,5 +1,5 @@
 import { writable, get } from "svelte/store";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 
 /** Global delivery fees (Admin → Delivery fees). Applied to all products unless free shipping. */

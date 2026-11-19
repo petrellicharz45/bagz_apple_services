@@ -64,8 +64,7 @@
     <div id="boot" aria-hidden="true"><img src="/brand/bagz-logo-white.png" alt="" width="180" height="43" /><span></span></div>
     <script>
       // Safety net: if the shop cannot start (very old browser, blocked script), show the page text.
-      // Only after everything has downloaded (slow networks can take well over 15 s) plus a grace
-      // period, or after 60 s in any case.
+      // Only after everything has downloaded (slow networks can take well over 15 s) plus a grace period.
       (function () {
         function reveal() {
           // The shop did not start (an old saved copy of this page pointing to replaced files, or a
@@ -86,10 +85,11 @@
           var b = document.getElementById("boot");
           if (b) b.remove();
         }
+        // Only once everything has downloaded: on a slow network the shop's program can take more
+        // than a minute, and reloading earlier would restart that download.
         window.addEventListener("load", function () {
           setTimeout(reveal, 5000);
         });
-        setTimeout(reveal, 60000);
       })();
     </script>
     <div id="app"></div>

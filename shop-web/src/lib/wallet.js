@@ -1,6 +1,6 @@
 import { writable, get } from "svelte/store";
 import { db } from "./firebase.js";
-import { collection, query, where, limit, getDocs } from "firebase/firestore";
+import { collection, query, where, limit, getDocs } from "firebase/firestore/lite";
 import { readProfile } from "./accountStore.js";
 
 const WALLET_KEY = "bagz_wallet_v1";

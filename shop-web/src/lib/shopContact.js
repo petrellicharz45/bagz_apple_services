@@ -2,7 +2,7 @@
 
 import { writable } from "svelte/store";
 import { BRAND } from "./brand.js";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 
 export * from "./contactInfo.js";

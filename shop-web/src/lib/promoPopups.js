@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 import { storageKey } from "./brand.js";
 
@@ -69,16 +69,14 @@ export function pickPopup(list, now = Date.now()) {
   );
 }
 
-/** Live list of active pop-ups; returns an unsubscribe function. */
+/** Active pop-ups, loaded once (the shop uses Firestore "lite", which has no live listeners). */
 export function watchPopups(onChange) {
   if (!db) return () => {};
-  try {
-    return onSnapshot(
-      doc(db, "settings", "popups"),
-      (snap) => onChange(cleanPopups(snap.exists() ? snap.data() : null)),
-      () => {}
-    );
-  } catch {
-    return () => {};
-  }
+  let stopped = false;
+  getDoc(doc(db, "settings", "popups"))
+    .then((snap) => !stopped && onChange(cleanPopups(snap.exists() ? snap.data() : null)))
+    .catch(() => {});
+  return () => {
+    stopped = true;
+  };
 }

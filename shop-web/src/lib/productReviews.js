@@ -9,7 +9,7 @@ import {
   setDoc,
   updateDoc,
   serverTimestamp
-} from "firebase/firestore";
+} from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 import { readProfile } from "./accountStore.js";
 

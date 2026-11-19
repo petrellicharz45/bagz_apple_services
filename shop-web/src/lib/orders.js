@@ -1,5 +1,5 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore/lite";
 import { getAuth } from "firebase/auth";
 import { app, db } from "./firebase.js";
 import { apiUrl } from "./appRuntime.js";

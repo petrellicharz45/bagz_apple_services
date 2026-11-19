@@ -1,4 +1,4 @@
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 
 /**
@@ -49,22 +49,25 @@ export async function loadHomeBanners() {
 }
 
 /**
- * Live banners: calls `onChange(list)` now and whenever an admin adds, edits,
- * hides, reorders or deletes a banner. Returns an unsubscribe function.
+ * Banners: calls `onChange(list)` once loaded, and again when the visitor comes back to the tab
+ * (so admin changes show up without a reload). Returns a stop function.
+ * (The shop uses the small Firestore "lite" build, which has no live listeners.)
  */
 export function watchHomeBanners(onChange) {
   if (!db) {
     onChange([]);
     return () => {};
   }
-  try {
-    return onSnapshot(
-      doc(db, "settings", "banners"),
-      (snap) => onChange(cleanBanners(snap.exists() ? snap.data() : null)),
-      () => onChange(cachedHomeBanners()) // offline / blocked: keep the last known banners
-    );
-  } catch {
-    loadHomeBanners().then(onChange);
-    return () => {};
-  }
+  let stopped = false;
+  const load = () =>
+    getDoc(doc(db, "settings", "banners"))
+      .then((snap) => !stopped && onChange(cleanBanners(snap.exists() ? snap.data() : null)))
+      .catch(() => !stopped && onChange(cachedHomeBanners())); // offline / blocked: keep the last known banners
+  const onVisible = () => document.visibilityState === "visible" && load();
+  load();
+  document.addEventListener("visibilitychange", onVisible);
+  return () => {
+    stopped = true;
+    document.removeEventListener("visibilitychange", onVisible);
+  };
 }

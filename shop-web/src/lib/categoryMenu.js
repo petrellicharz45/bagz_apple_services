@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { db } from "./firebase.js";
 import { coverUrl, stockPhotoForCategory, stockPhotoForProduct } from "./catalog.js";
 import { categoryKeysFromSettings, imageMapFromSettings, loadCategoryOrder, sortByOrder } from "./categoryImages.js";
